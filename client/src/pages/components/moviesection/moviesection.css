@@ -1,0 +1,20 @@
+.tab__active::before, .tab__support::before {
+    content: "";
+    position: absolute;
+    border-bottom: 2px solid #034ea2;
+    top: 30px;
+    width: 24px;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all .3s ease-in-out;
+}
+
+.film__footer{
+    height: 60px;
+}
+
+.tab__active{
+    opacity: 1 !important;
+    color: #034ea2
+}
+

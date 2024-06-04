@@ -1,0 +1,13 @@
+.title__movie{
+    text-align: center;
+    text-transform: capitalize;
+    position: relative;
+    margin-bottom: 0;
+    text-align: left;
+    line-height: 160%;
+    color: #333;
+    font-weight: 700;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+}

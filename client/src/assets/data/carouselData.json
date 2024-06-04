@@ -1,0 +1,24 @@
+{
+    "slides":[
+        {
+            "src": "https://cdn.galaxycine.vn/media/2024/4/10/shopee-pay-3_1712752827888.jpg",
+            "alt": "Carousel 1"
+        },
+        {
+            "src": "https://cdn.galaxycine.vn/media/2024/2/8/2048x682_1707364876796.jpg",
+            "alt": "Carousel 2"
+        },
+        {
+            "src": "https://cdn.galaxycine.vn/media/2024/4/15/digital-2048x682_1713193116776.jpg",
+            "alt": "Carousel 3" 
+        },
+        {
+            "src": "https://cdn.galaxycine.vn/media/2024/4/10/cai-gia-cua-hanh-phuc-2_1712733220607.jpg",
+            "alt": "Carousel 4"
+        },
+        {
+            "src": "https://cdn.galaxycine.vn/media/2024/4/1/god-x-kong-2048_1711942313253.jpg",
+            "alt": "Carousel 5"
+        }
+    ]
+}   
