@@ -7,3 +7,10 @@
     -ms-flex-pack: center;
     justify-content: center;
 }
+
+.Snipper_loading__title__6K0l{
+    font-weight: 600;
+    letter-spacing: 5px;
+    animation-duration: 2.5s;
+    animation-iteration-count: infinite;
+}

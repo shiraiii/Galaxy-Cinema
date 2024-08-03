@@ -1,6 +1,15 @@
-import React from "react"
-
+import React, { useEffect } from "react"
+import AppContext from "../AppContext"
+import { useContext } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import userDetails from "../userDetails/userDetails"
 const DataUser = (props) => {
+  const { state, dispatch } = useContext(AppContext)
+  const { user } = state
+  const navigate = useNavigate()
+  const dataString = sessionStorage.getItem("userInfo")
+  const data = JSON.parse(dataString)
+
   return (
     <div className="md:px-2 py-4 relative items-center text-left md:cursor-pointer group transition-all duration-500 ease-in-out md:flex hidden">
       <div className="w-[40px] h-[40px] leading-[62px] text-center rounded-full bg-[#D0D0D0] border-4 border-solid border-[#E9E9E2] flex-none mr-4">
@@ -25,7 +34,7 @@ const DataUser = (props) => {
             style={{ color: "transparent" }}
           ></img>
           <p className="flex-auto md:flex hidden flex-col text-sm font-bold not-italic justify-start md:pr-0 group hover:text-orang-500 transition-all duration-500 ease-in-out capitalize">
-            {props.user.userName}
+            {data.userName}
             <span className="block text-xs font-light not-italic">Star</span>
           </p>
         </div>
@@ -50,7 +59,7 @@ const DataUser = (props) => {
         type="button"
         className="md:py-7 md:hidden flex text-sm font-bold not-italic justify-between items-center md:pr-0 group hover:text-orange-500 transition-all duration-500 ease-in-out"
       >
-        {props.user.userName}
+        {data.userName}
       </button>
       <div className="absolute left-0 w-full min-w-[150px] max-w-[220px] top-20 hidden group-hover:md:block hover:md:block z-[500] transition-all duration-500 ease-in-out">
         <div
@@ -62,26 +71,42 @@ const DataUser = (props) => {
         >
           <ul className="flex flex-col">
             <li>
-              <a
+              <Link
+                to={"/userDetails"}
                 className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
                 type="button"
               >
                 <i className="fa-solid fa-id-badge"></i>
                 <span className="grow ml-4">Tài khoản</span>
-              </a>
+              </Link>
             </li>
-            <li>
-              <a
-                className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
-                type="button"
-              >
-                <i className="fa-solid fa-list-ol"></i>
-                <span className="grow ml-4">Lịch sử</span>
-              </a>
-            </li>
+            {/* đánh dấu trạng thái admin sau đó ẩn lịch sử ròi thay bằng đường dẫn đến admin */}
+            {user && data.roles === "admin" ? (
+              <li>
+                <a
+                  className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
+                  type="button"
+                >
+                  <i className="fa-solid fa-list-ol"></i>
+                  <span className="grow ml-4">Lịch sử</span>
+                </a>
+              </li>
+            ) : (
+              <li>
+                <Link
+                  to={"/admin"}
+                  className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
+                  type="button"
+                >
+                  <i className="fa-solid fa-list-ol"></i>
+                  <span className="grow ml-4">Admin</span>
+                </Link>
+              </li>
+            )}
+
             <li>
               <a className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize">
-                <i className="fa-solid fa-right-from-bracket"></i>
+                <i className="fa-solid fa-right-from-bracket rotate-180"></i>
                 <span className="grow ml-4" onClick={props.signOut}>
                   Đăng xuất
                 </span>

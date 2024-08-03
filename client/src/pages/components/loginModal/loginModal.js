@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom"
 import "./loginModal.css"
 import axios from "axios"
 import AppContext from "../AppContext"
+// import axiosInstance from "../../../app/api/axiosInstance"
 
 const LoginModal = ({ onClose }) => {
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
   const [admin, setAdmin] = useState(false)
   const navigate = useNavigate()
   const { dispatch } = useContext(AppContext)
@@ -25,41 +24,29 @@ const LoginModal = ({ onClose }) => {
       e.preventDefault()
       const option = {
         method: "POST",
-        url: "/api/v1/auth/login",
+        url: "http://localhost:5000/api/v1/auth/login",
+        mode: "cors",
         data: userInput,
       }
       const response = await axios(option)
       const { token, userName, roles } = response.data.data
-      localStorage.setItem("token", token)
+      const userString = JSON.stringify(response.data.data)
+      sessionStorage.setItem("userInfo", userString)
+      window.localStorage.setItem("token", token)
       dispatch({ type: "CURRENT_USER", payload: { userName } })
       if (roles == "Admin") {
         setAdmin(true)
         onClose(false)
         navigate("/admin")
       }
-      onClose(false)
+      if (roles == "User") {
+        setAdmin(false)
+        onClose(false)
+      }
     } catch (err) {
       setErrorMessage(err.response.data.message)
     }
   }
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault()
-  //     axios
-  //       .post("http://localhost:5000/api/login", { email, password })
-  //       .then((result) => {
-  //         console.log(result)
-  //         if (result.data.roles === "Admin") {
-  //           setAdmin(true)
-  //           onClose(false)
-  //           navigate("/admin")
-  //         } else {
-  //           onClose(false)
-  //           setAdmin(false)
-  //           navigate("/")
-  //         }
-  //       })
-  //       .catch((err) => console.log(err))
-  //   }
   return (
     <>
       <div className="login__wrapper sm:w-[350px]">
@@ -77,6 +64,7 @@ const LoginModal = ({ onClose }) => {
         </div>
         <div className="login__form">
           <form onSubmit={onSubmitHandle}>
+            {errorMessage && <div className="text-red-500">{errorMessage}</div>}
             <label
               htmlFor="email"
               className="text-xs block font-bold not-italic text-[#777777]"

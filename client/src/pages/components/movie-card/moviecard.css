@@ -70,3 +70,8 @@
     margin-top: 10px;
     cursor: pointer;
 }
+
+.card__hover__content{
+    z-index: 10
+}
+

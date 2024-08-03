@@ -1,3 +1,8 @@
 @import "tailwindcss/base";
+@layer base{
+    html{
+        @apply text-[#4a4a4a];
+    }
+}
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";

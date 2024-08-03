@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-const Sidenav = ({ onClose, props }) => {
+const Sidenav = ({ onClose, user, signOut }) => {
   const [menus, setMenus] = useState([{}])
   useEffect(() => {
     fetch("/api/menus")
@@ -26,33 +26,27 @@ const Sidenav = ({ onClose, props }) => {
           ></input>
         </div>
       </div>
-      {props ? (
+      {user ? (
         <>
-          <div className="flex gap-2 mt-4 justify-center">
+          <div className="flex gap-2 mt-4 justify-between">
             <a className="md:hidden block text-center w-full">
               <img
                 className="max-w-min w-[87px] h-[27px] inline-block object-cover duration-500 ease-in-out group-hover:opacity-100"
                 src="https://www.galaxycine.vn/_next/static/media/btn-ticket.01407df7.png"
               ></img>
             </a>
-            <div className="flex justify-center items-center w-full">
-              <div className="flex items-center flex-wrap justify-center flex-auto mr-1">
-                <a className="cursor-pointer logo__header grow-0">
-                  <img src="https://www.galaxycine.vn/_next/static/media/join-Gstar.24c52de9.svg"></img>
-                </a>
-              </div>
-            </div>
+
             <div className="flex items-center flex-wrap justify-end flex-auto mr-1 hidden"></div>
-            <div className="px-2 py-2 relative items-center text-left md:cursor-pointer group transition-all duration-500 ease-in-out flex">
-              <div className="w-[40px] h-[40px] leading-[62px] text-center rounded-full bg-[#D0D0D0] border-4 border-solid border-[#E9E9E2] flex-none mr-4">
-                <img
-                  alt="Avatar"
-                  width={40}
-                  height={40}
-                  className="w-full h-full rounded-full object-cover duration-500 ease-in-out group-hover:opacity-100"
-                  src="https://www.galaxycine.vn/_next/static/media/user_default.b1a2ce07.png"
-                ></img>
-              </div>
+          </div>
+          <div className="px-2 py-2 relative items-center text-left md:cursor-pointer group transition-all duration-500 ease-in-out flex">
+            <div className="w-[40px] h-[40px] leading-[62px] text-center rounded-full bg-[#D0D0D0] border-4 border-solid border-[#E9E9E2] flex-none mr-4">
+              <img
+                alt="Avatar"
+                width={40}
+                height={40}
+                className="w-full h-full rounded-full object-cover duration-500 ease-in-out group-hover:opacity-100"
+                src="https://www.galaxycine.vn/_next/static/media/user_default.b1a2ce07.png"
+              ></img>
             </div>
           </div>
         </>
@@ -65,17 +59,12 @@ const Sidenav = ({ onClose, props }) => {
                 src="https://www.galaxycine.vn/_next/static/media/btn-ticket.01407df7.png"
               ></img>
             </a>
-            <div className="flex items-center flex-wrap justify-end flex-auto mr-1 hidden"></div>
-          </div>
-          <div className="px-2 py-2 relative items-center text-left md:cursor-pointer group transition-all duration-500 ease-in-out flex">
-            <div className="w-[40px] h-[40px] leading-[62px] text-center rounded-full bg-[#D0D0D0] border-4 border-solid border-[#E9E9E2] flex-none mr-4">
-              <img
-                alt="Avatar"
-                width={40}
-                height={40}
-                className="w-full h-full rounded-full object-cover duration-500 ease-in-out group-hover:opacity-100"
-                src="https://www.galaxycine.vn/_next/static/media/user_default.b1a2ce07.png"
-              ></img>
+            <div className="flex justify-center items-center w-full">
+              <div className="flex items-center flex-wrap justify-center flex-auto mr-1">
+                <a className="cursor-pointer logo__header grow-0">
+                  <img src="https://www.galaxycine.vn/_next/static/media/join-Gstar.24c52de9.svg"></img>
+                </a>
+              </div>
             </div>
           </div>
         </>
@@ -116,6 +105,15 @@ const Sidenav = ({ onClose, props }) => {
             )
           })}
         </ul>
+        {user ? (
+          <a
+            className="md:hidden block fixed -bottom-1 z-[999] left-0 bg-white w-full h-10 text-sm text-black text-center py-2 hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-white transition-all duration-300"
+            onClick={signOut}
+          >
+            <i className="fa-solid fa-right-from-bracket mr-2 rotate-180"></i>
+            Đăng xuất
+          </a>
+        ) : null}
       </div>
     </nav>
   )

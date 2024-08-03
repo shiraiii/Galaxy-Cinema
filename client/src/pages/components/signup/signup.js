@@ -27,7 +27,7 @@ const SignUp = ({ onClose, openModal }) => {
     email: "",
     password: "",
     phone: "",
-    roles: "",
+    roles: "User",
   })
   const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
@@ -39,13 +39,20 @@ const SignUp = ({ onClose, openModal }) => {
       e.preventDefault()
       const option = {
         method: "POST",
-        url: "/api/v1/auth/register",
+        url: "http://localhost:5000/api/v1/auth/register",
         data: userInput,
       }
       const response = await axios(option)
-      const { token, userName } = response.data.data
+      const { token, userName, status } = response.data.data
+      const userString = JSON.stringify(response.data.data)
+      sessionStorage.setItem("userInfo", userString)
       localStorage.setItem("token", token)
       dispatch({ type: "CURRENT_USER", payload: { userName } })
+      if (status == "success") {
+        onClose(false)
+      }
+      console.log(status)
+      console.log(userName)
     } catch (err) {
       setErrorMessage(err.response.data.message)
     }
@@ -91,9 +98,11 @@ const SignUp = ({ onClose, openModal }) => {
           <form onSubmit={onSubmitHandle}>
             {errorMessage &&
               (Array.isArray(errorMessage) ? (
-                errorMessage.map((err) => <div className="">Error: {err}</div>)
+                errorMessage.map((err) => (
+                  <div className="text-red-500">{err}</div>
+                ))
               ) : (
-                <div className="">Error: {errorMessage}</div>
+                <div className="text-red-500">{errorMessage}</div>
               ))}
             <label
               htmlFor="name"

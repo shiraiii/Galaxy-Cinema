@@ -1,7 +1,24 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
+import { createSlice } from "@reduxjs/toolkit"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import axios from "axios"
 
-export const apiSlice = createApi({
-    baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000'}),
-    tagTypes: ['Note','User'],
-    endpoints: builder => ({})
+const user = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user"))
+  : null
+
+const initialState = {
+  user: null,
+}
+
+export const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    setUserDetails: (state, action) => {
+      console.log(action.payload)
+    },
+  },
 })
+
+export const { setUserDetails } = userSlice.actions
+export default userSlice.reducer

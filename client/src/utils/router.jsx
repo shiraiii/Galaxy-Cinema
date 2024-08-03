@@ -1,21 +1,27 @@
 export const ROUTERS = {
     USER: {
         HOME: "",
-        PROFILE: "profile",
+        PROFILE: "UserDetails",
         PRODUCT: "/product",
-        MOREMOVIE:"phim-dang-chieu",
-        USER:"admin/user",
-        CREATE:"admin/create",
-        UPDATE: "admin/update/:id",
-        DELETE: "admin/delete/:id"
+        NOWSHOWING:"phim-dang-chieu",
+        BOOKING: "booking/:id",
+        UPCOMING: "phim-sap-chieu",
+        IMAX: "phim-imax",
+
     
         
     },
     ADMIN: {
         MOVIE: "admin/movie",
         ADMIN: "admin",
-        CREATE: "admin/movie/create",
-        UPDATE: "admin/movie/update/:id",
+        CINEMACREATE:"admin/cinema/create",
+        CINEMA:"admin/cinema",
+        MOVIECREATE: "admin/movie/create",
+        MOVIEUPDATE: "admin/movie/update/:id",
+        USER:"admin/user",
+        USERCREATE:"admin/create",
+        USERUPDATE: "admin/update/:id",
+        DELETE: "admin/delete/:id",
 
     }
 }

@@ -1,0 +1,43 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start:frontend": "npm start --prefix client",
+    "start:backend": "nodemon server/index.js",
+    "dev": "concurrently -n \"client,server\" -c \"green,red\" -p \"[{name}]\" \"npm run start:frontend\" \"npm run start:backend\""
+  },
+  "proxy": "http://localhost:3000",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto-browserify": "^3.12.0",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "express-rate-limit": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.6.0",
+    "mongoose": "^8.3.3",
+    "mongoose-sequence": "^6.0.1",
+    "path-browserify": "^1.0.1",
+    "qrcode": "^1.5.3",
+    "querystring-es3": "^0.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

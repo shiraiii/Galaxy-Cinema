@@ -7,6 +7,7 @@ import Sidenav from "../../sidenav/sidenav"
 import SignUp from "../../signup/signup"
 import DataUser from "../../data-user/dataUser"
 import AppContext from "../../AppContext"
+import MovieCardHeader from "../../movie-card/moviecard-header"
 
 const Header = () => {
   const [menus, setMenus] = useState([{}])
@@ -17,6 +18,7 @@ const Header = () => {
   const { state, dispatch } = useContext(AppContext)
   const { user } = state
   const signOut = () => {
+    sessionStorage.removeItem("userInfo")
     localStorage.removeItem("token")
     dispatch({ type: "CURRENT_USER", payload: null })
   }
@@ -27,10 +29,18 @@ const Header = () => {
   }, [])
 
   useEffect(() => {
-    fetch("/api/movies")
+    fetch("http://localhost:5000/api/v1/movie/getAllMovie")
       .then((res) => res.json())
       .then((data) => setMovies(data))
   }, [])
+
+  const today = new Date().toISOString().split("T")[0]
+
+  const upcomingMovies = movies.filter((movie) => movie.releaseDate > today)
+
+  const nowShowingMovies = movies.filter(
+    (movie) => movie.releaseDate <= today && movie.endDate >= today
+  )
   return (
     <>
       <header className="Header_header_iG0T4 pt-5 pb-2 lg:pt-3">
@@ -41,7 +51,7 @@ const Header = () => {
           <nav className="flex justify-start justify-items-center items-center flex-row">
             <a
               className="header-logo logo__header grow-0 md:mr-[40px] mr-[20px] "
-              href="/"
+              href={"/"}
             >
               <img
                 style={{ width: 115, height: 60 }}
@@ -97,68 +107,9 @@ const Header = () => {
                                         {childItem?.name}
                                       </a>
                                       <ul className="flex flex-row gap-7 justify-between">
-                                        {movies
-                                          ?.slice(0, 4)
-                                          .map((movie, movieKey) => {
-                                            return (
-                                              <li
-                                                key={movieKey}
-                                                className="text-sm text-black py-2 transition-all duration-300"
-                                              >
-                                                <div className="inline-block whitespace-nowrap relative max-w-full w-[140px] h-[200px]">
-                                                  <div className="inline-block cursor-pointer rounded overflow-hidden card__movies max-w-full">
-                                                    <div className="object-cover rounded relative card__img max-w-full">
-                                                      <div className="absolute hidden md:block w-full h-full z-10 cursor-pointer bg-[#000000] transition-all duration-300 ease-in-out opacity-0 hover:opacity-100">
-                                                        <div className="card__hover__content flex flex-col justify-center items-center w-full h-full">
-                                                          <a
-                                                            type="button"
-                                                            className="text-white bg-[#f26b38] w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
-                                                          >
-                                                            <img
-                                                              src="https://www.galaxycine.vn/_next/static/media/Vector-1.319a0d2b.svg"
-                                                              className="mr-2"
-                                                              style={{
-                                                                color:
-                                                                  "transparent",
-                                                              }}
-                                                            ></img>
-                                                            Mua vé
-                                                          </a>
-                                                        </div>
-                                                      </div>
-                                                      <a>
-                                                        <img
-                                                          className="undefined object-cover duration-500 ease-in-out group-hover:opacity-100"
-                                                          src={movie.movieImg}
-                                                        ></img>
-                                                      </a>
-                                                      <div className="votes">
-                                                        <p className="absolute right-[5px] bottom-10">
-                                                          <span>
-                                                            <i className="fa-solid fa-star text-yellow-300 mr-5 text-[12px]"></i>
-                                                          </span>
-                                                          <span className="text-[18px] font-bold text-white">
-                                                            {movie.movieRating}
-                                                          </span>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div
-                                                    className="Card_card__title__kFoFc mt-2"
-                                                    style={{ width: "128px" }}
-                                                  >
-                                                    <a
-                                                      type="button"
-                                                      className="text-sm font-semibold not-italic w-[140px]"
-                                                    >
-                                                      {movie.name}
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                              </li>
-                                            )
-                                          })}
+                                        <MovieCardHeader
+                                          movies={nowShowingMovies}
+                                        ></MovieCardHeader>
                                       </ul>
                                     </div>
                                   </div>
@@ -177,68 +128,9 @@ const Header = () => {
                                         {childItem?.name}
                                       </a>
                                       <ul className="flex flex-row gap-7 justify-between">
-                                        {movies
-                                          ?.slice(6, 10)
-                                          .map((movie, movieKey) => {
-                                            return (
-                                              <li
-                                                key={movieKey}
-                                                className="text-sm text-black py-2 transition-all duration-300"
-                                              >
-                                                <div className="inline-block whitespace-nowrap relative max-w-full w-[140px] h-[200px]">
-                                                  <div className="inline-block cursor-pointer rounded overflow-hidden card__movies max-w-full">
-                                                    <div className="object-cover rounded relative card__img max-w-full">
-                                                      <div className="absolute hidden md:block w-full h-full z-10 cursor-pointer bg-[#000000] transition-all duration-300 ease-in-out opacity-0 hover:opacity-100">
-                                                        <div className="card__hover__content flex flex-col justify-center items-center w-full h-full">
-                                                          <a
-                                                            type="button"
-                                                            className="text-white bg-[#f26b38] w-[120px] h-[40px] hover:bg-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440]"
-                                                          >
-                                                            <img
-                                                              src="https://www.galaxycine.vn/_next/static/media/Vector-1.319a0d2b.svg"
-                                                              className="mr-2"
-                                                              style={{
-                                                                color:
-                                                                  "transparent",
-                                                              }}
-                                                            ></img>
-                                                            Mua vé
-                                                          </a>
-                                                        </div>
-                                                      </div>
-                                                      <a>
-                                                        <img
-                                                          className="undefined object-cover duration-500 ease-in-out group-hover:opacity-100"
-                                                          src={movie.movieImg}
-                                                        ></img>
-                                                      </a>
-                                                      <div className="votes">
-                                                        <p className="absolute right-[5px] bottom-10">
-                                                          <span>
-                                                            <i className="fa-solid fa-star text-yellow-300 mr-5 text-[12px]"></i>
-                                                          </span>
-                                                          <span className="text-[18px] font-bold text-white">
-                                                            {movie.movieRating}
-                                                          </span>
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  <div
-                                                    className="Card_card__title__kFoFc mt-2"
-                                                    style={{ width: "128px" }}
-                                                  >
-                                                    <a
-                                                      type="button"
-                                                      className="text-sm font-semibold not-italic w-[140px]"
-                                                    >
-                                                      {movie.name}
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                              </li>
-                                            )
-                                          })}
+                                        <MovieCardHeader
+                                          movies={upcomingMovies}
+                                        ></MovieCardHeader>
                                       </ul>
                                     </div>
                                   </div>
@@ -318,7 +210,7 @@ const Header = () => {
                           src="https://www.galaxycine.vn/_next/static/media/join-Gstar.24c52de9.svg"
                         ></img>
                       </a>
-                      <div className="absolute top-21 right-0 hidden group-hover:md:block hover:md:block z-[400] transition-all duration-300 ease-in-out">
+                      <div className="absolute top-20 right-0 hidden group-hover:md:block hover:md:block z-[400] transition-all duration-300 ease-in-out">
                         <div
                           className="bg-white min-w-[849px] text-center border border-white border-solid rounded px-6 py-4"
                           style={{
@@ -326,7 +218,7 @@ const Header = () => {
                               "0 6px 16px rgb(0 0 0 / .08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgb(0 0 0 / .05)",
                           }}
                         >
-                          <div className="grid grid-cols-5 gap-5">
+                          <div className="grid grid-cols-4 gap-5">
                             <div className="flex flex-col justify-start items-center gap-5 pt-6">
                               <img
                                 width={"84"}
@@ -396,12 +288,14 @@ const Header = () => {
               )}
             </div>
             <div className="flex md:grow md:basis-6/12 justify-end screen1200:hidden">
-              <a className="text-sm text-[#777] capitalize cursor-pointer transition-all duration-300 hover:text-[#f26b38]">
-                <span onClick={() => setShowModal(true)}>
-                  <i className="fa-regular fa-user inline align-baseline mr-1"></i>
-                  Đăng nhập
-                </span>
-              </a>
+              {!user ? (
+                <a className="text-sm text-[#777] capitalize cursor-pointer transition-all duration-300 hover:text-[#f26b38]">
+                  <span onClick={() => setShowModal(true)}>
+                    <i className="fa-regular fa-user inline align-baseline mr-1"></i>
+                    Đăng nhập
+                  </span>
+                </a>
+              ) : null}
               <button className="ml-4">
                 <span onClick={() => setShowSideNav(true)}>
                   <i className="fa-solid fa-bars"></i>
@@ -411,7 +305,11 @@ const Header = () => {
           </nav>
         </div>
         {showSideNav && (
-          <Sidenav user={user} onClose={setShowSideNav}></Sidenav>
+          <Sidenav
+            user={user}
+            signOut={signOut}
+            onClose={setShowSideNav}
+          ></Sidenav>
         )}
       </header>
       {showModal && (
@@ -431,7 +329,7 @@ const Header = () => {
               data-testid="modal-container"
             >
               <div
-                className="react-responsive-modal-modal modal-sx px-6 py-10 m-0"
+                className="react-responsive-modal-modal modal-sx px-6 py-10 m-0 "
                 role="dialog"
                 aria-modal="true"
                 data-testid="modal"
@@ -448,7 +346,7 @@ const Header = () => {
                     type="button"
                     className="rounded-md hover:bg-[#e38601] transition-all duration-300 min-w-[135px] w-full focus:outline-none focus:ring-[#e38601] text-sm text-center inline-flex items-center dark:hover:bg-[#e38601] dark:focus:ring-[#e38601] justify-center border border-[#ff953f] text-[#f58020] hover:text-white w-auto px-6 py-[6px] font-light"
                     onClick={() => {
-                      setShowSignUp("true")
+                      setShowSignUp(true)
                       setShowModal(false)
                     }}
                   >

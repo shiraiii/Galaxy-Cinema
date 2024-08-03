@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BlogProvider, TabsProvider, useBlogs, useTabs } from "./TabsContext";
 
 export const Tabs = ({children, defaultIndex}) => {
@@ -16,8 +15,8 @@ export const Tab = ({index,children}) => {
     )
 }
 export const TabPanel = ({index, children}) => {
-    const {activeTab} = useTabs();
-    return activeTab === index? <div className="tabPanel grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-6 mb-10 ">{children}</div> : null
+    const {activeTab, setActiveTab} = useTabs();
+    return activeTab === index? <div className="tabPanel grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-6 mb-10 " onClick={() => setActiveTab(index)}>{children}</div> : null
 }
 
 
