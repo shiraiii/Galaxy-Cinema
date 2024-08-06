@@ -17,7 +17,7 @@ const login = async (req, res, next) => {
       const token = jwt.sign(
         { userId: user._id },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "30s" }
+        { expiresIn: "15m" }
       )
       const refreshToken = jwt.sign(
         { userId: user._id },
@@ -53,7 +53,8 @@ const register = async (req, res, next) => {
     const user = await userModel.create(req.body)
     const token = jwt.sign(
       { userId: user._id },
-      process.env.ACCESS_TOKEN_SECRET
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1m" }
     )
     const refreshToken = jwt.sign(
       { userId: user._id },
@@ -77,14 +78,14 @@ const register = async (req, res, next) => {
 
 const refresh = async (req, res) => {
   const refreshToken = req.cookies.jwt
-  if (!refreshToken) return res.status(401).json({ message: "Unauthorized" })
+  // if (!refreshToken) return res.status(401).json({ message: "Unauthorized" })
 
   try {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
 
     const user = await userModel.findById(decoded.userId)
 
-    if (!user) return res.status(401).json({ message: "Unauthorized" })
+    // if (!user) return res.status(401).json({ message: "Unauthorized" })
 
     const newAccessToken = jwt.sign(
       { userId: user._id },

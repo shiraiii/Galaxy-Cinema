@@ -5,6 +5,15 @@ import { CCard, CCardBody, CCardImage, CCardTitle } from "@coreui/react"
 
 const Moviecard = ({ movies, n }) => {
   const navigate = useNavigate()
+  const handleClick = (e, path) => {
+    e.stopPropagation()
+    navigate(path)
+  }
+
+  const handleTouch = (e, path) => {
+    e.stopPropagation()
+    navigate(path)
+  }
   return (
     <>
       {movies?.slice(0, n).map((movie, index) => {
@@ -14,7 +23,7 @@ const Moviecard = ({ movies, n }) => {
               <div className="Card_card__header__Nq4zg ">
                 <div className="Card_card__hover__jJf4Q hidden xl:block">
                   <div
-                    onClick={() => navigate(`/booking/${movie?._id}`)}
+                    onClick={(e) => handleClick(e, `/booking/${movie?._id}`)}
                     className="card__hover__content flex flex-col justify-center items-center w-full h-full gap-3"
                   >
                     <Link
@@ -31,6 +40,10 @@ const Moviecard = ({ movies, n }) => {
                     <button
                       type="button"
                       className="text-white w-[120px] h-[40px] border border-white hover:bg-[#fb9440]/80 hover:border-transparent rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440] "
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        navigate(`/`)
+                      }}
                     >
                       <i className="fa-solid fa-circle-play mr-2"></i>
                       Trailer
@@ -38,6 +51,12 @@ const Moviecard = ({ movies, n }) => {
                   </div>
                 </div>
                 <CCardImage
+                  onClick={(e) => {
+                    handleClick(e, `/booking/${movie?._id}`)
+                  }}
+                  onTouchStart={(e) => {
+                    handleTouch(e, `/booking/${movie?._id}`)
+                  }}
                   alt={movie?.movieName}
                   width={"300px"}
                   height={"500px"}

@@ -7,10 +7,10 @@ const checkCurrentUser = (req, res, next) => {
     req.user = null
     return next()
   } else {
-    const userInfo = Authorization.replace("Bearer ", "")
+    const token = Authorization.replace("Bearer ", "")
 
     try {
-      const { userId } = jwt.verify(userInfo, process.env.ACCESS_TOKEN_SECRET)
+      const { userId } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
       req.user = { userId }
       return next()
     } catch (err) {

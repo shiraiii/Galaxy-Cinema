@@ -35,4 +35,20 @@ module.exports = {
       },
     ],
   },
+  devServer: {
+    setupMiddlewares: (middlewares, devServer) => {
+      if (!devServer) {
+        throw new Error("webpack-dev-server is not defined")
+      }
+
+      // Place your middleware setup here if you had any custom middleware logic.
+      // Example:
+      // devServer.app.use((req, res, next) => {
+      //   console.log('Middleware triggered');
+      //   next();
+      // });
+
+      return middlewares
+    },
+  },
 }

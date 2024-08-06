@@ -1,9 +1,19 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { CCard, CCardBody, CCardImage, CCardTitle } from "@coreui/react"
 import "./moviecard.css"
 
 const MovieCardIMAX = ({ movies, n }) => {
+  const navigate = useNavigate()
+  const handleClick = (e, path) => {
+    e.stopPropagation()
+    navigate(path)
+  }
+
+  const handleTouch = (e, path) => {
+    e.stopPropagation()
+    navigate(path)
+  }
   return (
     <>
       {movies?.slice(0, n).map((movie, index) => {
@@ -27,6 +37,7 @@ const MovieCardIMAX = ({ movies, n }) => {
                     <button
                       type="button"
                       className="text-white w-[120px] h-[40px] border border-white hover:bg-[#fb9440]/80 hover:border-transparent rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440] "
+                      onClick={(e) => handleClick(e, `/booking/${movie?._id}`)}
                     >
                       <i className="fa-solid fa-circle-play mr-2"></i>
                       Trailer
@@ -41,6 +52,12 @@ const MovieCardIMAX = ({ movies, n }) => {
                   ></img>
                 </div>
                 <CCardImage
+                  onClick={(e) => {
+                    handleClick(e, `/booking/${movie?._id}`)
+                  }}
+                  onTouchStart={(e) => {
+                    handleTouch(e, `/booking/${movie?._id}`)
+                  }}
                   width={"300px"}
                   height={"500px"}
                   src={movie?.movieImg}

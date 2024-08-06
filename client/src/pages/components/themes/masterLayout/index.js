@@ -4,7 +4,7 @@ import Footer from "../footer"
 import { AppReducer } from "../../../../reducer/AppReducer"
 import AppContext from "../../AppContext"
 import axios from "axios"
-import Loading from "../../Loading"
+import manageToken from "../../../../utils/manageToken"
 const MasterLayout = ({ children, ...props }) => {
   const initialState = { user: null }
   const [state, dispatch] = useReducer(AppReducer, initialState)
@@ -31,6 +31,10 @@ const MasterLayout = ({ children, ...props }) => {
   useEffect(() => {
     checkCurrentUser()
   }, [checkCurrentUser])
+  useEffect(() => {
+    const cleanup = manageToken()
+    return () => cleanup()
+  }, [])
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

@@ -1,6 +1,16 @@
 import axios from "axios"
 import React, { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import dayjs from "dayjs"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"
+import OutlinedInput from "@mui/material/OutlinedInput"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import FormControl from "@mui/material/FormControl"
+import ListItemText from "@mui/material/ListItemText"
+import Select from "@mui/material/Select"
+import Checkbox from "@mui/material/Checkbox"
 
 const UpdateUser = () => {
   const { id } = useParams()
@@ -17,25 +27,75 @@ const UpdateUser = () => {
 
   const [producers, setProducers] = useState("")
 
+  const [directors, setDirectors] = useState("")
+
+  const [actors, setActors] = useState("")
+
+  const [casts, setCasts] = useState("")
+
+  const [description, setDescription] = useState("")
+
+  const [duration, setDuration] = useState("")
+
+  const [nation, setNation] = useState("")
+
+  const [releaseDate, setReleaseDate] = useState(dayjs())
+
+  const [endDate, setEndDate] = useState(dayjs())
+
+  const [genres, setGenres] = useState([])
+
+  const genresOpt = [
+    "Hành động",
+    "giả tưởng",
+    "phiêu lưu",
+    "kinh diễn",
+    "văn hóa",
+    "tốc nhiệm",
+    "lãng mạn",
+    "tâm lý",
+  ]
+
+  const ITEM_HEIGHT = 48
+  const ITEM_PADDING_TOP = 8
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  }
+
   useEffect(() => {
     const fectchData = async () => {
       try {
         const response = await axios.get(
           "http://localhost:5000/api/v1/movie/getMovie/" + id
         )
-        console.log(response)
+        const fectcGenres = response.data.genres.map((genre) => genre.trim())
         setMovieName(response.data.movieName)
         setMovieImg(response.data.movieImg)
         setMovieRating(response.data.movieRating)
         setAgeLimit(response.data.ageLimit)
         setMovieBanner(response.data.movieBanner)
+        setActors(response.data.actors)
         setProducers(response.data.producers)
+        setDirectors(response.data.directors)
+        setCasts(response.data.casts)
+        setDescription(response.data.description)
+        setDuration(response.data.duration)
+        setNation(response.data.nation)
+        setReleaseDate(dayjs(response.data.releaseDate))
+        setEndDate(dayjs(response.data.endDate))
+        console.log("Fetched genres:", fectcGenres)
+        setGenres(fectcGenres)
       } catch (err) {
         console.log(err)
       }
     }
     fectchData()
-  }, [])
+  }, [id])
 
   const navigate = useNavigate()
 
@@ -49,13 +109,22 @@ const UpdateUser = () => {
         ageLimit,
         movieBanner,
         producers,
+        directors,
+        actors,
+        casts,
+        description,
+        duration,
+        nation,
+        releaseDate,
+        endDate,
+        genres,
       })
       .then((res) => {
-        console.log(res)
         navigate("/admin/movie")
       })
       .catch((err) => console.log(err))
   }
+
   return (
     <div className="flex h-100 justify-center items-center">
       <div className="w-full bg-white rounded p-3">
@@ -150,6 +219,28 @@ const UpdateUser = () => {
               onChange={(e) => setAgeLimit(e.target.value)}
             ></input>
           </span>
+          <FormControl
+            className="w-full mb-1 relative h-auto border inline-flex itemscenter min-w-0 text-sm bg-white rounded transition-all duration-500 "
+            sx={{ m: 1, width: 300 }}
+          >
+            <InputLabel id="demo-multiple-checkbox-label">Thể loại</InputLabel>
+            <Select
+              id="genres"
+              multiple
+              value={genres}
+              onChange={(e) => setGenres(e.target.value)}
+              input={<OutlinedInput label="Tag" />}
+              renderValue={(selected) => selected.join(", ")}
+              MenuProps={MenuProps}
+            >
+              {genresOpt.map((genre) => (
+                <MenuItem key={genre} value={genre}>
+                  <Checkbox checked={genres.includes(genre)} />
+                  <ListItemText primary={genre} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <label
             htmlFor=""
             className="text-xs block font-bold not-italic text-[#777777]"
@@ -167,6 +258,36 @@ const UpdateUser = () => {
               onChange={(e) => setProducers(e.target.value)}
             ></input>
           </span>
+          <label
+            htmlFor="releaseDate"
+            className="text-xs block font-bold not-italic text-[#777777]"
+          >
+            Ngày chiếu
+          </label>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              value={releaseDate}
+              views={["year", "month", "day"]}
+              id="releaseDate"
+              onChange={(date) => setReleaseDate(date)}
+            />
+          </LocalizationProvider>
+
+          <label
+            htmlFor="endDate"
+            className="text-xs block font-bold not-italic text-[#777777]"
+          >
+            Ngày kết thúc
+          </label>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              value={endDate}
+              views={["year", "month", "day"]}
+              id="endDate"
+              onChange={(date) => setEndDate(date)}
+            />
+          </LocalizationProvider>
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-1 rounded"

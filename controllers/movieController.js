@@ -78,9 +78,50 @@ const createMovie = async (req, res, next) => {
 const updateMovie = async (req, res, next) => {
   try {
     const id = req.params.id
-    await movieModel
-      .findByIdAndUpdate({ _id: id }, req.body)
-      .then((movies) => res.json(movies))
+
+    // Retrieve the current movie data
+    const currentMovie = await movieModel.findById(id)
+    if (!currentMovie) {
+      return res.status(404).json({ message: "Movie not found" })
+    }
+
+    // Merge new data with existing data
+    const updatedData = {
+      movieName: req.body.movieName || currentMovie.movieName,
+      movieImg: req.body.movieImg || currentMovie.movieImg,
+      genres: req.body.genres || currentMovie.genres,
+      directors: req.body.directors
+        ? typeof req.body.directors === "string"
+          ? req.body.directors.split(",").map((d) => d.trim())
+          : req.body.directors
+        : currentMovie.directors,
+      casts: req.body.casts
+        ? typeof req.body.casts === "string"
+          ? req.body.casts.split(",").map((c) => c.trim())
+          : req.body.casts
+        : currentMovie.casts,
+      description: req.body.description || currentMovie.description,
+      producers: req.body.producers
+        ? typeof req.body.producers === "string"
+          ? req.body.producers.split(",").map((p) => p.trim())
+          : req.body.producers
+        : currentMovie.producers,
+      movieRating: req.body.movieRating || currentMovie.movieRating,
+      ageLimit: req.body.ageLimit || currentMovie.ageLimit,
+      movieBanner: req.body.movieBanner || currentMovie.movieBanner,
+      duration: req.body.duration || currentMovie.duration,
+      votes: req.body.votes || currentMovie.votes,
+      nation: req.body.nation || currentMovie.nation,
+      releaseDate: req.body.releaseDate || currentMovie.releaseDate,
+      endDate: req.body.endDate || currentMovie.endDate,
+    }
+
+    // Update the movie with the merged data
+    const updatedMovie = await movieModel.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    })
+
+    res.json(updatedMovie)
   } catch (err) {
     next(err)
   }

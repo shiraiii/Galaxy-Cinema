@@ -295,7 +295,9 @@ const Header = () => {
                     Đăng nhập
                   </span>
                 </a>
-              ) : null}
+              ) : (
+                <DataUser></DataUser>
+              )}
               <button className="ml-4">
                 <span onClick={() => setShowSideNav(true)}>
                   <i className="fa-solid fa-bars"></i>

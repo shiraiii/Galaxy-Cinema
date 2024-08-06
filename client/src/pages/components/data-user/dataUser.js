@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import AppContext from "../AppContext"
 import { useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
@@ -33,7 +33,7 @@ const DataUser = (props) => {
             src="https://cdn.galaxycine.vn/media/2020/5/15/s_1589511977688.png"
             style={{ color: "transparent" }}
           ></img>
-          <p className="flex-auto md:flex hidden flex-col text-sm font-bold not-italic justify-start md:pr-0 group hover:text-orang-500 transition-all duration-500 ease-in-out capitalize">
+          <p className="flex-auto md:flex hidden flex-col text-sm font-bold not-italic justify-start md:pr-0 group hover:text-orange-500 transition-all duration-500 ease-in-out capitalize">
             {data.userName}
             <span className="block text-xs font-light not-italic">Star</span>
           </p>
@@ -81,7 +81,7 @@ const DataUser = (props) => {
               </Link>
             </li>
             {/* đánh dấu trạng thái admin sau đó ẩn lịch sử ròi thay bằng đường dẫn đến admin */}
-            {user && data.roles === "admin" ? (
+            {data.roles == "User" ? (
               <li>
                 <a
                   className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
