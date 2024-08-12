@@ -46,9 +46,9 @@ app.use(function (req, res, next) {
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/movie", movieRoutes)
 app.use("/api/v1/user", userRoutes)
-app.use("api/v1/cinema", cinemaRoutes)
-app.use("api/v1/reservation", reservationRoutes)
-app.use("api/v1/showtime", showtimeRoutes)
+app.use("/api/v1/cinema", cinemaRoutes)
+app.use("/api/v1/reservation", reservationRoutes)
+app.use("/api/v1/showtime", showtimeRoutes)
 
 var menus = [
   {

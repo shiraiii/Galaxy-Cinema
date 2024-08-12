@@ -8,7 +8,7 @@ const CinemaAdmin = () => {
       .then((res) => res.json())
       .then((data) => setData(data))
       .catch((err) => console.log(err))
-  })
+  }, [])
 
   return (
     <div className="flex h-full bg-red-500 justify-center items-center">
@@ -29,11 +29,11 @@ const CinemaAdmin = () => {
           <thead>
             <tr className="w-auto">
               <th className="text-left">Cinema Name</th>
+              <th className="text-left">Cinema Image</th>
               <th className="text-left">Ticket Price</th>
               <th className="text-left">City</th>
               <th className="text-left">Address</th>
               <th className="text-left">Seat Available</th>
-              <th className="text-left">Image</th>
             </tr>
           </thead>
           <tbody>
@@ -47,10 +47,10 @@ const CinemaAdmin = () => {
                   <td>{cinema.ticketPrice}</td>
                   <td>{cinema.city}</td>
                   <td>{cinema.address}</td>
-                  <td>{cinema.seatAvailable}</td>
+                  <td>{cinema.seatsAvailable}</td>
                   <td>
                     <Link
-                      to={`/admin/movie/update/${movie._id}`}
+                      to={`/admin/cinema/update/${cinema._id}`}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
                       Update

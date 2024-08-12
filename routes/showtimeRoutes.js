@@ -8,7 +8,7 @@ router.route("/createShowtime").post(showtimeController.createShowtime)
 
 router.route("/getAllShowtime").get(showtimeController.getAllShowtime)
 
-router.route("/getShowtime/:id").get(showtimeController.getShowtime)
+router.route("/getShowtime/:movieId").get(showtimeController.getShowtime)
 
 router.route("/updateShowtime/:id").put(showtimeController.updateShowtime)
 

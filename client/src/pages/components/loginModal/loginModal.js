@@ -37,7 +37,7 @@ const LoginModal = ({ onClose }) => {
       if (roles == "Admin") {
         setAdmin(true)
         onClose(false)
-        navigate("/admin")
+        // navigate("/admin")
       }
       if (roles == "User") {
         setAdmin(false)

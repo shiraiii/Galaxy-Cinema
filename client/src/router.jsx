@@ -1,4 +1,4 @@
-import React,{useState, useEffect, Component} from 'react';
+import React,{useState, useEffect} from 'react';
 import Loading from './pages/components/Loading';
 import Homepage from './pages/components/homepage/homepage'
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -19,6 +19,8 @@ import Upcoming from './pages/components/moremovie/Upcoming';
 import IMAX from './pages/components/moremovie/IMAX';
 import CreateCinema from './pages/admin/CreateCinema';
 import CinemaAdmin from './pages/admin/CinemaAdmin';
+import CreateShowTime from './pages/admin/CreateShowTime';
+import ShowTimeAdmin from './pages/admin/ShowTimeAdmin';
 
 const RenderUserRouter = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -99,6 +101,14 @@ const RenderUserRouter = () => {
         {
           path: ROUTERS.ADMIN.CINEMA,
           component: <CinemaAdmin></CinemaAdmin>
+        },
+        {
+          path: ROUTERS.ADMIN.SHOWTIMECREATE,
+          component: <CreateShowTime></CreateShowTime> 
+        },
+        {
+          path: ROUTERS.ADMIN.SHOWTIME,
+          component: <ShowTimeAdmin></ShowTimeAdmin>
         }
 
     ]

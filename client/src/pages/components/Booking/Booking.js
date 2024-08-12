@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
-import MovieContent from "../moviecontent/moviecontent"
+import BookingSide from "./bookingSide"
+import MovieContent from "./moviecontent"
+import MovieShowtime from "./movieshowtime"
 
 const Booking = () => {
   const { id } = useParams()
   const [movies, setMovies] = useState("")
+  const [showtimes, setShowtimes] = useState("")
   const [data, setData] = useState([])
 
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/movie/getMovie/" + id)
       .then((res) => res.json())
       .then((data) => setMovies(data))
-      .then(console.log(movies))
       .catch((err) => console.error("Error fetching movie: ", err))
   }, [id])
 
@@ -21,6 +23,20 @@ const Booking = () => {
       .then((data) => setData(data))
       .catch((err) => console.error("Error fetching movies: ", err))
   }, [])
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/v1/showtime/getShowtime/" + id)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok " + res.statusText)
+        }
+        return res.json()
+      })
+      .then((data) => {
+        setShowtimes(data)
+      })
+      .catch((err) => console.error("Error fetching showtimes: ", err))
+  }, [id])
 
   const releaseDate = new Date(movies.releaseDate)
   const formattedDate = `${releaseDate.getDate()}/${
@@ -229,6 +245,8 @@ const Booking = () => {
                   </div>
                 </div>
               </div>
+              <MovieContent movies={movies}></MovieContent>
+              <MovieShowtime showtimes={showtimes}></MovieShowtime>
             </div>
           </div>
           <div className="hidden screen1200:block lg:col-span-2 w-full overflow-hidden">
@@ -238,7 +256,7 @@ const Booking = () => {
                 Phim đang chiếu
               </h1>
             </div>
-            <MovieContent data={nowShowingMovies}></MovieContent>
+            <BookingSide data={nowShowingMovies}></BookingSide>
           </div>
         </div>
       </div>

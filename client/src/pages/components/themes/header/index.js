@@ -12,6 +12,7 @@ import MovieCardHeader from "../../movie-card/moviecard-header"
 const Header = () => {
   const [menus, setMenus] = useState([{}])
   const [movies, setMovies] = useState([{}])
+  const [cinemas, setCinemas] = useState([{}])
   const [showModal, setShowModal] = useState(false)
   const [showSignUp, setShowSignUp] = useState(false)
   const [showSideNav, setShowSideNav] = useState(false)
@@ -32,6 +33,12 @@ const Header = () => {
     fetch("http://localhost:5000/api/v1/movie/getAllMovie")
       .then((res) => res.json())
       .then((data) => setMovies(data))
+  }, [])
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/v1/cinema/getAllCinema")
+      .then((res) => res.json())
+      .then((data) => setCinemas(data))
   }, [])
 
   const today = new Date().toISOString().split("T")[0]
@@ -141,7 +148,7 @@ const Header = () => {
                     </div>
                   )
                 })}
-                {menus?.slice(1, 4).map((menu, menuKey) => (
+                {menus?.slice(1, 3).map((menu, menuKey) => (
                   <div key={menuKey} className="hover relative">
                     <div className="px-3 text-left md:cursor-pointer group hover:text-orange-500 transition-all duration-300">
                       <a className="py-7 nav-item-text flex text-sm justify-between items-center md:pr-0 pr-5 group hover:text-orange-500 transition-all duration-300 ease-in-out not-italic">
@@ -169,6 +176,42 @@ const Header = () => {
                                     <a className="block py-2">
                                       {childItem.name}
                                     </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {menus?.slice(3, 4).map((menu, menuKey) => (
+                  <div key={menuKey} className="hover relative">
+                    <div className="px-3 text-left md:cursor-pointer group hover:text-orange-500 transition-all duration-300">
+                      <a className="py-7 nav-item-text flex text-sm justify-between items-center md:pr-0 pr-5 group hover:text-orange-500 transition-all duration-300 ease-in-out not-italic">
+                        {menu?.name}
+                        <span className="text-xs md:ml-2 md:block group-hover:text-orange-500 transition-all duration-300 ease-in-out text-[#777777]">
+                          <i className="fa-solid fa-angle-down"></i>
+                        </span>
+                      </a>
+                      {menu.child && (
+                        <div>
+                          <div className=" absolute top-[65px] -left-[45px] hidden group-hover:md:block hover:md:block z-[800] ">
+                            <div
+                              className="bg-white min-w-[200px] text-center border border-white border-solid rounded px-6 py-4"
+                              style={{
+                                boxShadow:
+                                  "0 6px 16px rgb(0 0 0 / .08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgb(0 0 0 / .05)",
+                              }}
+                            >
+                              <ul>
+                                {cinemas.map((cinema, index) => (
+                                  <li
+                                    key={index}
+                                    className="text-sm text-black hover:text-[#f26b38] hover:pl-0.5 hover:border-l-4 capitalize hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300"
+                                  >
+                                    <a className="block py-2">{cinema.name}</a>
                                   </li>
                                 ))}
                               </ul>

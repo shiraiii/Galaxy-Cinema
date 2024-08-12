@@ -7,7 +7,7 @@ const cinemaSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  tiketPrice: {
+  ticketPrice: {
     type: Number,
     required: true,
   },

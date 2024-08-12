@@ -14,8 +14,10 @@ export const ROUTERS = {
     ADMIN: {
         MOVIE: "admin/movie",
         ADMIN: "admin",
-        CINEMACREATE:"admin/cinema/create",
         CINEMA:"admin/cinema",
+        SHOWTIME: "admin/showtime",
+        SHOWTIMECREATE: "admin/showtime/create",
+        CINEMACREATE:"admin/cinema/create",
         MOVIECREATE: "admin/movie/create",
         MOVIEUPDATE: "admin/movie/update/:id",
         USER:"admin/user",

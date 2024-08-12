@@ -14,7 +14,9 @@ const createShowtime = async (req, res, next) => {
 const getAllShowtime = async (req, res, next) => {
   try {
     const showtimes = await Showtime.find({})
-    res.send(showtimes)
+    if (!showtimes || showtimes.length === 0)
+      return res.status(404).send({ message: "No showtimes found" })
+    res.status(200).send(showtimes)
   } catch (err) {
     res.status(400).send(err)
     next(err)
@@ -22,12 +24,17 @@ const getAllShowtime = async (req, res, next) => {
 }
 
 const getShowtime = async (req, res, next) => {
-  const _id = req.params.id
+  const movieId = req.params.movieId
+  console.log("Received movieId:", movieId)
   try {
-    const showtime = await Showtime.findById(_id)
-    if (!showtime) return res.sendStatus(404)
-    return res.send(showtime)
+    const showtimes = await Showtime.find({ movieId })
+    if (!showtimes.length) {
+      console.log("No showtimes found for movieId:", movieId)
+      return res.sendStatus(404)
+    }
+    return res.send(showtimes)
   } catch (err) {
+    console.error("Error in getShowtimeByMovieId:", err)
     res.status(400).send(err)
     next(err)
   }

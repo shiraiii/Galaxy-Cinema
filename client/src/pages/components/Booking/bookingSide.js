@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import "../movie-card/moviecard.css"
 
-const MovieContent = ({ data }) => {
+const BookingSide = ({ data }) => {
   const navigate = useNavigate()
   return (
     <div className="movie__content">
@@ -84,4 +84,4 @@ const MovieContent = ({ data }) => {
   )
 }
 
-export default MovieContent
+export default BookingSide

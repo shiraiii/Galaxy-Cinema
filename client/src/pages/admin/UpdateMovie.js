@@ -8,6 +8,7 @@ import OutlinedInput from "@mui/material/OutlinedInput"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import FormControl from "@mui/material/FormControl"
+import { useTheme } from "@mui/material/styles"
 import ListItemText from "@mui/material/ListItemText"
 import Select from "@mui/material/Select"
 import Checkbox from "@mui/material/Checkbox"
@@ -45,7 +46,11 @@ const UpdateUser = () => {
 
   const [genres, setGenres] = useState([])
 
+  const theme = useTheme()
+
   const genresOpt = [
+    "Hài",
+    "Hoạt hình",
     "Hành động",
     "giả tưởng",
     "phiêu lưu",
@@ -65,6 +70,25 @@ const UpdateUser = () => {
         width: 250,
       },
     },
+  }
+
+  function getStyles(genre, genresOpt, theme) {
+    return {
+      fontWeight:
+        genresOpt.indexOf(genre) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    }
+  }
+
+  const handleGenreChange = (e) => {
+    const { value } = e.target
+
+    setGenres((prevGenres) => {
+      return value
+        .filter((genre) => prevGenres.includes(genre))
+        .concat(prevGenres.filter((genre) => !value.includes(genre)))
+    })
   }
 
   useEffect(() => {
@@ -90,6 +114,7 @@ const UpdateUser = () => {
         setEndDate(dayjs(response.data.endDate))
         console.log("Fetched genres:", fectcGenres)
         setGenres(fectcGenres)
+        console.log(genresOpt)
       } catch (err) {
         console.log(err)
       }
@@ -233,10 +258,9 @@ const UpdateUser = () => {
               renderValue={(selected) => selected.join(", ")}
               MenuProps={MenuProps}
             >
-              {genresOpt.map((genre) => (
-                <MenuItem key={genre} value={genre}>
-                  <Checkbox checked={genres.includes(genre)} />
-                  <ListItemText primary={genre} />
+              {genresOpt.map((genre, index) => (
+                <MenuItem key={genre + "-" + index} value={genre}>
+                  {genre}
                 </MenuItem>
               ))}
             </Select>

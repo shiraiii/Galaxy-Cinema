@@ -3,17 +3,17 @@ import axios from "axios"
 import { useNavigate, Link } from "react-router-dom"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"
+import { useTheme } from "@mui/material"
 import dayjs from "dayjs"
 import OutlinedInput from "@mui/material/OutlinedInput"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import FormControl from "@mui/material/FormControl"
-import ListItemText from "@mui/material/ListItemText"
 import Select from "@mui/material/Select"
-import Checkbox from "@mui/material/Checkbox"
 
 const CreateMovie = () => {
   const navigate = useNavigate()
+  const theme = useTheme()
 
   const [userInput, setUserInput] = useState({
     movieName: "",
@@ -33,17 +33,12 @@ const CreateMovie = () => {
     endDate: dayjs(),
   })
 
-  const [errorMessage, setErrorMessage] = useState(null)
-
-  const today = dayjs()
-
-  const genres = [
+  const genresOpt = [
     "Hành động",
     "giả tưởng",
     "phiêu lưu",
     "kinh diễn",
-    "văn hòa",
-    "văn hòa",
+    "văn hóa",
     "tốc nhiệm",
     "lãng mạn",
     "tâm lý",
@@ -60,6 +55,14 @@ const CreateMovie = () => {
     },
   }
 
+  function getStyles(genre, genresOpt, theme) {
+    return {
+      fontWeight:
+        genresOpt.indexOf(genre) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    }
+  }
   const onChangeHandle = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value })
   }
@@ -149,10 +152,13 @@ const CreateMovie = () => {
               renderValue={(selected) => selected.join(", ")}
               MenuProps={MenuProps}
             >
-              {genres.map((genre) => (
-                <MenuItem key={genre} value={genre}>
-                  <Checkbox checked={userInput.genres.indexOf(genre) > -1} />
-                  <ListItemText primary={genre} />
+              {genresOpt.map((genre, index) => (
+                <MenuItem
+                  key={genre + "-" + index}
+                  value={genre}
+                  style={getStyles(genre, genresOpt, theme)}
+                >
+                  {genre}
                 </MenuItem>
               ))}
             </Select>
