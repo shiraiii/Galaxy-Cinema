@@ -3,6 +3,12 @@ import { Link, useParams } from "react-router-dom"
 import BookingSide from "./bookingSide"
 import MovieContent from "./moviecontent"
 import MovieShowtime from "./movieshowtime"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const Booking = () => {
   const { id } = useParams()
@@ -38,15 +44,29 @@ const Booking = () => {
       .catch((err) => console.error("Error fetching showtimes: ", err))
   }, [id])
 
+  const today = dayjs()
+    .tz("Asia/Ho_Chi_Minh")
+    .startOf("day")
+    .format("YYYY-MM-DD")
+
+  const nowShowingMovies = data.filter((movie) => {
+    const releaseDate = dayjs(data.releaseDate)
+      .tz("Asia/Ho_Chi_Minh")
+      .startOf("day")
+      .format("YYYY-MM-DD")
+
+    const endDate = dayjs(data.endDate)
+      .tz("Asia/Ho_Chi_Minh")
+      .startOf("day")
+      .format("YYYY-MM-DD")
+
+    return releaseDate <= today && endDate >= today
+  })
+
   const releaseDate = new Date(movies.releaseDate)
   const formattedDate = `${releaseDate.getDate()}/${
     releaseDate.getMonth() + 1
   }/${releaseDate.getFullYear()}`
-
-  const today = new Date().toISOString().split("T")[0]
-  const nowShowingMovies = data.filter(
-    (movie) => movie.releaseDate <= today && movie.endDate >= today
-  )
 
   return (
     <>
@@ -246,7 +266,9 @@ const Booking = () => {
                 </div>
               </div>
               <MovieContent movies={movies}></MovieContent>
-              <MovieShowtime showtimes={showtimes}></MovieShowtime>
+              {showtimes.length ? (
+                <MovieShowtime showtimes={showtimes}></MovieShowtime>
+              ) : null}
             </div>
           </div>
           <div className="hidden screen1200:block lg:col-span-2 w-full overflow-hidden">

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react"
 import Moremovie from "./Moremovie-index"
 import Moviecard from "../movie-card/moviecard"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const Upcoming = () => {
   const [movies, setMovies] = useState([])
@@ -11,9 +17,19 @@ const Upcoming = () => {
       .then((data) => setMovies(data))
   }, [])
 
-  const today = new Date().toISOString().split("T")[0]
+  const today = dayjs()
+    .tz("Asia/Ho_Chi_Minh")
+    .startOf("day")
+    .format("YYYY-MM-DD")
 
-  const upcomingMovies = movies.filter((movie) => movie.releaseDate > today)
+  const upcomingMovies = movies.filter((movie) => {
+    const releaseDate = dayjs(movie.releaseDate)
+      .tz("Asia/Ho_Chi_Minh")
+      .startOf("day")
+      .format("YYYY-MM-DD")
+
+    return releaseDate > today
+  })
 
   return (
     <div className="movies">

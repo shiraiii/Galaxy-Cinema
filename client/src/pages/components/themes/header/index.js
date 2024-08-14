@@ -8,6 +8,12 @@ import SignUp from "../../signup/signup"
 import DataUser from "../../data-user/dataUser"
 import AppContext from "../../AppContext"
 import MovieCardHeader from "../../movie-card/moviecard-header"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const Header = () => {
   const [menus, setMenus] = useState([{}])
@@ -41,13 +47,33 @@ const Header = () => {
       .then((data) => setCinemas(data))
   }, [])
 
-  const today = new Date().toISOString().split("T")[0]
+  const today = dayjs()
+    .tz("Asia/Ho_Chi_Minh")
+    .startOf("day")
+    .format("YYYY-MM-DD")
 
-  const upcomingMovies = movies.filter((movie) => movie.releaseDate > today)
+  const nowShowingMovies = movies.filter((movie) => {
+    const releaseDate = dayjs(movie.releaseDate)
+      .tz("Asia/Ho_Chi_Minh")
+      .startOf("day")
+      .format("YYYY-MM-DD")
 
-  const nowShowingMovies = movies.filter(
-    (movie) => movie.releaseDate <= today && movie.endDate >= today
-  )
+    const endDate = dayjs(movie.endDate)
+      .tz("Asia/Ho_Chi_Minh")
+      .startOf("day")
+      .format("YYYY-MM-DD")
+
+    return releaseDate <= today && endDate >= today
+  })
+
+  const upcomingMovies = movies.filter((movie) => {
+    const releaseDate = dayjs(movie.releaseDate)
+      .tz("Asia/Ho_Chi_Minh")
+      .startOf("day")
+      .format("YYYY-MM-DD")
+
+    return releaseDate > today
+  })
   return (
     <>
       <header className="Header_header_iG0T4 pt-5 pb-2 lg:pt-3">

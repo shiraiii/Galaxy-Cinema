@@ -1,4 +1,4 @@
-import { BlogProvider, TabsProvider, useBlogs, useTabs } from "./TabsContext";
+import { BlogProvider, TabsProvider,ShowtimeProvider, useBlogs, useTabs, useShowtime } from "./TabsContext";
 
 export const Tabs = ({children, defaultIndex}) => {
     return <TabsProvider defaultIndex={defaultIndex}>{children}</TabsProvider>;
@@ -19,11 +19,6 @@ export const TabPanel = ({index, children}) => {
     return activeTab === index? <div className="tabPanel grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-4 gap-6 mb-10 " onClick={() => setActiveTab(index)}>{children}</div> : null
 }
 
-
-
-
-
-
 export const Blogs = ({children, defaultIndex}) => {
     return <BlogProvider defaultIndex={defaultIndex}>{children}</BlogProvider>;
 }
@@ -42,4 +37,26 @@ export const BlogTab = ({index, children}) => {
 export const BlogPanel = ({index, children}) => {
     const {activeBlog} = useBlogs();
     return activeBlog === index? <div className="grid md:grid-cols-2 md:gap-x-6 gap-4">{children}</div>:null
+}
+
+export const ShowtimeContainer = ({children, defaultIndex}) => {
+    return <ShowtimeProvider defaultIndex={defaultIndex}>{children}</ShowtimeProvider>;
+}
+
+export const ShowtimeList = ({index,children}) => {
+    const {activeShowtime} = useShowtime();
+    return activeShowtime === index? <div className="showtime__list">{children}</div>:null
+}
+
+export const ShowtimeTab = ({index, children}) => {
+    const {activeShowtime, setActiveShowtime} = useShowtime();
+    const activeClass = 'flex flex-wrap items-center capitalize text-center text-sm w-[80px] h-[65px] rounded-[5px] py-2 cursor-pointer bg-[#034ea2] text-white'
+    const inactiveClass = 'flex flex-wrap items-center capitalize text-center text-sm w-[80px] h-[65px] rounded-[5px] py-2 cursor-pointer'
+    return (
+<a className={activeShowtime === index ? activeClass : inactiveClass} onClick={() => setActiveShowtime(index)}>{children}</a>
+    )
+}
+
+export const ShowtimePanel = ({children}) => {
+    return <div>{children}</div>
 }

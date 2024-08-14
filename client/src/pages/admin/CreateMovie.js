@@ -10,6 +10,11 @@ import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import FormControl from "@mui/material/FormControl"
 import Select from "@mui/material/Select"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const CreateMovie = () => {
   const navigate = useNavigate()
@@ -29,7 +34,7 @@ const CreateMovie = () => {
     duration: "",
     votes: 0,
     nation: "",
-    releaseDate: dayjs().subtract(1, "day"),
+    releaseDate: dayjs(),
     endDate: dayjs(),
   })
 
@@ -83,13 +88,21 @@ const CreateMovie = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault()
+      const releaseDate = dayjs(userInput.releaseDate).utc().format()
+      const endDate = dayjs(userInput.endDate).utc().format()
+      const data = {
+        ...userInput,
+        releaseDate,
+        endDate,
+      }
       const option = {
         method: "POST",
         url: "http://localhost:5000/api/v1/movie/createMovie",
-        data: userInput,
+        data,
       }
       const response = await axios(option)
       console.log(response.data)
+      console.log(dayjs(releaseDate).tz("Asia/Ho_Chi_Minh").format())
       navigate("/admin/movie")
     } catch (err) {
       console.log(err)
@@ -136,15 +149,13 @@ const CreateMovie = () => {
               onChange={onChangeHandle}
             ></input>
           </span>
-          <FormControl
-            className="w-full mb-1 relative h-auto border inline-flex itemscenter min-w-0 text-sm bg-white rounded transition-all duration-500 "
-            sx={{ m: 1, width: 300 }}
-          >
+          <FormControl fullWidth>
             <InputLabel id="demo-multiple-checkbox-label">Thể loại</InputLabel>
             <Select
               labelId="demo-multiple-checkbox-label"
               id="genres"
               name="genres"
+              label="Thể loại"
               multiple
               value={userInput.genres}
               onChange={handleGenreChange}
@@ -346,7 +357,7 @@ const CreateMovie = () => {
             <span className="w-1/2">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  value={userInput.releaseDate}
+                  value={dayjs(userInput.releaseDate).tz("Asia/Ho_Chi_Minh")}
                   views={["year", "month", "day"]}
                   id="releaseDate"
                   onChange={(date) => handleDateChange(date, "releaseDate")}
@@ -361,7 +372,7 @@ const CreateMovie = () => {
             </label>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                value={userInput.endDate}
+                value={dayjs(userInput.endDate).tz("Asia/Ho_Chi_Minh")}
                 disablePast
                 views={["year", "month", "day"]}
                 id="endDate"

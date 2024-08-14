@@ -5,7 +5,7 @@ const checkCurrentUser = require("../middleware/checkCurrentUser")
 
 router.route("/").get(checkCurrentUser, authController.getCurrentUser)
 
-router.route("/login").post(authController.login)
+router.route("/login").post(checkCurrentUser, authController.login)
 
 router.route("/register").post(authController.register)
 

@@ -7,6 +7,7 @@ export const ROUTERS = {
         BOOKING: "booking/:id",
         UPCOMING: "phim-sap-chieu",
         IMAX: "phim-imax",
+        BOOKINGSEAT:"dat-ve/:id"
 
     
         

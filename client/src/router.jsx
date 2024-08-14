@@ -21,6 +21,7 @@ import CreateCinema from './pages/admin/CreateCinema';
 import CinemaAdmin from './pages/admin/CinemaAdmin';
 import CreateShowTime from './pages/admin/CreateShowTime';
 import ShowTimeAdmin from './pages/admin/ShowTimeAdmin';
+import BookingSeats from './pages/components/Booking/bookingseats';
 
 const RenderUserRouter = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -61,6 +62,10 @@ const RenderUserRouter = () => {
         {
           path: ROUTERS.USER.PROFILE,
           component: <UserDetails></UserDetails>
+        },
+        {
+          path: ROUTERS.USER.BOOKINGSEAT,
+          component: <BookingSeats></BookingSeats>
         },
         {
           path: ROUTERS.ADMIN.ADMIN,
