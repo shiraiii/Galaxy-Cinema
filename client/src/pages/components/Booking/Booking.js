@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import BookingSide from "./bookingSide"
 import MovieContent from "./moviecontent"
 import MovieShowtime from "./movieshowtime"
+import { filterAndSortMovies } from "../../../utils/movieUtils"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -49,19 +50,7 @@ const Booking = () => {
     .startOf("day")
     .format("YYYY-MM-DD")
 
-  const nowShowingMovies = data.filter((movie) => {
-    const releaseDate = dayjs(data.releaseDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    const endDate = dayjs(data.endDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    return releaseDate <= today && endDate >= today
-  })
+  const nowShowingMovies = filterAndSortMovies(data, today, "nowShowing")
 
   const releaseDate = new Date(movies.releaseDate)
   const formattedDate = `${releaseDate.getDate()}/${

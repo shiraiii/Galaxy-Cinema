@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Moremovie from "./Moremovie-index"
 import MovieCardIMAX from "../movie-card/moviecard-imax"
+import { filterAndSortMovies } from "../../../utils/movieUtils"
 
 const IMAX = () => {
   const [movies, setMovies] = useState([])
@@ -12,10 +13,8 @@ const IMAX = () => {
   }, [])
 
   const today = new Date().toISOString().split("T")[0]
+  const nowShowingMovies = filterAndSortMovies(movies, today, "nowShowing")
 
-  const nowShowingMovies = movies.filter(
-    (movie) => movie.releaseDate <= today && movie.endDate >= today
-  )
   return (
     <div className="movies">
       <div className="movies__wrapper py-12 pt-6 my-0 mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 lg:max-w-4xl md:max-w-4xl md:px-4 sm:px-[45px] px-[16px] ">

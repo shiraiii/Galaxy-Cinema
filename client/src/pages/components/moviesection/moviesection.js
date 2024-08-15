@@ -3,6 +3,7 @@ import "./moviesection.css"
 import { Tabs, Tab, TabsList, TabPanel } from "../Tabs/Tabs"
 import Moviecard from "../movie-card/moviecard"
 import MovieCardIMAX from "../movie-card/moviecard-imax"
+import { filterAndSortMovies } from "../../../utils/movieUtils"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -36,28 +37,8 @@ const Moviesection = () => {
     .startOf("day")
     .format("YYYY-MM-DD")
 
-  const nowShowingMovies = movies.filter((movie) => {
-    const releaseDate = dayjs(movie.releaseDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    const endDate = dayjs(movie.endDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    return releaseDate <= today && endDate >= today
-  })
-
-  const upcomingMovies = movies.filter((movie) => {
-    const releaseDate = dayjs(movie.releaseDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    return releaseDate > today
-  })
+  const nowShowingMovies = filterAndSortMovies(movies, today, "nowShowing")
+  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming")
 
   return (
     <div className="pb-12 pt-6 my-0 mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 lg:max-w-4xl md:max-w-4xl md:px-4 sm:px-[45px] px-[16px] ">

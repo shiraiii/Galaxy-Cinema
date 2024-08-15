@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Moremovie from "./Moremovie-index"
 import Moviecard from "../movie-card/moviecard"
 import dayjs from "dayjs"
+import { filterAndSortMovies } from "../../../utils/movieUtils"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 
@@ -22,14 +23,7 @@ const Upcoming = () => {
     .startOf("day")
     .format("YYYY-MM-DD")
 
-  const upcomingMovies = movies.filter((movie) => {
-    const releaseDate = dayjs(movie.releaseDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    return releaseDate > today
-  })
+  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming")
 
   return (
     <div className="movies">

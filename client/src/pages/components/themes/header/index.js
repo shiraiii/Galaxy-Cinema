@@ -11,6 +11,7 @@ import MovieCardHeader from "../../movie-card/moviecard-header"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import { filterAndSortMovies } from "../../../../utils/movieUtils"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -52,28 +53,9 @@ const Header = () => {
     .startOf("day")
     .format("YYYY-MM-DD")
 
-  const nowShowingMovies = movies.filter((movie) => {
-    const releaseDate = dayjs(movie.releaseDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
+  const nowShowingMovies = filterAndSortMovies(movies, today, "nowShowing")
+  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming")
 
-    const endDate = dayjs(movie.endDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    return releaseDate <= today && endDate >= today
-  })
-
-  const upcomingMovies = movies.filter((movie) => {
-    const releaseDate = dayjs(movie.releaseDate)
-      .tz("Asia/Ho_Chi_Minh")
-      .startOf("day")
-      .format("YYYY-MM-DD")
-
-    return releaseDate > today
-  })
   return (
     <>
       <header className="Header_header_iG0T4 pt-5 pb-2 lg:pt-3">
