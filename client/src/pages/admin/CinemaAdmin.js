@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext } from "react"
 import { Link } from "react-router-dom"
 import axios from "axios"
+import AppContext from "../../context/AppContext"
 
 const CinemaAdmin = () => {
-  const [data, setData] = useState([])
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/cinema/getAllCinema")
-      .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch((err) => console.log(err))
-  }, [])
+  const { cinemas } = useContext(AppContext)
 
   const handleDelete = (id) => {
     axios
@@ -51,7 +46,7 @@ const CinemaAdmin = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((cinema, index) => {
+            {cinemas?.map((cinema, index) => {
               return (
                 <tr key={index}>
                   <td>{cinema.name}</td>

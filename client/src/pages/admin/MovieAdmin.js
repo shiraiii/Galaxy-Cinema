@@ -1,18 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useContext } from "react"
 import axios from "axios"
-import { Link, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
+import AppContext from "../../context/AppContext"
 
 const Movies = () => {
-  const { id } = useParams()
-
-  const [data, setData] = useState([])
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/movie/getAllMovie")
-      .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch((err) => console.log(err))
-  }, [])
+  const { movies } = useContext(AppContext)
 
   const handleDelete = (id) => {
     axios
@@ -52,7 +44,7 @@ const Movies = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((movie, index) => {
+            {movies?.map((movie, index) => {
               return (
                 <tr key={index}>
                   <td>{movie.movieName}</td>
