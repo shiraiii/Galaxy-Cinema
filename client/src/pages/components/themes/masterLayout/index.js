@@ -2,12 +2,46 @@ import { memo, useCallback, useEffect, useReducer, useState } from "react"
 import Header from "../header"
 import Footer from "../footer"
 import { AppReducer } from "../../../../reducer/AppReducer"
-import AppContext from "../../AppContext"
+import AppContext from "../../../../context/AppContext"
 import axios from "axios"
 import manageToken from "../../../../utils/manageToken"
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+import { filterAndSortMovies } from "../../../../utils/movieUtils"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 const MasterLayout = ({ children, ...props }) => {
   const initialState = { user: null }
   const [state, dispatch] = useReducer(AppReducer, initialState)
+  const [showModal, setShowModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(true)
+  const [showSignUp, setShowSignUp] = useState(false)
+  const [showSideNav, setShowSideNav] = useState(false)
+  const [menus, setMenus] = useState([{}])
+  const [movies, setMovies] = useState([{}])
+  const [cinemas, setCinemas] = useState([{}])
+  const [isAuth, setIsAuth] = useState(false)
+  const [redirectPath, setRedirectPath] = useState(null)
+
+  useEffect(() => {
+    fetch("/api/menus")
+      .then((res) => res.json())
+      .then((data) => setMenus(data))
+  }, [])
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/v1/movie/getAllMovie")
+      .then((res) => res.json())
+      .then((data) => setMovies(data))
+  }, [])
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/v1/cinema/getAllCinema")
+      .then((res) => res.json())
+      .then((data) => setCinemas(data))
+  }, [])
 
   const checkCurrentUser = useCallback(async () => {
     try {
@@ -25,7 +59,7 @@ const MasterLayout = ({ children, ...props }) => {
         dispatch({ type: "CURRENT_USER", payload: { userName } })
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }, [dispatch])
   useEffect(() => {
@@ -36,8 +70,40 @@ const MasterLayout = ({ children, ...props }) => {
     return () => cleanup()
   }, [])
 
+  const today = dayjs()
+    .tz("Asia/Ho_Chi_Minh")
+    .startOf("day")
+    .format("YYYY-MM-DD")
+
+  const nowShowingMovies = filterAndSortMovies(movies, today, "nowShowing")
+  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming")
   return (
-    <AppContext.Provider value={{ state, dispatch }}>
+    <AppContext.Provider
+      value={{
+        state,
+        dispatch,
+        showModal,
+        setShowModal,
+        showLoginModal,
+        setShowLoginModal,
+        showSignUp,
+        setShowSignUp,
+        showSideNav,
+        setShowSideNav,
+        nowShowingMovies,
+        upcomingMovies,
+        movies,
+        setMovies,
+        cinemas,
+        setCinemas,
+        menus,
+        setMenus,
+        isAuth,
+        setIsAuth,
+        redirectPath,
+        setRedirectPath,
+      }}
+    >
       <div {...props}>
         <Header></Header>
         {children}

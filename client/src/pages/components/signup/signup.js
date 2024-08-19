@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import AppContext from "../AppContext"
+import AppContext from "../../../context/AppContext"
 import axios from "axios"
 
-const SignUp = ({ onClose, openModal }) => {
+const SignUp = () => {
   const [name, setName] = useState()
   const [validname, setValidName] = useState(false)
 
@@ -21,7 +21,8 @@ const SignUp = ({ onClose, openModal }) => {
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
   const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
-  const { dispatch } = useContext(AppContext)
+  const { dispatch, setShowLoginModal, setShowSignUp, setShowModal } =
+    useContext(AppContext)
   const [userInput, setUserInput] = useState({
     name: "",
     email: "",
@@ -49,7 +50,7 @@ const SignUp = ({ onClose, openModal }) => {
       localStorage.setItem("token", token)
       dispatch({ type: "CURRENT_USER", payload: { userName } })
       if (status == "success") {
-        onClose(false)
+        setShowModal(false)
       }
       console.log(status)
       console.log(userName)
@@ -181,6 +182,7 @@ const SignUp = ({ onClose, openModal }) => {
             <span className="w-full mb-1 relative h-auto border inline-flex items-center min-w-0 text-sm bg-white rounded transition-all duration-300">
               <input
                 required
+                autoComplete="false"
                 type="password"
                 id="password"
                 placeholder="Nhập mật khẩu"
@@ -224,6 +226,7 @@ const SignUp = ({ onClose, openModal }) => {
               <input
                 required
                 type="password"
+                autoComplete="false"
                 id="confirmPassword"
                 placeholder="Nhập lại mật khẩu"
                 className="bg-transparent w-full h-9 focus:ring-2 focus:outline-blue-500 focus:rounded px-2"
@@ -253,7 +256,11 @@ const SignUp = ({ onClose, openModal }) => {
       </div>
       <button
         className="react-responsive-modal-closeButton"
-        onClick={() => onClose(false)}
+        onClick={() => {
+          setShowModal(false)
+          setShowLoginModal(true)
+          setShowSignUp(false)
+        }}
       >
         <span className="inline-flex bg-[#ececec] rounded-full w-[24px] h-[24px] items-center justify-center">
           <img
@@ -265,6 +272,19 @@ const SignUp = ({ onClose, openModal }) => {
           ></img>
         </span>
       </button>
+      <div className="text-[14px] pt-6 border-t-2 text-center">
+        <span>Bạn đã có tài khoản?</span>
+        <button
+          type="button"
+          className="rounded-md hover:bg-[#e38601] transition-all duration-300 min-w-[135px] w-full focus:outline-none focus:ring-[#e38601] text-sm text-center inline-flex items-center dark:hover:bg-[#e38601] dark:focus:ring-[#e38601] justify-center border border-[#ff953f] text-[#f58020] hover:text-white w-auto px-6 py-[6px] font-light"
+          onClick={() => {
+            setShowLoginModal(true)
+            setShowSignUp(false)
+          }}
+        >
+          <span className="block">Đăng nhập</span>
+        </button>
+      </div>
     </>
   )
 }

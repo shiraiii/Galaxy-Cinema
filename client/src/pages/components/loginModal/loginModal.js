@@ -2,13 +2,19 @@ import React, { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import "./loginModal.css"
 import axios from "axios"
-import AppContext from "../AppContext"
-// import axiosInstance from "../../../app/api/axiosInstance"
+import AppContext from "../../../context/AppContext"
 
-const LoginModal = ({ onClose }) => {
-  const [admin, setAdmin] = useState(false)
+const LoginModal = () => {
   const navigate = useNavigate()
-  const { dispatch } = useContext(AppContext)
+  const {
+    dispatch,
+    setShowLoginModal,
+    setShowSignUp,
+    setShowModal,
+    setIsAuth,
+    redirectPath,
+    setRedirectPath,
+  } = useContext(AppContext)
   const [userInput, setUserInput] = useState({
     email: "",
     password: "",
@@ -34,14 +40,17 @@ const LoginModal = ({ onClose }) => {
       sessionStorage.setItem("userInfo", userString)
       window.localStorage.setItem("token", token)
       dispatch({ type: "CURRENT_USER", payload: { userName } })
+      setIsAuth(true)
       if (roles == "Admin") {
-        setAdmin(true)
-        onClose(false)
+        setShowModal(false)
         // navigate("/admin")
       }
       if (roles == "User") {
-        setAdmin(false)
-        onClose(false)
+        setShowModal(false)
+        if (redirectPath) {
+          navigate(redirectPath)
+          setRedirectPath(null)
+        }
       }
     } catch (err) {
       setErrorMessage(err.response.data.message)
@@ -119,7 +128,11 @@ const LoginModal = ({ onClose }) => {
       </div>
       <button
         className="react-responsive-modal-closeButton"
-        onClick={() => onClose(false)}
+        onClick={() => {
+          setShowModal(false)
+          setShowLoginModal(true)
+          setShowSignUp(false)
+        }}
       >
         <span
           className="inline-flex bg-[#ececec] rounded-full w-[24px] h-[24px] items-center justify-center"
@@ -135,6 +148,19 @@ const LoginModal = ({ onClose }) => {
           ></img>
         </span>
       </button>
+      <div className="log__footer text-[14px] pt-6 border-t-2 text-center">
+        <span>Bạn chưa có tài khoản</span>
+        <button
+          type="button"
+          className="rounded-md hover:bg-[#e38601] transition-all duration-300 min-w-[135px] w-full focus:outline-none focus:ring-[#e38601] text-sm text-center inline-flex items-center dark:hover:bg-[#e38601] dark:focus:ring-[#e38601] justify-center border border-[#ff953f] text-[#f58020] hover:text-white w-auto px-6 py-[6px] font-light"
+          onClick={() => {
+            setShowSignUp(true)
+            setShowLoginModal(false)
+          }}
+        >
+          <span className="block">Đăng ký</span>
+        </button>
+      </div>
     </>
   )
 }

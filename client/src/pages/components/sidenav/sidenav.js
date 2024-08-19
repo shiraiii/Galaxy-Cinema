@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import DataUserRe from "../data-user/dataUserRe"
+import DataUserResponsive from "../data-user/dataUserRe"
 
 const Sidenav = ({ onClose, user, signOut }) => {
   const [menus, setMenus] = useState([{}])
@@ -39,7 +39,7 @@ const Sidenav = ({ onClose, user, signOut }) => {
 
             <div className="flex items-center flex-wrap justify-end flex-auto mr-1 hidden"></div>
           </div>
-          <DataUserRe></DataUserRe>
+          <DataUserResponsive></DataUserResponsive>
         </>
       ) : (
         <>

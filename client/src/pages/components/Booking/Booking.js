@@ -14,7 +14,7 @@ dayjs.extend(timezone)
 const Booking = () => {
   const { id } = useParams()
   const [movies, setMovies] = useState("")
-  const [showtimes, setShowtimes] = useState("")
+  const [showtimes, setShowtimes] = useState([])
   const [data, setData] = useState([])
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Booking = () => {
   }, [])
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/showtime/getShowtime/" + id)
+    fetch(`http://localhost:5000/api/v1/showtime/getShowtime/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Network response was not ok " + res.statusText)
@@ -40,10 +40,10 @@ const Booking = () => {
         return res.json()
       })
       .then((data) => {
-        setShowtimes(data)
+        setShowtimes(Array.isArray(data) ? data : [])
       })
       .catch((err) => console.error("Error fetching showtimes: ", err))
-  }, [id])
+  }, [])
 
   const today = dayjs()
     .tz("Asia/Ho_Chi_Minh")
@@ -56,6 +56,10 @@ const Booking = () => {
   const formattedDate = `${releaseDate.getDate()}/${
     releaseDate.getMonth() + 1
   }/${releaseDate.getFullYear()}`
+
+  const uniqueShowtimes = showtimes.filter((showtime) => {
+    return dayjs(showtime.startDate).utc().tz("Asia/Ho_Chi_Minh").isAfter(today)
+  })
 
   return (
     <>
@@ -255,7 +259,7 @@ const Booking = () => {
                 </div>
               </div>
               <MovieContent movies={movies}></MovieContent>
-              {showtimes.length ? (
+              {uniqueShowtimes ? (
                 <MovieShowtime showtimes={showtimes}></MovieShowtime>
               ) : null}
             </div>

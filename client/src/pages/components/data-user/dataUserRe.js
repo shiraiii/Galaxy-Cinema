@@ -1,12 +1,8 @@
 import React from "react"
-import AppContext from "../AppContext"
+import AppContext from "../../../context/AppContext"
 import { useContext } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import userDetails from "../userDetails/userDetails"
-const DataUserRe = (props) => {
+const DataUserResponsive = (props) => {
   const { state, dispatch } = useContext(AppContext)
-  const { user } = state
-  const navigate = useNavigate()
   const dataString = sessionStorage.getItem("userInfo")
   const data = JSON.parse(dataString)
 
@@ -58,4 +54,4 @@ const DataUserRe = (props) => {
   )
 }
 
-export default DataUserRe
+export default DataUserResponsive

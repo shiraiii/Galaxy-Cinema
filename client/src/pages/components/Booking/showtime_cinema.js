@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
-import React from "react"
+import React, { useContext } from "react"
+import AppContext from "../../../context/AppContext"
 import { useNavigate } from "react-router-dom"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -10,6 +11,21 @@ dayjs.extend(timezone)
 dayjs.locale("vi")
 const Showtime_Cinema = ({ showtimes, cinemas }) => {
   const navigate = useNavigate()
+  const { isAuth, setIsAuth, setShowModal, setRedirectPath } =
+    useContext(AppContext)
+  const bookingMovie = (showtimeId) => {
+    if (isAuth) {
+      navigate(`/dat-ve/${showtimeId}`)
+    } else {
+      if (setRedirectPath) {
+        setRedirectPath(`/dat-ve/${showtimeId}`)
+        setShowModal(true)
+      } else {
+        console.error("setRedirectPath not found")
+      }
+    }
+  }
+
   return cinemas.map((cinema, index) => {
     const cinemaShowtimes = showtimes
       .filter((showtime) => showtime.cinemaId === cinema._id)
@@ -40,7 +56,7 @@ const Showtime_Cinema = ({ showtimes, cinemas }) => {
             {cinemaShowtimes.map((showtime) => {
               return (
                 <button
-                  onClick={() => navigate(`/dat-ve/${showtime._id}`)}
+                  onClick={() => bookingMovie(showtime._id)}
                   key={showtime._id}
                   className="py-2 md:px-8 px-6 border rouned text-sm font-normal text-[#333333] hover:bg-[#034EA2] hover:text-white active:bg-[#034EA2] transition-all duration-500 ease-in-out"
                 >

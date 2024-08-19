@@ -6,55 +6,35 @@ import LoginModal from "../../loginModal/loginModal"
 import Sidenav from "../../sidenav/sidenav"
 import SignUp from "../../signup/signup"
 import DataUser from "../../data-user/dataUser"
-import AppContext from "../../AppContext"
-import MovieCardHeader from "../../movie-card/moviecard-header"
+import HeaderNavigator from "./header-navigator"
+import AppContext from "../../../../context/AppContext"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
-import { filterAndSortMovies } from "../../../../utils/movieUtils"
+import HeaderMoreInfo from "./header-moreInfo"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const Header = () => {
-  const [menus, setMenus] = useState([{}])
-  const [movies, setMovies] = useState([{}])
-  const [cinemas, setCinemas] = useState([{}])
-  const [showModal, setShowModal] = useState(false)
-  const [showSignUp, setShowSignUp] = useState(false)
-  const [showSideNav, setShowSideNav] = useState(false)
-  const { state, dispatch } = useContext(AppContext)
+  const {
+    state,
+    dispatch,
+    showModal,
+    setShowModal,
+    showLoginModal,
+    setShowLoginModal,
+    showSignUp,
+    setShowSignUp,
+    showSideNav,
+    setShowSideNav,
+  } = useContext(AppContext)
   const { user } = state
   const signOut = () => {
     sessionStorage.removeItem("userInfo")
     localStorage.removeItem("token")
     dispatch({ type: "CURRENT_USER", payload: null })
   }
-  useEffect(() => {
-    fetch("/api/menus")
-      .then((res) => res.json())
-      .then((data) => setMenus(data))
-  }, [])
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/movie/getAllMovie")
-      .then((res) => res.json())
-      .then((data) => setMovies(data))
-  }, [])
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/cinema/getAllCinema")
-      .then((res) => res.json())
-      .then((data) => setCinemas(data))
-  }, [])
-
-  const today = dayjs()
-    .tz("Asia/Ho_Chi_Minh")
-    .startOf("day")
-    .format("YYYY-MM-DD")
-
-  const nowShowingMovies = filterAndSortMovies(movies, today, "nowShowing")
-  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming")
 
   return (
     <>
@@ -81,157 +61,7 @@ const Header = () => {
                 src="https://www.galaxycine.vn/_next/static/media/btn-ticket.42d72c96.webp"
               ></img>
             </a>
-            <div className="hidden screen1200:flex screen1200:grow screen1200:basis-full items-center gap-8 px-5 transition-all duration-300 ease-in-out">
-              <div className="hidden nav-item grow md:flex items-center justify-center">
-                <a className="md:block mr-4 hidden" href="#">
-                  <img
-                    style={{ width: 112, height: 36 }}
-                    className="max-w-min w-[84px] h-[27px] lg:w-[112px] lg:h-[36px] object-cover duration-500 ease-in-out group-hover:opacity-100 "
-                    src="https://www.galaxycine.vn/_next/static/media/btn-ticket.42d72c96.webp"
-                  ></img>
-                </a>
-                {menus?.slice(0, 1).map((menu, menuKey) => {
-                  return (
-                    <div key={menuKey} className="hover relative">
-                      <div className="px-3 text-left: md:cursor-pointer group hover:text-orange-500 transition-all duration-300">
-                        <a className="py-7 nav-item-text flex text-sm justify-between items-center md:pr-0 pr-5 group hover:text-orange-500 transition-all duration-300 ease-in-out not-italic">
-                          {menu?.name}
-                          <span className="text-xs md:ml-2 md:block group-hover:text-orange-500 transition-all duration-300 ease-in-out text-[#777777]">
-                            <i className="fa-solid fa-angle-down"></i>
-                          </span>
-                        </a>
-                        <div className="absolute top-[65px] -left-[45px] hidden group-hover:md:block hover:md:block z-[800] transition-all duration-300 ease-in-out">
-                          <div
-                            className="bg-white min-w-[250px] border border-white border-solid rounded px-6 py-4"
-                            style={{
-                              boxShadow:
-                                "0 6px 16px 0 rgba(0,0,0,.08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgba(0,0,0,.05)",
-                            }}
-                          >
-                            {menu.child &&
-                              menu.child
-                                .slice(0, 1)
-                                .map((childItem, childKey) => (
-                                  <div key={childKey} className="movie__show">
-                                    <div>
-                                      <span className="border-l-4 border-solid border-[#034ea2]"></span>
-                                      <a
-                                        type="button"
-                                        className="text-base font-normal text-[#333333] pl-2 inline cursor-pointer uppercase hover:text-orange-500 transition-all duration-300 ease-in-out"
-                                      >
-                                        {childItem?.name}
-                                      </a>
-                                      <ul className="flex flex-row gap-7 justify-between">
-                                        <MovieCardHeader
-                                          movies={nowShowingMovies}
-                                        ></MovieCardHeader>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                ))}
-                            {menu.child &&
-                              menu.child
-                                .slice(1, 2)
-                                .map((childItem, childKey) => (
-                                  <div key={childKey} className="movie__show">
-                                    <div>
-                                      <span className="border-l-4 border-solid border-[#034ea2]"></span>
-                                      <a
-                                        type="button"
-                                        className="text-base font-normal text-[#333333] pl-2 inline cursor-pointer uppercase hover:text-orange-500 transition-all duration-300 ease-in-out"
-                                      >
-                                        {childItem?.name}
-                                      </a>
-                                      <ul className="flex flex-row gap-7 justify-between">
-                                        <MovieCardHeader
-                                          movies={upcomingMovies}
-                                        ></MovieCardHeader>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-                {menus?.slice(1, 3).map((menu, menuKey) => (
-                  <div key={menuKey} className="hover relative">
-                    <div className="px-3 text-left md:cursor-pointer group hover:text-orange-500 transition-all duration-300">
-                      <a className="py-7 nav-item-text flex text-sm justify-between items-center md:pr-0 pr-5 group hover:text-orange-500 transition-all duration-300 ease-in-out not-italic">
-                        {menu?.name}
-                        <span className="text-xs md:ml-2 md:block group-hover:text-orange-500 transition-all duration-300 ease-in-out text-[#777777]">
-                          <i className="fa-solid fa-angle-down"></i>
-                        </span>
-                      </a>
-                      {menu.child && (
-                        <div>
-                          <div className=" absolute top-[65px] -left-[45px] hidden group-hover:md:block hover:md:block z-[800] ">
-                            <div
-                              className="bg-white min-w-[200px] text-center border border-white border-solid rounded px-6 py-4"
-                              style={{
-                                boxShadow:
-                                  "0 6px 16px rgb(0 0 0 / .08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgb(0 0 0 / .05)",
-                              }}
-                            >
-                              <ul>
-                                {menu.child.map((childItem, childKey) => (
-                                  <li
-                                    key={`${menuKey}-${childKey}`}
-                                    className="text-sm text-black hover:text-[#f26b38] hover:pl-0.5 hover:border-l-4 capitalize hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300"
-                                  >
-                                    <a className="block py-2">
-                                      {childItem.name}
-                                    </a>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                {menus?.slice(3, 4).map((menu, menuKey) => (
-                  <div key={menuKey} className="hover relative">
-                    <div className="px-3 text-left md:cursor-pointer group hover:text-orange-500 transition-all duration-300">
-                      <a className="py-7 nav-item-text flex text-sm justify-between items-center md:pr-0 pr-5 group hover:text-orange-500 transition-all duration-300 ease-in-out not-italic">
-                        {menu?.name}
-                        <span className="text-xs md:ml-2 md:block group-hover:text-orange-500 transition-all duration-300 ease-in-out text-[#777777]">
-                          <i className="fa-solid fa-angle-down"></i>
-                        </span>
-                      </a>
-                      {menu.child && (
-                        <div>
-                          <div className=" absolute top-[65px] -left-[45px] hidden group-hover:md:block hover:md:block z-[800] ">
-                            <div
-                              className="bg-white min-w-[200px] text-center border border-white border-solid rounded px-6 py-4"
-                              style={{
-                                boxShadow:
-                                  "0 6px 16px rgb(0 0 0 / .08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgb(0 0 0 / .05)",
-                              }}
-                            >
-                              <ul>
-                                {cinemas.map((cinema, index) => (
-                                  <li
-                                    key={index}
-                                    className="text-sm text-black hover:text-[#f26b38] hover:pl-0.5 hover:border-l-4 capitalize hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300"
-                                  >
-                                    <a className="block py-2">{cinema.name}</a>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <HeaderNavigator></HeaderNavigator>
             <div className="hidden screen1200:flex screen1200:grow screen1200:basis-6/12 screen1200:justify-end uppercase items-center relative transition-all duration-300">
               <div className="search-icon mr-4">
                 <a
@@ -246,102 +76,18 @@ const Header = () => {
                   <DataUser signOut={signOut} user={user}></DataUser>
                 </>
               ) : (
-                <>
-                  <a
-                    className="ml-3 text-sm text-[#777] capitalize cursor-pointer transition-all duration-300 hover:text-[#f26b38] "
-                    onClick={() => setShowModal("true")}
-                  >
-                    Đăng nhập
-                  </a>
-                  <div className="hover">
-                    <div className="join-button px-4 py-7 text-left md:cursor-pointer group transition-all duration-300 flex ">
-                      <a className="logo-header cursor-pointer logo__header grow-1 ">
-                        <img
-                          style={{ width: 99, height: 38 }}
-                          src="https://www.galaxycine.vn/_next/static/media/join-Gstar.24c52de9.svg"
-                        ></img>
-                      </a>
-                      <div className="absolute top-20 right-0 hidden group-hover:md:block hover:md:block z-[400] transition-all duration-300 ease-in-out">
-                        <div
-                          className="bg-white min-w-[849px] text-center border border-white border-solid rounded px-6 py-4"
-                          style={{
-                            boxShadow:
-                              "0 6px 16px rgb(0 0 0 / .08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgb(0 0 0 / .05)",
-                          }}
-                        >
-                          <div className="grid grid-cols-4 gap-5">
-                            <div className="flex flex-col justify-start items-center gap-5 pt-6">
-                              <img
-                                width={"84"}
-                                height={"80"}
-                                className="w-[85px] h-[80px]"
-                                style={{ color: "transparent" }}
-                                src="https://www.galaxycine.vn/_next/static/media/icon-rules.9c822007.png"
-                              ></img>
-                              <h2 className="text-sm font-bold not-italic capitalize text-center">
-                                Thể lệ
-                              </h2>
-                              <a className="w-[79px] h-8 leading-8 text-center text-[#f58020] border border-[#f58020] rounded text-[14px] font-bold not-italic hover:bg-[#f58020] hover:text-white transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] capitalize">
-                                Chi tiết
-                              </a>
-                            </div>
-                            <div className="flex flex-col justify-start items-center gap-5 pt-6">
-                              <img
-                                width={"125"}
-                                height={"80"}
-                                className="w-[126px] h-[80px]"
-                                style={{ color: "transparent" }}
-                                src="https://www.galaxycine.vn/_next/static/media/icon-login.fbbf1b2d.svg"
-                              ></img>
-                              <h2 className="text-sm font-bold not-italic capitalize text-center">
-                                Quyền lợi
-                              </h2>
-                              <a className="w-[79px] h-8 leading-8 text-center text-[#f58020] border border-[#f58020] rounded text-[14px] font-bold not-italic hover:bg-[#f58020] hover:text-white transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] capitalize">
-                                Chi tiết
-                              </a>
-                            </div>
-                            <div className="flex flex-col justify-start items-center gap-5 pt-6">
-                              <img
-                                width={"107"}
-                                height={"80"}
-                                className="w-[108px] h-[80px]"
-                                style={{ color: "transparent" }}
-                                src="https://www.galaxycine.vn/_next/static/media/faq.ce7c4be4.png"
-                              ></img>
-                              <h2 className="text-sm font-bold not-italic capitalize text-center">
-                                Hướng dẫn
-                              </h2>
-                              <a className="w-[79px] h-8 leading-8 text-center text-[#f58020] border border-[#f58020] rounded text-[14px] font-bold not-italic hover:bg-[#f58020] hover:text-white transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] capitalize">
-                                Chi tiết
-                              </a>
-                            </div>
-                            <div className="flex flex-col justify-between items-center gap-5">
-                              <img
-                                width={"84"}
-                                height={"80"}
-                                className="w-[85px] h-[80px]"
-                                style={{ color: "transparent" }}
-                                src="https://www.galaxycine.vn/_next/static/media/bear_glx.d5131c11.png"
-                              ></img>
-                              <h2 className="text-sm font-bold not-italic capitalize text-center">
-                                Đăng ký thành viên G-star nhận ngay ưu đãi
-                              </h2>
-                              <a className="w-[79px] h-8 leading-8 text-center text-[#f58020] border border-[#f58020] rounded text-[14px] font-bold not-italic hover:bg-[#f58020] hover:text-white transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] capitalize">
-                                Đăng ký
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
+                <HeaderMoreInfo></HeaderMoreInfo>
               )}
             </div>
             <div className="flex md:grow md:basis-6/12 justify-end screen1200:hidden">
               {!user ? (
                 <a className="text-sm text-[#777] capitalize cursor-pointer transition-all duration-300 hover:text-[#f26b38]">
-                  <span onClick={() => setShowModal(true)}>
+                  <span
+                    onClick={() => {
+                      setShowModal(true)
+                      setShowLoginModal(true)
+                    }}
+                  >
                     <i className="fa-regular fa-user inline align-baseline mr-1"></i>
                     Đăng nhập
                   </span>
@@ -392,66 +138,8 @@ const Header = () => {
                     "300ms ease 0s 1 normal none running react-responsive-modal-modal-in",
                 }}
               >
-                <LoginModal onClose={setShowModal} />
-                <div className="log__footer text-[14px] pt-6 border-t-2 text-center">
-                  <span>Bạn chưa có tài khoản</span>
-                  <button
-                    type="button"
-                    className="rounded-md hover:bg-[#e38601] transition-all duration-300 min-w-[135px] w-full focus:outline-none focus:ring-[#e38601] text-sm text-center inline-flex items-center dark:hover:bg-[#e38601] dark:focus:ring-[#e38601] justify-center border border-[#ff953f] text-[#f58020] hover:text-white w-auto px-6 py-[6px] font-light"
-                    onClick={() => {
-                      setShowSignUp(true)
-                      setShowModal(false)
-                    }}
-                  >
-                    <span className="block">Đăng ký</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {showSignUp && (
-        <div>
-          <div className="react-responsive-modal-root" data-testid="root">
-            <div
-              className="react-responsive-modal-overlay"
-              data-testid="overlay"
-              aria-hidden="true"
-              style={{
-                animation:
-                  "300ms ease 0s 1 normal none running react-responsive-modal-overlay-in",
-              }}
-            ></div>
-            <div
-              className="react-responsive-modal-container react-responsive-modal-containerCenter"
-              data-testid="modal-container"
-            >
-              <div
-                className="react-responsive-modal-modal modal-sx px-6 py-10 m-0"
-                role="dialog"
-                aria-modal="true"
-                data-testid="modal"
-                tabIndex="-1"
-                style={{
-                  animation:
-                    "300ms ease 0s 1 normal none running react-responsive-modal-modal-in",
-                }}
-              >
-                <SignUp onClose={setShowSignUp} />
-                <div className="text-[14px] pt-6 border-t-2 text-center">
-                  <span>Bạn đã có tài khoản?</span>
-                  <button
-                    type="button"
-                    className="rounded-md hover:bg-[#e38601] transition-all duration-300 min-w-[135px] w-full focus:outline-none focus:ring-[#e38601] text-sm text-center inline-flex items-center dark:hover:bg-[#e38601] dark:focus:ring-[#e38601] justify-center border border-[#ff953f] text-[#f58020] hover:text-white w-auto px-6 py-[6px] font-light"
-                    onClick={() => {
-                      setShowModal(true)
-                      setShowSignUp(false)
-                    }}
-                  >
-                    <span className="block">Đăng nhập</span>
-                  </button>
-                </div>
+                {showLoginModal && <LoginModal />}
+                {showSignUp && <SignUp />}
               </div>
             </div>
           </div>

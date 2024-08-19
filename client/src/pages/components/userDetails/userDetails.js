@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import AppContext from "../AppContext"
+import AppContext from "../../../context/AppContext"
 
 const UserDetails = () => {
   const { state, dispatch } = useContext(AppContext)
