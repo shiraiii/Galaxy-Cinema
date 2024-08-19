@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { Link, useParams } from "react-router-dom"
 import BookingSide from "./bookingSide"
 import MovieContent from "./moviecontent"
@@ -7,6 +7,7 @@ import { filterAndSortMovies } from "../../../utils/movieUtils"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import AppContext from "../../../context/AppContext"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -16,6 +17,7 @@ const Booking = () => {
   const [movies, setMovies] = useState("")
   const [showtimes, setShowtimes] = useState([])
   const [data, setData] = useState([])
+  const { nowShowingMovies } = useContext(AppContext)
 
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/movie/getMovie/" + id)
@@ -49,8 +51,6 @@ const Booking = () => {
     .tz("Asia/Ho_Chi_Minh")
     .startOf("day")
     .format("YYYY-MM-DD")
-
-  const nowShowingMovies = filterAndSortMovies(data, today, "nowShowing")
 
   const releaseDate = new Date(movies.releaseDate)
   const formattedDate = `${releaseDate.getDate()}/${

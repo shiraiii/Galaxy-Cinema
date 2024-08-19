@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import "./moviesection.css"
 import { Tabs, Tab, TabsList, TabPanel } from "../Tabs/Tabs"
 import Moviecard from "../movie-card/moviecard"
@@ -7,14 +7,15 @@ import { filterAndSortMovies } from "../../../utils/movieUtils"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import AppContext from "../../../context/AppContext"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const Moviesection = () => {
   const [lists, setLists] = useState([])
-  const [movies, setMovies] = useState([])
   const [activeIndex, setActiveIndex] = useState(0)
+  const { nowShowingMovies, upcomingMovies } = useContext(AppContext)
 
   useEffect(() => {
     fetch("/api/movieCats")
@@ -22,23 +23,9 @@ const Moviesection = () => {
       .then((data) => setLists(data))
   }, [])
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/movie/getAllMovie")
-      .then((res) => res.json())
-      .then((data) => setMovies(data))
-  }, [])
-
   const handleClick = (index) => {
     setActiveIndex(index)
   }
-
-  const today = dayjs()
-    .tz("Asia/Ho_Chi_Minh")
-    .startOf("day")
-    .format("YYYY-MM-DD")
-
-  const nowShowingMovies = filterAndSortMovies(movies, today, "nowShowing")
-  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming")
 
   return (
     <div className="pb-12 pt-6 my-0 mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 lg:max-w-4xl md:max-w-4xl md:px-4 sm:px-[45px] px-[16px] ">

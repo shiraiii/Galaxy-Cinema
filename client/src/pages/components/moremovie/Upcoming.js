@@ -1,29 +1,17 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import Moremovie from "./Moremovie-index"
 import Moviecard from "../movie-card/moviecard"
 import dayjs from "dayjs"
 import { filterAndSortMovies } from "../../../utils/movieUtils"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import AppContext from "../../../context/AppContext"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const Upcoming = () => {
-  const [movies, setMovies] = useState([])
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/movie/getAllMovie")
-      .then((res) => res.json())
-      .then((data) => setMovies(data))
-  }, [])
-
-  const today = dayjs()
-    .tz("Asia/Ho_Chi_Minh")
-    .startOf("day")
-    .format("YYYY-MM-DD")
-
-  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming")
+  const { upcomingMovies } = useContext(AppContext)
 
   return (
     <div className="movies">
