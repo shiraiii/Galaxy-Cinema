@@ -53,27 +53,43 @@ const MovieShowtime = ({ showtimes = [] }) => {
 
   const today = dayjs().startOf("day")
 
+  const getDatesInRange = (start, end) => {
+    const startDate = dayjs(start).startOf("day")
+    const endDate = dayjs(end).startOf("day")
+    const dateRange = []
+    let currentDate = startDate
+
+    while (
+      currentDate.isBefore(endDate) ||
+      currentDate.isSame(endDate, "day")
+    ) {
+      dateRange.push(currentDate.format("YYYY-MM-DD"))
+      currentDate = currentDate.add(1, "day")
+    }
+
+    return dateRange
+  }
+
   const groupedShowtimes = showtimes
     .filter((showtime) => {
-      const startDate = dayjs.utc(showtime.startDate).tz("Asia/Ho_Chi_Minh")
-      return (
-        startDate.isAfter(dayjs().tz("Asia/Ho_Chi_Minh")) ||
-        startDate.isSame(dayjs().tz("Asia/Ho_Chi_Minh"), "day")
-      )
+      const showtimeDate = dayjs(showtime.date).tz("Asia/Ho_Chi_Minh")
+      return showtimeDate.isAfter(today) || showtimeDate.isSame(today, "day")
     })
-    .sort((a, b) =>
-      dayjs.utc(a.startDate).isAfter(dayjs.utc(b.startDate)) ? 1 : -1
-    )
     .reduce((acc, showtime) => {
-      const date = dayjs(showtime.startDate).format("YYYY-MM-DD")
-      if (!acc[date]) {
-        acc[date] = {
-          date,
-          showtimes: [showtime],
+      const startDate = dayjs(showtime.startDate)
+      const endDate = dayjs(showtime.endDate)
+      const datesInRange = getDatesInRange(startDate, endDate)
+
+      datesInRange.forEach((date) => {
+        if (!acc[date]) {
+          acc[date] = {
+            date: date,
+            showtimes: [],
+          }
         }
-      } else {
         acc[date].showtimes.push(showtime)
-      }
+      })
+
       return acc
     }, {})
 

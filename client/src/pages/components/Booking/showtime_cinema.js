@@ -12,10 +12,12 @@ dayjs.locale("vi")
 const Showtime_Cinema = ({ showtimes, cinemas }) => {
   const navigate = useNavigate()
   const { isAuth, setShowModal, setRedirectPath } = useContext(AppContext)
+  const dataString = sessionStorage.getItem("userInfo")
+  const data = JSON.parse(dataString)
   const bookingMovie = (showtimeId) => {
-    if (isAuth) {
+    if (data?.token) {
       navigate(`/dat-ve/${showtimeId}`)
-    } else if (!isAuth) {
+    } else {
       if (setRedirectPath) {
         setRedirectPath(`/dat-ve/${showtimeId}`)
         setShowModal(true)
@@ -24,7 +26,6 @@ const Showtime_Cinema = ({ showtimes, cinemas }) => {
       }
     }
   }
-  console.log(isAuth)
 
   return cinemas.map((cinema, index) => {
     const cinemaShowtimes = showtimes
@@ -38,9 +39,7 @@ const Showtime_Cinema = ({ showtimes, cinemas }) => {
           parseTime: dayjs(fullDateTime).tz("Asia/Ho_Chi_Minh"),
         }
       })
-      .sort((a, b) => {
-        return a.parseTime.isAfter(b.parseTime) ? 1 : -1
-      })
+      .sort((a, b) => (a.parseTime.isBefore(b.parseTime) ? -1 : 1))
     if (cinemaShowtimes.length === 0) return null
     return (
       <div
