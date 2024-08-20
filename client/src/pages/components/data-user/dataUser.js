@@ -1,9 +1,6 @@
 import React from "react"
-import AppContext from "../../../context/AppContext"
-import { useContext } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 const DataUser = (props) => {
-  const { state, dispatch } = useContext(AppContext)
   const dataString = sessionStorage.getItem("userInfo")
   const data = JSON.parse(dataString)
 

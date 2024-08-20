@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken")
 const asyncHandler = require("express-async-handler")
 const userModel = require("../models/User")
 
+const TOKEN_EXPIRE = "6h"
+
 const login = async (req, res, next) => {
   try {
     const user = await userModel.findOne({ email: req.body.email })
@@ -17,7 +19,7 @@ const login = async (req, res, next) => {
       const token = jwt.sign(
         { userId: user._id },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "6h" }
+        { expiresIn: TOKEN_EXPIRE }
       )
       const refreshToken = jwt.sign(
         { userId: user._id },
@@ -54,7 +56,7 @@ const register = async (req, res, next) => {
     const token = jwt.sign(
       { userId: user._id },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1m" }
+      { expiresIn: TOKEN_EXPIRE }
     )
     const refreshToken = jwt.sign(
       { userId: user._id },
@@ -69,7 +71,12 @@ const register = async (req, res, next) => {
     })
     res.status(200).json({
       status: "success",
-      data: { token, userName: user.name, status: "success" },
+      data: {
+        token,
+        userName: user.name,
+        status: "success",
+        roles: user.roles,
+      },
     })
   } catch (err) {
     next(err)

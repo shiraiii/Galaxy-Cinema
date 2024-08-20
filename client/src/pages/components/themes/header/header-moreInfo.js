@@ -2,7 +2,8 @@ import React, { useContext } from "react"
 import AppContext from "../../../../context/AppContext"
 
 const HeaderMoreInfo = () => {
-  const { setShowLoginModal, setShowModal } = useContext(AppContext)
+  const { setShowLoginModal, setShowModal, setShowSignUp } =
+    useContext(AppContext)
   return (
     <>
       <a
@@ -84,7 +85,14 @@ const HeaderMoreInfo = () => {
                   <h2 className="text-sm font-bold not-italic capitalize text-center">
                     Đăng ký thành viên G-star nhận ngay ưu đãi
                   </h2>
-                  <a className="w-[79px] h-8 leading-8 text-center text-[#f58020] border border-[#f58020] rounded text-[14px] font-bold not-italic hover:bg-[#f58020] hover:text-white transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] capitalize">
+                  <a
+                    onClick={() => {
+                      setShowModal(true)
+                      setShowLoginModal(false)
+                      setShowSignUp(true)
+                    }}
+                    className="w-[79px] h-8 leading-8 text-center border border-[#f58020] rounded text-[14px] font-bold not-italic hover:bg-[#f58020] hover:text-white transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] capitalize bg-[#f58020] text-white"
+                  >
                     Đăng ký
                   </a>
                 </div>

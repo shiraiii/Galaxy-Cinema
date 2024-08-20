@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useState } from "react"
 import { ShowtimeContainer, ShowtimeList, ShowtimeTab } from "../Tabs/Tabs"
 import Slider from "react-slick"
 import { TextField } from "@mui/material"
@@ -6,6 +6,7 @@ import { MenuItem } from "@mui/material"
 import dayjs from "dayjs"
 import "dayjs/locale/vi"
 import Showtime_Cinema from "./showtime_cinema"
+import AppContext from "../../../context/AppContext"
 
 const MovieShowtime = ({ showtimes = [] }) => {
   dayjs.locale("vi")
@@ -13,9 +14,9 @@ const MovieShowtime = ({ showtimes = [] }) => {
     city: "Toàn quốc",
     name: "Tất cả các rạp",
   })
-  const [cinemas, setCinemas] = useState([])
   const [selectedDate, setSelectedDate] = useState(dayjs())
   const [activeTab, setActiveTab] = useState(0)
+  const { cinemas } = useContext(AppContext)
   const handleTabClick = (index, date) => {
     setActiveTab(index)
     setSelectedDate(dayjs(date))
@@ -23,12 +24,6 @@ const MovieShowtime = ({ showtimes = [] }) => {
   const onChangeHandle = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value })
   }
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/cinema/getAllCinema")
-      .then((res) => res.json())
-      .then((data) => setCinemas(data))
-      .catch((err) => console.log(err))
-  }, [])
 
   const filteredCinema =
     userInput.city === "Toàn quốc"

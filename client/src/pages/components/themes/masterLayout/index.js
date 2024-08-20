@@ -24,6 +24,7 @@ const MasterLayout = ({ children, ...props }) => {
   const [cinemas, setCinemas] = useState([{}])
   const [isAuth, setIsAuth] = useState(false)
   const [redirectPath, setRedirectPath] = useState(null)
+  const [showtimes, setShowtimes] = useState([{}])
 
   useEffect(() => {
     fetch("/api/menus")
@@ -41,6 +42,12 @@ const MasterLayout = ({ children, ...props }) => {
     fetch("http://localhost:5000/api/v1/cinema/getAllCinema")
       .then((res) => res.json())
       .then((data) => setCinemas(data))
+  }, [])
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/v1/showtime/getAllShowtime")
+      .then((res) => res.json())
+      .then((data) => setShowtimes(data))
   }, [])
 
   const checkCurrentUser = useCallback(async () => {
@@ -96,6 +103,8 @@ const MasterLayout = ({ children, ...props }) => {
         setMovies,
         cinemas,
         setCinemas,
+        showtimes,
+        setShowtimes,
         menus,
         setMenus,
         isAuth,

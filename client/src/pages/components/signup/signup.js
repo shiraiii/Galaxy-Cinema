@@ -21,8 +21,13 @@ const SignUp = () => {
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
   const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
-  const { dispatch, setShowLoginModal, setShowSignUp, setShowModal } =
-    useContext(AppContext)
+  const {
+    dispatch,
+    setShowLoginModal,
+    setShowSignUp,
+    setShowModal,
+    setIsAuth,
+  } = useContext(AppContext)
   const [userInput, setUserInput] = useState({
     name: "",
     email: "",
@@ -31,7 +36,6 @@ const SignUp = () => {
     roles: "User",
   })
   const [errorMessage, setErrorMessage] = useState(null)
-  const navigate = useNavigate()
   const onChangeSubmit = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value })
   }
@@ -50,17 +54,15 @@ const SignUp = () => {
       localStorage.setItem("token", token)
       dispatch({ type: "CURRENT_USER", payload: { userName } })
       if (status == "success") {
+        setIsAuth(true)
         setShowModal(false)
       }
-      console.log(status)
-      console.log(userName)
     } catch (err) {
       setErrorMessage(err.response.data.message)
     }
   }
 
   const userRef = useRef()
-  const errRef = useRef()
 
   useEffect(() => {
     userRef.current.focus()

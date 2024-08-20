@@ -11,12 +11,11 @@ dayjs.extend(timezone)
 dayjs.locale("vi")
 const Showtime_Cinema = ({ showtimes, cinemas }) => {
   const navigate = useNavigate()
-  const { isAuth, setIsAuth, setShowModal, setRedirectPath } =
-    useContext(AppContext)
+  const { isAuth, setShowModal, setRedirectPath } = useContext(AppContext)
   const bookingMovie = (showtimeId) => {
     if (isAuth) {
       navigate(`/dat-ve/${showtimeId}`)
-    } else {
+    } else if (!isAuth) {
       if (setRedirectPath) {
         setRedirectPath(`/dat-ve/${showtimeId}`)
         setShowModal(true)
@@ -25,6 +24,7 @@ const Showtime_Cinema = ({ showtimes, cinemas }) => {
       }
     }
   }
+  console.log(isAuth)
 
   return cinemas.map((cinema, index) => {
     const cinemaShowtimes = showtimes

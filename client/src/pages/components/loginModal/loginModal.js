@@ -11,6 +11,7 @@ const LoginModal = () => {
     setShowLoginModal,
     setShowSignUp,
     setShowModal,
+    isAuth,
     setIsAuth,
     redirectPath,
     setRedirectPath,
