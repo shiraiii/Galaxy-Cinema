@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 import React, { useEffect, useState } from "react"
 import { useParams, useLocation } from "react-router-dom"
+import BookingSeatSummary from "./BookingSeats-summary"
 
 const SeatsSection = () => {
   const [showtimes, setShowtimes] = useState([])
@@ -10,6 +11,7 @@ const SeatsSection = () => {
   const [selectedShowtime, setSelectedShowtime] = useState(null)
   const [selectedCinemaId, setSelectedCinemaId] = useState("")
   const [selectedSeats, setSelectedSeats] = useState([])
+  const [total, setTotal] = useState(0)
 
   const { id } = useParams()
   const location = useLocation()
@@ -67,22 +69,76 @@ const SeatsSection = () => {
     )
   })
 
-  const handleSeatClick = (rowLetter, seatNumber, uniqueSeatId) => {
+  // const handleSeatClick = (
+  //   rowLetter,
+  //   seatNumber,
+  //   uniqueSeatId,
+  //   ticketPrice
+  // ) => {
+  //   setSelectedSeats((prevSelectedSeats) => {
+  //     if (
+  //       prevSelectedSeats.some((seat) => seat.uniqueSeatId === uniqueSeatId)
+  //     ) {
+  //       setTotal((prevTotal) => prevTotal - ticketPrice)
+  //       return prevSelectedSeats.filter((seat) => seat.id !== uniqueSeatId)
+  //     } else {
+  //       setSelectedSeats((prevSelectedSeats) => [
+  //         ...prevSelectedSeats,
+  //         { rowLetter, seatNumber, uniqueSeatId, ticketPrice },
+  //       ])
+  //       setTotal((prevTotal) => prevTotal + ticketPrice)
+  //       return [...prevSelectedSeats, uniqueSeatId]
+  //     }
+  //   })
+  // }
+  const handleSeatClick = (
+    rowLetter,
+    seatNumber,
+    uniqueSeatId,
+    ticketPrice
+  ) => {
     setSelectedSeats((prevSelectedSeats) => {
-      if (prevSelectedSeats.includes(uniqueSeatId)) {
-        return prevSelectedSeats.filter((id) => id !== uniqueSeatId)
-      } else {
-        console.log(`${rowLetter}${seatNumber}`)
+      // Check if the seat is already selected
+      const isSeatSelected = prevSelectedSeats.some(
+        (seat) => seat.uniqueSeatId === uniqueSeatId
+      )
 
-        return [...prevSelectedSeats, uniqueSeatId]
-      }
+      // Update total based on seat selection status
+      const newTotal = isSeatSelected
+        ? prevSelectedSeats.reduce(
+            (total, seat) =>
+              seat.uniqueSeatId === uniqueSeatId
+                ? total - seat.ticketPrice
+                : total,
+            total
+          )
+        : total + ticketPrice
+
+      // Update selected seats
+      const newSelectedSeats = isSeatSelected
+        ? prevSelectedSeats.filter((seat) => seat.uniqueSeatId !== uniqueSeatId)
+        : [
+            ...prevSelectedSeats,
+            { rowLetter, seatNumber, uniqueSeatId, ticketPrice },
+          ]
+
+      return newSelectedSeats
+    })
+
+    // Update total separately
+    setTotal((prevTotal) => {
+      const isSeatSelected = selectedSeats.some(
+        (seat) => seat.uniqueSeatId === uniqueSeatId
+      )
+
+      return isSeatSelected ? prevTotal - ticketPrice : prevTotal + ticketPrice
     })
   }
 
   const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
 
   const handleShowtimeClick = (showtime) => {
-    setSelectedShowtime(showtime._id)
+    setSelectedShowtime(showtime)
   }
 
   return (
@@ -96,14 +152,14 @@ const SeatsSection = () => {
           </div>
           <div className="col-span-8 flex-row gap-4 flex-wrap items-center md:flex hidden">
             {filteredShowtimes.map((filterdShowtime) => {
-              const isSelected = selectedShowtime === filterdShowtime._id
+              const isSelected = selectedShowtime === filterdShowtime.startAt
               return (
                 <button
                   key={filterdShowtime._id}
                   className={`py-2 px-4 border rounded text-sm font-normal text-[#333333]  transition-all duration-500 ease-in-out hover:bg-[#034EA2] hover:text-white ${
                     isSelected ? "bg-[#034EA2] text-white" : ""
                   }`}
-                  onClick={() => handleShowtimeClick(filterdShowtime)}
+                  onClick={() => handleShowtimeClick(filterdShowtime.startAt)}
                 >
                   {filterdShowtime.startAt}
                 </button>
@@ -126,27 +182,27 @@ const SeatsSection = () => {
                     <div className="flex md:gap-2 gap-1 grow justify-center min-w-[398px] flex-1">
                       {rowSeats.map((seat, seatIndex) => {
                         const uniqueSeatId = `${rowIndex}-${seatIndex}`
+                        const isSelected = selectedSeats.some(
+                          (seat) => seat.uniqueSeatId === uniqueSeatId
+                        )
                         return (
                           <button
                             key={uniqueSeatId}
                             className={`md:h-5 h-4 border rounded md:text-[12px] text-[10px] transition-all duration-200 ease-in-out text-white md:w-5 w-4 border-[#d0d0d0] xl:hover:bg-[#f26b38] xl:hover:border-[#f26b38] ${
-                              selectedSeats.includes(uniqueSeatId)
-                                ? "bg-[#f26b38] border-[#f26b38]"
-                                : ""
+                              isSelected ? "bg-[#f26b38] border-[#f26b38]" : ""
                             }`}
                             onClick={() =>
                               handleSeatClick(
                                 alphabets[rowIndex],
                                 seatIndex + 1,
-                                uniqueSeatId
+                                uniqueSeatId,
+                                cinemas.ticketPrice
                               )
                             }
                           >
                             <span
                               className={`inline-block md:w-5 w-4 text-center ${
-                                selectedSeats.includes(uniqueSeatId)
-                                  ? "text-white"
-                                  : "text-[#333333]"
+                                isSelected ? "text-white" : "text-[#333333]"
                               } `}
                             >
                               {seatIndex + 1}
@@ -195,6 +251,13 @@ const SeatsSection = () => {
           </div>
         </div>
       </div>
+      <BookingSeatSummary
+        cinemas={cinemas}
+        movies={movies}
+        time={selectedShowtime}
+        date={dayjs(selectedDate).format("DD/MM/YYYY")}
+        total={total}
+      ></BookingSeatSummary>
     </div>
   )
 }

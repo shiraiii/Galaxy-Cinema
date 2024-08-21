@@ -17,10 +17,12 @@ const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
 
   const [selectedTime, setSelectedTime] = useState(null)
 
-  const bookingMovie = (movieId, showtimeDate, cinemaId, showtimeId) => {
+  const bookingMovie = (movieId, showtimeDate, cinemaId, showtime) => {
     const url = `/dat-ve/${movieId}?date=${encodeURIComponent(
       showtimeDate
-    )}&cinema=${encodeURIComponent(cinemaId)}&showtime=${showtimeId}`
+    )}&cinema=${encodeURIComponent(
+      cinemaId
+    )}&showtime=${showtime.parseTime.format("HH:mm")}`
     if (data?.token) {
       navigate(url)
     } else {
@@ -62,12 +64,12 @@ const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
               return (
                 <button
                   onClick={() => {
-                    setSelectedTime(showtime._id)
+                    setSelectedTime(showtime.startAt)
                     bookingMovie(
                       showtime.movieId,
                       dayjs(showtimeDay).format("YYYY-MM-DD"),
                       cinema._id,
-                      showtime._id
+                      showtime
                     )
                   }}
                   key={showtime._id}
