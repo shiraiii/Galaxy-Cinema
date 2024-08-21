@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import AppContext from "../../../context/AppContext"
 import { useNavigate } from "react-router-dom"
 import utc from "dayjs/plugin/utc"
@@ -9,17 +9,23 @@ import "dayjs/locale/vi"
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.locale("vi")
-const Showtime_Cinema = ({ showtimes, cinemas }) => {
+const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
   const navigate = useNavigate()
   const { isAuth, setShowModal, setRedirectPath } = useContext(AppContext)
   const dataString = sessionStorage.getItem("userInfo")
   const data = JSON.parse(dataString)
-  const bookingMovie = (showtimeId) => {
+
+  const [selectedTime, setSelectedTime] = useState(null)
+
+  const bookingMovie = (movieId, showtimeDate, cinemaId, showtimeId) => {
+    const url = `/dat-ve/${movieId}?date=${encodeURIComponent(
+      showtimeDate
+    )}&cinema=${encodeURIComponent(cinemaId)}&showtime=${showtimeId}`
     if (data?.token) {
-      navigate(`/dat-ve/${showtimeId}`)
+      navigate(url)
     } else {
       if (setRedirectPath) {
-        setRedirectPath(`/dat-ve/${showtimeId}`)
+        setRedirectPath(url)
         setShowModal(true)
       } else {
         console.error("setRedirectPath not found")
@@ -55,7 +61,15 @@ const Showtime_Cinema = ({ showtimes, cinemas }) => {
             {cinemaShowtimes.map((showtime) => {
               return (
                 <button
-                  onClick={() => bookingMovie(showtime._id)}
+                  onClick={() => {
+                    setSelectedTime(showtime._id)
+                    bookingMovie(
+                      showtime.movieId,
+                      dayjs(showtimeDay).format("YYYY-MM-DD"),
+                      cinema._id,
+                      showtime._id
+                    )
+                  }}
                   key={showtime._id}
                   className="py-2 md:px-8 px-6 border rouned text-sm font-normal text-[#333333] hover:bg-[#034EA2] hover:text-white active:bg-[#034EA2] transition-all duration-500 ease-in-out"
                 >

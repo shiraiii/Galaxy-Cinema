@@ -19,7 +19,8 @@ const MovieShowtime = ({ showtimes = [] }) => {
   const { cinemas } = useContext(AppContext)
   const handleTabClick = (index, date) => {
     setActiveTab(index)
-    setSelectedDate(dayjs(date))
+    const formattedDate = dayjs(date).format("YYYY-MM-DD")
+    setSelectedDate(formattedDate)
   }
   const onChangeHandle = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value })
@@ -57,7 +58,7 @@ const MovieShowtime = ({ showtimes = [] }) => {
     const startDate = dayjs(start).startOf("day")
     const endDate = dayjs(end).startOf("day")
     const dateRange = []
-    let currentDate = startDate
+    let currentDate = startDate.isBefore(today) ? today : startDate
 
     while (
       currentDate.isBefore(endDate) ||
@@ -125,6 +126,7 @@ const MovieShowtime = ({ showtimes = [] }) => {
                 const dayOfWeek = isToday
                   ? "Hôm nay"
                   : dayjs(showtimeGroup.date).format("dddd")
+
                 return (
                   <div
                     key={index}
@@ -192,6 +194,7 @@ const MovieShowtime = ({ showtimes = [] }) => {
             showtimes={filteredShowtimes.flatMap(
               (showtimeGroup) => showtimeGroup.showtimes
             )}
+            showtimeDay={selectedDate}
           ></Showtime_Cinema>
         </ShowtimeList>
       </ShowtimeContainer>
