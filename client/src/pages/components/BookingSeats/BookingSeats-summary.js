@@ -1,6 +1,36 @@
 import React from "react"
 
-const BookingSeatSummary = ({ movies, cinemas, time, date, total }) => {
+const BookingSeatSummary = ({
+  movies,
+  cinemas,
+  time,
+  date,
+  total,
+  selectedSeats,
+}) => {
+  const dayOfTheWeek = (dateString) => {
+    const [day, month, year] = dateString.split("/")
+
+    const date = new Date(year, month - 1, day)
+
+    const daysOfWeek = [
+      "Chủ Nhật",
+      "Thứ Hai",
+      "Thứ Ba",
+      "Thứ Tư",
+      "Thứ Năm",
+      "Thứ Sáu",
+      "Thứ Bảy",
+    ]
+
+    const dayOfWeekNumber = date.getDay()
+
+    return daysOfWeek[dayOfWeekNumber]
+  }
+
+  const dayOfWeek = dayOfTheWeek(date)
+
+  const formattedTotal = new Intl.NumberFormat("vi-VN").format(total)
   return (
     <div className="col-span-1 xl:pl-4 xl:order-none order-first py-4">
       <div className="booking__summary md:mb-4">
@@ -43,26 +73,61 @@ const BookingSeatSummary = ({ movies, cinemas, time, date, total }) => {
                 <span> - </span>
                 <span className="text-sm xl:text-base">RẠP 2</span>
               </div>
+
               <div className="xl:mt-2 text-sm xl:text-base">
                 <span>Suất: </span>
-                <span>{time}</span>
+                <strong>{time}</strong>
                 <span> - </span>
-                <span></span>
+                <span className="capitalize text-sm">{dayOfWeek}</span>
                 <span> - </span>
                 <span className="capitalize text-sm">
                   <strong>{date}</strong>
                 </span>
               </div>
             </div>
+            {selectedSeats.length > 0 ? (
+              <>
+                <div className="my-4 border-t border-[#999999] border-dashed xl:block hidden"></div>
+                <div className="xl:block hidden">
+                  <div className="flex justify-between text-sm mt-2">
+                    <div>
+                      <strong>{selectedSeats.length}x</strong>
+                      <span> Ghế đơn</span>
+                      <div>
+                        <span>Ghế: </span>
+                        <strong>
+                          {selectedSeats
+                            .map(
+                              (seat) => `${seat.rowLetter}${seat.seatNumber}`
+                            )
+                            .join(", ")}
+                        </strong>
+                      </div>
+                    </div>
+                    <span className="inline-block font-bold">
+                      {formattedTotal} đ
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : null}
             <div className="xl:block hidden"></div>
             <div className="my-4 border-t border-[#999999] border-dashed xl:block hidden"></div>
           </div>
           <div className="xl:flex hidden justify-between col-span-3">
             <strong className="text-base">Tổng cộng</strong>
             <span className="inline-block font-bold text-[#f58020]">
-              {total} đ
+              {formattedTotal} đ
             </span>
           </div>
+        </div>
+        <div className="mt-8 xl:flex hidden">
+          <button className="w-1/2 mr-2 py-2 text-[#f58020]">
+            <span>Quay lại</span>
+          </button>
+          <button className="w-1/2 mr-2 py-2 text-white bg-[#f58020] border rounded-md hover:bg-[#ff953f]">
+            <span>Tiếp tục</span>
+          </button>
         </div>
       </div>
     </div>

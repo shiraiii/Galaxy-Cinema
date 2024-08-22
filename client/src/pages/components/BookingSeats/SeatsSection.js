@@ -69,28 +69,6 @@ const SeatsSection = () => {
     )
   })
 
-  // const handleSeatClick = (
-  //   rowLetter,
-  //   seatNumber,
-  //   uniqueSeatId,
-  //   ticketPrice
-  // ) => {
-  //   setSelectedSeats((prevSelectedSeats) => {
-  //     if (
-  //       prevSelectedSeats.some((seat) => seat.uniqueSeatId === uniqueSeatId)
-  //     ) {
-  //       setTotal((prevTotal) => prevTotal - ticketPrice)
-  //       return prevSelectedSeats.filter((seat) => seat.id !== uniqueSeatId)
-  //     } else {
-  //       setSelectedSeats((prevSelectedSeats) => [
-  //         ...prevSelectedSeats,
-  //         { rowLetter, seatNumber, uniqueSeatId, ticketPrice },
-  //       ])
-  //       setTotal((prevTotal) => prevTotal + ticketPrice)
-  //       return [...prevSelectedSeats, uniqueSeatId]
-  //     }
-  //   })
-  // }
   const handleSeatClick = (
     rowLetter,
     seatNumber,
@@ -257,6 +235,7 @@ const SeatsSection = () => {
         time={selectedShowtime}
         date={dayjs(selectedDate).format("DD/MM/YYYY")}
         total={total}
+        selectedSeats={selectedSeats}
       ></BookingSeatSummary>
     </div>
   )
