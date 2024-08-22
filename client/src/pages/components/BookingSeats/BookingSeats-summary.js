@@ -1,4 +1,6 @@
-import React from "react"
+import axios from "axios"
+import dayjs from "dayjs"
+import React, { useEffect, useState } from "react"
 
 const BookingSeatSummary = ({
   movies,
@@ -8,6 +10,38 @@ const BookingSeatSummary = ({
   total,
   selectedSeats,
 }) => {
+  const [userInput, setUserInput] = useState({
+    seats: [],
+    checkin: Boolean,
+    date: dayjs(),
+    startAt: "",
+    ticketPrice: "",
+    total: Number,
+    movieId: "",
+    cinemaId: "",
+    userId: "",
+    username: "",
+    phone: "",
+  })
+
+  useEffect(() => {
+    const dataString = sessionStorage.getItem("userInfo")
+    const data = JSON.parse(dataString)
+    if (data) {
+      setUserInput(() => ({
+        seats: selectedSeats,
+        date: date,
+        startAt: time,
+        total: selectedSeats.length * cinemas.ticketPrice,
+        username: data.userName,
+        phone: data.phone,
+        movieId: movies._id,
+        cinemaId: cinemas._id,
+        userId: data.id,
+        ticketPrice: cinemas.ticketPrice,
+      }))
+    }
+  }, [date, time, total, selectedSeats, cinemas, movies])
   const dayOfTheWeek = (dateString) => {
     const [day, month, year] = dateString.split("/")
 
@@ -28,9 +62,25 @@ const BookingSeatSummary = ({
     return daysOfWeek[dayOfWeekNumber]
   }
 
-  const dayOfWeek = dayOfTheWeek(date)
-
+  const formattedDate = dayjs(date).format("DD/MM/YYYY")
   const formattedTotal = new Intl.NumberFormat("vi-VN").format(total)
+  const dayOfWeek = dayOfTheWeek(formattedDate)
+
+  const handleSubmit = async (e) => {
+    try {
+      const option = {
+        method: "POST",
+        url: "http://localhost:5000/api/v1/reservation/createReservation",
+        data: userInput,
+      }
+      const response = await axios(option)
+      console.log(response.data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  console.log(userInput)
+
   return (
     <div className="col-span-1 xl:pl-4 xl:order-none order-first py-4">
       <div className="booking__summary md:mb-4">
@@ -81,7 +131,7 @@ const BookingSeatSummary = ({
                 <span className="capitalize text-sm">{dayOfWeek}</span>
                 <span> - </span>
                 <span className="capitalize text-sm">
-                  <strong>{date}</strong>
+                  <strong>{formattedDate}</strong>
                 </span>
               </div>
             </div>
@@ -125,7 +175,10 @@ const BookingSeatSummary = ({
           <button className="w-1/2 mr-2 py-2 text-[#f58020]">
             <span>Quay lại</span>
           </button>
-          <button className="w-1/2 mr-2 py-2 text-white bg-[#f58020] border rounded-md hover:bg-[#ff953f]">
+          <button
+            onClick={() => handleSubmit()}
+            className="w-1/2 mr-2 py-2 text-white bg-[#f58020] border rounded-md hover:bg-[#ff953f]"
+          >
             <span>Tiếp tục</span>
           </button>
         </div>

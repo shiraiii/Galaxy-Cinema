@@ -20,9 +20,7 @@ const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
   const bookingMovie = (movieId, showtimeDate, cinemaId, showtime) => {
     const url = `/dat-ve/${movieId}?date=${encodeURIComponent(
       showtimeDate
-    )}&cinema=${encodeURIComponent(
-      cinemaId
-    )}&showtime=${showtime.parseTime.format("HH:mm")}`
+    )}&cinema=${encodeURIComponent(cinemaId)}&showtime=${showtime.startAt}`
     if (data?.token) {
       navigate(url)
     } else {
@@ -67,7 +65,7 @@ const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
                     setSelectedTime(showtime.startAt)
                     bookingMovie(
                       showtime.movieId,
-                      dayjs(showtimeDay).format("YYYY-MM-DD"),
+                      showtimeDay,
                       cinema._id,
                       showtime
                     )
@@ -75,7 +73,7 @@ const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
                   key={showtime._id}
                   className="py-2 md:px-8 px-6 border rouned text-sm font-normal text-[#333333] hover:bg-[#034EA2] hover:text-white active:bg-[#034EA2] transition-all duration-500 ease-in-out"
                 >
-                  {showtime.parseTime.format("HH:mm")}
+                  {showtime.startAt}
                 </button>
               )
             })}

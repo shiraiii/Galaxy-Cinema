@@ -1,6 +1,16 @@
 const mongoose = require("mongoose")
 
 const { Schema } = mongoose
+const seatSchema = new Schema({
+  rowLetter: {
+    type: String,
+    required: true,
+  },
+  seatNumber: {
+    type: Number,
+    required: true,
+  },
+})
 const reservationSchema = new mongoose.Schema({
   date: {
     type: Date,
@@ -12,10 +22,10 @@ const reservationSchema = new mongoose.Schema({
     trim: true,
   },
   seats: {
-    type: [Schema.Types.Mixed],
+    type: [seatSchema],
     required: true,
   },
-  tiketPrice: {
+  ticketPrice: {
     type: Number,
     required: true,
   },

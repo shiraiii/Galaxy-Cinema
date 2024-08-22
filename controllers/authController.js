@@ -38,6 +38,8 @@ const login = async (req, res, next) => {
           token,
           userName: user.name,
           roles: user.roles,
+          phone: user.phone,
+          id: user._id,
         },
       })
     } else {
@@ -76,6 +78,8 @@ const register = async (req, res, next) => {
         userName: user.name,
         status: "success",
         roles: user.roles,
+        phone: user.phone,
+        id: user._id,
       },
     })
   } catch (err) {

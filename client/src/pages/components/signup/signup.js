@@ -48,7 +48,7 @@ const SignUp = () => {
         data: userInput,
       }
       const response = await axios(option)
-      const { token, userName, status } = response.data.data
+      const { token, userName, status, phone } = response.data.data
       const userString = JSON.stringify(response.data.data)
       sessionStorage.setItem("userInfo", userString)
       localStorage.setItem("token", token)

@@ -117,7 +117,9 @@ const SeatsSection = () => {
 
   const handleShowtimeClick = (showtime) => {
     setSelectedShowtime(showtime)
+    setSelectedSeats([])
   }
+  console.log(selectedSeats)
 
   return (
     <div className="md:container md:mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 lg:max-w-4xl md:px-0 sm:px-[45px] grid xl:grid-cols-3 grid-cols-1 ">
@@ -233,7 +235,7 @@ const SeatsSection = () => {
         cinemas={cinemas}
         movies={movies}
         time={selectedShowtime}
-        date={dayjs(selectedDate).format("DD/MM/YYYY")}
+        date={selectedDate}
         total={total}
         selectedSeats={selectedSeats}
       ></BookingSeatSummary>
