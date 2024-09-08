@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react"
 import { memo } from "react"
+import { useNavigate } from "react-router-dom"
 import "../header/style.css"
 import "../../../../../src/index.css"
-import LoginModal from "../../loginModal/loginModal"
+import LoginModal from "../../Modal/loginModal"
 import Sidenav from "../../sidenav/sidenav"
-import SignUp from "../../signup/signup"
+import SignUp from "../../Modal/signup"
 import DataUser from "../../data-user/dataUser"
 import HeaderNavigator from "./header-navigator"
 import AppContext from "../../../../context/AppContext"
@@ -12,6 +13,7 @@ import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import HeaderMoreInfo from "./header-moreInfo"
+import OverSeatNumber from "../../Modal/overSeatNumber"
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -25,15 +27,22 @@ const Header = () => {
     showLoginModal,
     setShowLoginModal,
     showSignUp,
-    setShowSignUp,
     showSideNav,
     setShowSideNav,
+    redirectPath,
+    setRedirectPath,
+    overSeats,
   } = useContext(AppContext)
+  const navigate = useNavigate()
   const { user } = state
   const signOut = () => {
     sessionStorage.removeItem("userInfo")
     localStorage.removeItem("token")
     dispatch({ type: "CURRENT_USER", payload: null })
+    if (redirectPath) {
+      navigate(redirectPath)
+      setRedirectPath(null)
+    }
   }
 
   return (
@@ -140,6 +149,7 @@ const Header = () => {
               >
                 {showLoginModal && <LoginModal />}
                 {showSignUp && <SignUp />}
+                {overSeats && <OverSeatNumber />}
               </div>
             </div>
           </div>

@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom"
 import BookingSide from "./bookingSide"
 import MovieContent from "./moviecontent"
 import MovieShowtime from "./movieshowtime"
-import { filterAndSortMovies } from "../../../utils/movieUtils"
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
@@ -45,12 +44,9 @@ const Booking = () => {
         setShowtimes(Array.isArray(data) ? data : [])
       })
       .catch((err) => console.error("Error fetching showtimes: ", err))
-  }, [])
+  }, [id])
 
-  const today = dayjs()
-    .tz("Asia/Ho_Chi_Minh")
-    .startOf("day")
-    .format("YYYY-MM-DD")
+  const today = dayjs().tz("Asia/Ho_Chi_Minh").startOf("day")
 
   const releaseDate = new Date(movies.releaseDate)
   const formattedDate = `${releaseDate.getDate()}/${
@@ -259,7 +255,7 @@ const Booking = () => {
                 </div>
               </div>
               <MovieContent movies={movies}></MovieContent>
-              {uniqueShowtimes ? (
+              {showtimes.length > 0 ? (
                 <MovieShowtime showtimes={showtimes}></MovieShowtime>
               ) : null}
             </div>

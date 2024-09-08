@@ -25,6 +25,7 @@ const MasterLayout = ({ children, ...props }) => {
   const [isAuth, setIsAuth] = useState(false)
   const [redirectPath, setRedirectPath] = useState(null)
   const [showtimes, setShowtimes] = useState([{}])
+  const [overSeats, setOverSeats] = useState(false)
 
   useEffect(() => {
     fetch("/api/menus")
@@ -111,6 +112,8 @@ const MasterLayout = ({ children, ...props }) => {
         setIsAuth,
         redirectPath,
         setRedirectPath,
+        overSeats,
+        setOverSeats,
       }}
     >
       <div {...props}>

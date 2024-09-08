@@ -8,7 +8,9 @@ const HeaderMoreInfo = () => {
     <>
       <a
         className="ml-3 text-sm text-[#777] capitalize cursor-pointer transition-all duration-300 hover:text-[#f26b38] "
-        onClick={() => setShowModal("true")}
+        onClick={() => {
+          setShowModal("true")
+        }}
       >
         Đăng nhập
       </a>

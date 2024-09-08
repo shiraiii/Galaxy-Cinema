@@ -1,6 +1,8 @@
 import axios from "axios"
 import dayjs from "dayjs"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
+import AppContext from "../../../context/AppContext"
 
 const BookingSeatSummary = ({
   movies,
@@ -23,6 +25,8 @@ const BookingSeatSummary = ({
     username: "",
     phone: "",
   })
+  const navigate = useNavigate()
+  const { setRedirectPath } = useContext(AppContext)
 
   useEffect(() => {
     const dataString = sessionStorage.getItem("userInfo")
@@ -79,7 +83,6 @@ const BookingSeatSummary = ({
       console.error(err)
     }
   }
-  console.log(userInput)
 
   return (
     <div className="col-span-1 xl:pl-4 xl:order-none order-first py-4">

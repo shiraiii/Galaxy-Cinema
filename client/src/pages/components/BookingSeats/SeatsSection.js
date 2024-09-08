@@ -1,7 +1,8 @@
 import dayjs from "dayjs"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { useParams, useLocation } from "react-router-dom"
 import BookingSeatSummary from "./BookingSeats-summary"
+import AppContext from "../../../context/AppContext"
 
 const SeatsSection = () => {
   const [showtimes, setShowtimes] = useState([])
@@ -12,6 +13,9 @@ const SeatsSection = () => {
   const [selectedCinemaId, setSelectedCinemaId] = useState("")
   const [selectedSeats, setSelectedSeats] = useState([])
   const [total, setTotal] = useState(0)
+
+  const { setShowLoginModal, setShowModal, setOverSeats } =
+    useContext(AppContext)
 
   const { id } = useParams()
   const location = useLocation()
@@ -120,6 +124,12 @@ const SeatsSection = () => {
     setSelectedSeats([])
   }
   console.log(selectedSeats)
+  if (selectedSeats.length > 2) {
+    selectedSeats.pop()
+    setOverSeats(true)
+    setShowModal(true)
+    setShowLoginModal(false)
+  }
 
   return (
     <div className="md:container md:mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 lg:max-w-4xl md:px-0 sm:px-[45px] grid xl:grid-cols-3 grid-cols-1 ">
