@@ -39,6 +39,7 @@ const Header = () => {
     sessionStorage.removeItem("userInfo")
     localStorage.removeItem("token")
     dispatch({ type: "CURRENT_USER", payload: null })
+    window.location.reload()
     if (redirectPath) {
       navigate(redirectPath)
       setRedirectPath(null)
@@ -136,21 +137,9 @@ const Header = () => {
               className="react-responsive-modal-container react-responsive-modal-containerCenter"
               data-testid="modal-container"
             >
-              <div
-                className="react-responsive-modal-modal modal-sx px-6 py-10 m-0 "
-                role="dialog"
-                aria-modal="true"
-                data-testid="modal"
-                tabIndex="-1"
-                style={{
-                  animation:
-                    "300ms ease 0s 1 normal none running react-responsive-modal-modal-in",
-                }}
-              >
-                {showLoginModal && <LoginModal />}
-                {showSignUp && <SignUp />}
-                {overSeats && <OverSeatNumber />}
-              </div>
+              {showLoginModal && <LoginModal />}
+              {showSignUp && <SignUp />}
+              {overSeats && <OverSeatNumber />}
             </div>
           </div>
         </div>

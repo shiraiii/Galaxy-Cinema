@@ -14,7 +14,7 @@ const SeatsSection = () => {
   const [selectedSeats, setSelectedSeats] = useState([])
   const [total, setTotal] = useState(0)
 
-  const { setShowLoginModal, setShowModal, setOverSeats } =
+  const { setShowLoginModal, setShowModal, setOverSeats, SEATLIMIT } =
     useContext(AppContext)
 
   const { id } = useParams()
@@ -54,6 +54,7 @@ const SeatsSection = () => {
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/v1/cinema/getCinema/${selectedCinemaId}`)
+    
       .then((res) => res.json())
       .then((data) => setCinemas(data))
       .catch((err) => console.error("Error fetching cinema: ", err))
@@ -123,8 +124,7 @@ const SeatsSection = () => {
     setSelectedShowtime(showtime)
     setSelectedSeats([])
   }
-  console.log(selectedSeats)
-  if (selectedSeats.length > 2) {
+  if (selectedSeats.length > SEATLIMIT) {
     selectedSeats.pop()
     setOverSeats(true)
     setShowModal(true)

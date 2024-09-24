@@ -1,5 +1,8 @@
 @import "tailwindcss/base";
 @layer base{
+    .modal-375{
+        @apply max-w-[375px] min-w-[315px] rounded-[4px]
+    }
     html{
         @apply text-[#4a4a4a];
     }
