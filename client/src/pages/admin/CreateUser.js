@@ -1,37 +1,37 @@
-import React, { useState } from "react"
-import axios from "axios"
-import { Link, useNavigate } from "react-router-dom"
+import React, { useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreateUser = () => {
-  const [roles, setRoles] = useState()
+  const [roles, setRoles] = useState();
 
   const [userInput, setUserInput] = useState({
-    name: "",
+    fullname: "",
     email: "",
     phone: "",
     password: "",
     roles: [],
-  })
+  });
 
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const onChangeHandle = (e) => {
-    setUserInput({ ...userInput, [e.target.name]: e.target.value })
-  }
-  const navigate = useNavigate()
+    setUserInput({ ...userInput, [e.target.name]: e.target.value });
+  };
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     axios
       .post("http://localhost:5000/api/v1/user/createUser", {
         userInput,
       })
       .then((res) => {
-        console.log(res)
-        navigate("/admin/user")
+        console.log(res);
+        navigate("/admin/user");
       })
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="flex h-auto justify-center items-center">
       <div className="w-full bg-white rounded p-3">
@@ -140,7 +140,7 @@ const CreateUser = () => {
         Back
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default CreateUser
+export default CreateUser;

@@ -101,6 +101,7 @@ const SignUp = () => {
         <div className="login__wrapper">
           <div className="login__icon text-center mb-3">
             <img
+            alt="Icon login"
               src="https://www.galaxycine.vn/_next/static/media/icon-login.fbbf1b2d.svg"
               className="my-0 mx-auto object-cover duration-500 ease-in-out group-hover:opacity-100"
             ></img>

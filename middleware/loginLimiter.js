@@ -5,7 +5,7 @@ const loginLimit = rateLimit({
     windowMS: 60 * 1000,
     max: 5,
     message: 
-        {message: 'Too many login attemtps from this IP, please try again after a 60 second pause'},
+        {message: 'Too many login attempts from this IP, please try again after a 60 second pause'},
     handler: (req, res, next, options) => {
         logEvents(`${options.message.message}\t${req.method}\t${req.url}\t${req.headers.origin}`, 'errLog.log')
         res.status(options.statusCode).send(options.message)

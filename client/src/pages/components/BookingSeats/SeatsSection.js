@@ -1,69 +1,69 @@
-import dayjs from "dayjs"
-import React, { useEffect, useState, useContext } from "react"
-import { useParams, useLocation } from "react-router-dom"
-import BookingSeatSummary from "./BookingSeats-summary"
-import AppContext from "../../../context/AppContext"
+import dayjs from "dayjs";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import BookingSeatSummary from "./BookingSeats-summary";
+import AppContext from "../../../context/AppContext";
+import SeatLayout from "./SeatLayout";
 
 const SeatsSection = () => {
-  const [showtimes, setShowtimes] = useState([])
-  const [movies, setMovies] = useState([])
-  const [cinemas, setCinemas] = useState([])
-  const [selectedDate, setSelectedDate] = useState("")
-  const [selectedShowtime, setSelectedShowtime] = useState(null)
-  const [selectedCinemaId, setSelectedCinemaId] = useState("")
-  const [selectedSeats, setSelectedSeats] = useState([])
-  const [total, setTotal] = useState(0)
+  const [showtimes, setShowtimes] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [cinemas, setCinemas] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedShowtime, setSelectedShowtime] = useState(null);
+  const [selectedCinemaId, setSelectedCinemaId] = useState("");
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [total, setTotal] = useState(0);
 
   const { setShowLoginModal, setShowModal, setOverSeats, SEATLIMIT } =
-    useContext(AppContext)
+    useContext(AppContext);
 
-  const { id } = useParams()
-  const location = useLocation()
+  const { id } = useParams();
+  const location = useLocation();
 
-  const query = new URLSearchParams(location.search)
-  const initialDate = query.get("date")
-  const initialCinemaId = query.get("cinema")
-  const initialTime = query.get("showtime")
+  const query = new URLSearchParams(location.search);
+  const initialDate = query.get("date");
+  const initialCinemaId = query.get("cinema");
+  const initialTime = query.get("showtime");
 
   useEffect(() => {
-    setSelectedDate(initialDate)
-    setSelectedCinemaId(initialCinemaId)
-    setSelectedShowtime(initialTime)
-  }, [initialDate, initialCinemaId, initialTime])
+    setSelectedDate(initialDate);
+    setSelectedCinemaId(initialCinemaId);
+    setSelectedShowtime(initialTime);
+  }, [initialDate, initialCinemaId, initialTime]);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/movie/getMovie/" + id)
       .then((res) => res.json())
       .then((data) => setMovies(data))
-      .catch((err) => console.error("Error fetching movie: ", err))
-  }, [id])
+      .catch((err) => console.error("Error fetching movie: ", err));
+  }, [id]);
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/v1/showtime/getShowtime/${id}`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Network response was not ok " + res.statusText)
+          throw new Error("Network response was not ok " + res.statusText);
         }
-        return res.json()
+        return res.json();
       })
       .then((data) => {
-        setShowtimes(Array.isArray(data) ? data : [])
+        setShowtimes(Array.isArray(data) ? data : []);
       })
-      .catch((err) => console.error("Error fetching showtimes: ", err))
-  }, [id])
+      .catch((err) => console.error("Error fetching showtimes: ", err));
+  }, [id]);
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/v1/cinema/getCinema/${selectedCinemaId}`)
-    
       .then((res) => res.json())
       .then((data) => setCinemas(data))
-      .catch((err) => console.error("Error fetching cinema: ", err))
-  }, [selectedCinemaId])
+      .catch((err) => console.error("Error fetching cinema: ", err));
+  }, [selectedCinemaId]);
 
   const filteredShowtimes = showtimes.filter((showtime) => {
-    const showtimeStartDate = dayjs(showtime.startDate, "YYYY-MM-DD")
-    const showtimeEndDate = dayjs(showtime.endDate, "YYYY-MM-DD")
-    const selectedDateObj = dayjs(selectedDate, "YYYY-MM-DD")
+    const showtimeStartDate = dayjs(showtime.startDate, "YYYY-MM-DD");
+    const showtimeEndDate = dayjs(showtime.endDate, "YYYY-MM-DD");
+    const selectedDateObj = dayjs(selectedDate, "YYYY-MM-DD");
     return (
       selectedDateObj.isBetween(
         showtimeStartDate,
@@ -71,8 +71,8 @@ const SeatsSection = () => {
         null,
         "[]"
       ) && showtime.cinemaId === selectedCinemaId
-    )
-  })
+    );
+  });
 
   const handleSeatClick = (
     rowLetter,
@@ -84,7 +84,7 @@ const SeatsSection = () => {
       // Check if the seat is already selected
       const isSeatSelected = prevSelectedSeats.some(
         (seat) => seat.uniqueSeatId === uniqueSeatId
-      )
+      );
 
       // Update total based on seat selection status
       const newTotal = isSeatSelected
@@ -95,7 +95,7 @@ const SeatsSection = () => {
                 : total,
             total
           )
-        : total + ticketPrice
+        : total + ticketPrice;
 
       // Update selected seats
       const newSelectedSeats = isSeatSelected
@@ -103,32 +103,32 @@ const SeatsSection = () => {
         : [
             ...prevSelectedSeats,
             { rowLetter, seatNumber, uniqueSeatId, ticketPrice },
-          ]
+          ];
 
-      return newSelectedSeats
-    })
+      return newSelectedSeats;
+    });
 
     // Update total separately
     setTotal((prevTotal) => {
       const isSeatSelected = selectedSeats.some(
         (seat) => seat.uniqueSeatId === uniqueSeatId
-      )
+      );
 
-      return isSeatSelected ? prevTotal - ticketPrice : prevTotal + ticketPrice
-    })
-  }
+      return isSeatSelected ? prevTotal - ticketPrice : prevTotal + ticketPrice;
+    });
+  };
 
-  const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+  const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   const handleShowtimeClick = (showtime) => {
-    setSelectedShowtime(showtime)
-    setSelectedSeats([])
-  }
+    setSelectedShowtime(showtime);
+    setSelectedSeats([]);
+  };
   if (selectedSeats.length > SEATLIMIT) {
-    selectedSeats.pop()
-    setOverSeats(true)
-    setShowModal(true)
-    setShowLoginModal(false)
+    selectedSeats.pop();
+    setOverSeats(true);
+    setShowModal(true);
+    setShowLoginModal(false);
   }
 
   return (
@@ -142,7 +142,7 @@ const SeatsSection = () => {
           </div>
           <div className="col-span-8 flex-row gap-4 flex-wrap items-center md:flex hidden">
             {filteredShowtimes.map((filterdShowtime) => {
-              const isSelected = selectedShowtime === filterdShowtime.startAt
+              const isSelected = selectedShowtime === filterdShowtime.startAt;
               return (
                 <button
                   key={filterdShowtime._id}
@@ -153,7 +153,7 @@ const SeatsSection = () => {
                 >
                   {filterdShowtime.startAt}
                 </button>
-              )
+              );
             })}
           </div>
         </div>
@@ -171,10 +171,10 @@ const SeatsSection = () => {
                     </div>
                     <div className="flex md:gap-2 gap-1 grow justify-center min-w-[398px] flex-1">
                       {rowSeats.map((seat, seatIndex) => {
-                        const uniqueSeatId = `${rowIndex}-${seatIndex}`
+                        const uniqueSeatId = `${rowIndex}-${seatIndex}`;
                         const isSelected = selectedSeats.some(
                           (seat) => seat.uniqueSeatId === uniqueSeatId
-                        )
+                        );
                         return (
                           <button
                             key={uniqueSeatId}
@@ -198,7 +198,7 @@ const SeatsSection = () => {
                               {seatIndex + 1}
                             </span>
                           </button>
-                        )
+                        );
                       })}
                     </div>
                     <div className="text-sm text-[#777777] font-semibold flex-none w-5 text-right ">
@@ -209,36 +209,7 @@ const SeatsSection = () => {
               </ul>
             ) : null}
           </div>
-          <div className="seat__layout-screen">
-            <p className="text-[12px] text-[#cccccc] text-center">Màn hình</p>
-            <div className="border-2 border-[#ff8455] mt-3"></div>
-            <div className="text-sm flex md:flex-row flex-col-reverse justify-between items-center py-9 gap-2">
-              <div className="flex gap-5">
-                <div>
-                  <span className="w-5 h-5 rounded bg-[#d0d0d0] inline-block align-middle"></span>
-                  <span className="ml-2">Ghế đã bán</span>
-                </div>
-                <div>
-                  <span className="w-5 h-5 rounded bg-[#f26b38] inline-block align-middle"></span>
-                  <span className="ml-2">Ghế đang chọn</span>
-                </div>
-              </div>
-              <div className="flex gap-5">
-                <div>
-                  <span className="w-5 h-5 rounded border border-[#f2c94c] inline-block align-middle"></span>
-                  <span className="ml-2">Ghế VIP</span>
-                </div>
-                <div>
-                  <span className="w-5 h-5 rounded border border-[#d0d0d0] inline-block align-middle"></span>
-                  <span className="ml-2">Ghế đơn</span>
-                </div>
-                <div>
-                  <span className="w-[46px] h-5 rounded border border-[#034ea2] inline-block align-middle"></span>
-                  <span className="ml-2">Ghế đôi</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <SeatLayout></SeatLayout>
         </div>
       </div>
       <BookingSeatSummary
@@ -250,7 +221,7 @@ const SeatsSection = () => {
         selectedSeats={selectedSeats}
       ></BookingSeatSummary>
     </div>
-  )
-}
+  );
+};
 
-export default SeatsSection
+export default SeatsSection;

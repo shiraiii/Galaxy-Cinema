@@ -1,52 +1,50 @@
-import axios from "axios"
-import React, { useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import dayjs from "dayjs"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"
-import OutlinedInput from "@mui/material/OutlinedInput"
-import InputLabel from "@mui/material/InputLabel"
-import MenuItem from "@mui/material/MenuItem"
-import FormControl from "@mui/material/FormControl"
-import { useTheme } from "@mui/material/styles"
-import ListItemText from "@mui/material/ListItemText"
-import Select from "@mui/material/Select"
-import Checkbox from "@mui/material/Checkbox"
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import { useTheme } from "@mui/material/styles";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
 
 const UpdateUser = () => {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const [movieName, setMovieName] = useState("")
+  const [movieName, setMovieName] = useState("");
 
-  const [movieImg, setMovieImg] = useState("")
+  const [movieImg, setMovieImg] = useState("");
 
-  const [movieRating, setMovieRating] = useState("")
+  const [movieRating, setMovieRating] = useState("");
 
-  const [ageLimit, setAgeLimit] = useState("")
+  const [ageLimit, setAgeLimit] = useState("");
 
-  const [movieBanner, setMovieBanner] = useState("")
+  const [movieBanner, setMovieBanner] = useState("");
 
-  const [producers, setProducers] = useState("")
+  const [producers, setProducers] = useState("");
 
-  const [directors, setDirectors] = useState("")
+  const [directors, setDirectors] = useState("");
 
-  const [actors, setActors] = useState("")
+  const [actors, setActors] = useState("");
 
-  const [casts, setCasts] = useState("")
+  const [casts, setCasts] = useState("");
 
-  const [description, setDescription] = useState("")
+  const [description, setDescription] = useState("");
 
-  const [duration, setDuration] = useState("")
+  const [duration, setDuration] = useState("");
 
-  const [nation, setNation] = useState("")
+  const [nation, setNation] = useState("");
 
-  const [releaseDate, setReleaseDate] = useState(dayjs())
+  const [releaseDate, setReleaseDate] = useState(dayjs());
 
-  const [endDate, setEndDate] = useState(dayjs())
+  const [endDate, setEndDate] = useState(dayjs());
 
-  const [genres, setGenres] = useState([])
-
-  const theme = useTheme()
+  const [genres, setGenres] = useState([]);
 
   const genresOpt = [
     "Hài",
@@ -59,10 +57,10 @@ const UpdateUser = () => {
     "tốc nhiệm",
     "lãng mạn",
     "tâm lý",
-  ]
+  ];
 
-  const ITEM_HEIGHT = 48
-  const ITEM_PADDING_TOP = 8
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
   const MenuProps = {
     PaperProps: {
       style: {
@@ -70,7 +68,7 @@ const UpdateUser = () => {
         width: 250,
       },
     },
-  }
+  };
 
   function getStyles(genre, genresOpt, theme) {
     return {
@@ -78,54 +76,54 @@ const UpdateUser = () => {
         genresOpt.indexOf(genre) === -1
           ? theme.typography.fontWeightRegular
           : theme.typography.fontWeightMedium,
-    }
+    };
   }
 
   const handleGenreChange = (e) => {
-    const { value } = e.target
+    const { value } = e.target;
 
     setGenres((prevGenres) => {
       return value
         .filter((genre) => prevGenres.includes(genre))
-        .concat(prevGenres.filter((genre) => !value.includes(genre)))
-    })
-  }
+        .concat(prevGenres.filter((genre) => !value.includes(genre)));
+    });
+  };
 
   useEffect(() => {
     const fectchData = async () => {
       try {
         const response = await axios.get(
           "http://localhost:5000/api/v1/movie/getMovie/" + id
-        )
-        const fectcGenres = response.data.genres.map((genre) => genre.trim())
-        setMovieName(response.data.movieName)
-        setMovieImg(response.data.movieImg)
-        setMovieRating(response.data.movieRating)
-        setAgeLimit(response.data.ageLimit)
-        setMovieBanner(response.data.movieBanner)
-        setActors(response.data.actors)
-        setProducers(response.data.producers)
-        setDirectors(response.data.directors)
-        setCasts(response.data.casts)
-        setDescription(response.data.description)
-        setDuration(response.data.duration)
-        setNation(response.data.nation)
-        setReleaseDate(dayjs(response.data.releaseDate))
-        setEndDate(dayjs(response.data.endDate))
-        console.log("Fetched genres:", fectcGenres)
-        setGenres(fectcGenres)
-        console.log(genresOpt)
+        );
+        const fectcGenres = response.data.genres.map((genre) => genre.trim());
+        setMovieName(response.data.movieName);
+        setMovieImg(response.data.movieImg);
+        setMovieRating(response.data.movieRating);
+        setAgeLimit(response.data.ageLimit);
+        setMovieBanner(response.data.movieBanner);
+        setActors(response.data.actors);
+        setProducers(response.data.producers);
+        setDirectors(response.data.directors);
+        setCasts(response.data.casts);
+        setDescription(response.data.description);
+        setDuration(response.data.duration);
+        setNation(response.data.nation);
+        setReleaseDate(dayjs(response.data.releaseDate));
+        setEndDate(dayjs(response.data.endDate));
+        console.log("Fetched genres:", fectcGenres);
+        setGenres(fectcGenres);
+        console.log(genresOpt);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }
-    fectchData()
-  }, [id])
+    };
+    fectchData();
+  }, [id]);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleUpdate = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     axios
       .put("http://localhost:5000/api/v1/movie/updateMovie/" + id, {
         movieName,
@@ -145,10 +143,10 @@ const UpdateUser = () => {
         genres,
       })
       .then((res) => {
-        navigate("/admin/movie")
+        navigate("/admin/movie");
       })
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="flex h-100 justify-center items-center">
@@ -327,7 +325,7 @@ const UpdateUser = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UpdateUser
+export default UpdateUser;

@@ -1,8 +1,8 @@
-import axios from "axios"
-import dayjs from "dayjs"
-import React, { useEffect, useState, useContext } from "react"
-import { useNavigate } from "react-router-dom"
-import AppContext from "../../../context/AppContext"
+import axios from "axios";
+import dayjs from "dayjs";
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import AppContext from "../../../context/AppContext";
 
 const BookingSeatSummary = ({
   movies,
@@ -24,13 +24,13 @@ const BookingSeatSummary = ({
     userId: "",
     username: "",
     phone: "",
-  })
-  const navigate = useNavigate()
-  const { setRedirectPath } = useContext(AppContext)
+  });
+  const navigate = useNavigate();
+  const { setRedirectPath } = useContext(AppContext);
 
   useEffect(() => {
-    const dataString = sessionStorage.getItem("userInfo")
-    const data = JSON.parse(dataString)
+    const dataString = sessionStorage.getItem("userInfo");
+    const data = JSON.parse(dataString);
     if (data) {
       setUserInput(() => ({
         seats: selectedSeats,
@@ -43,13 +43,13 @@ const BookingSeatSummary = ({
         cinemaId: cinemas._id,
         userId: data.id,
         ticketPrice: cinemas.ticketPrice,
-      }))
+      }));
     }
-  }, [date, time, total, selectedSeats, cinemas, movies])
+  }, [date, time, total, selectedSeats, cinemas, movies]);
   const dayOfTheWeek = (dateString) => {
-    const [day, month, year] = dateString.split("/")
+    const [day, month, year] = dateString.split("/");
 
-    const date = new Date(year, month - 1, day)
+    const date = new Date(year, month - 1, day);
 
     const daysOfWeek = [
       "Chủ Nhật",
@@ -59,16 +59,16 @@ const BookingSeatSummary = ({
       "Thứ Năm",
       "Thứ Sáu",
       "Thứ Bảy",
-    ]
+    ];
 
-    const dayOfWeekNumber = date.getDay()
+    const dayOfWeekNumber = date.getDay();
 
-    return daysOfWeek[dayOfWeekNumber]
-  }
+    return daysOfWeek[dayOfWeekNumber];
+  };
 
-  const formattedDate = dayjs(date).format("DD/MM/YYYY")
-  const formattedTotal = new Intl.NumberFormat("vi-VN").format(total)
-  const dayOfWeek = dayOfTheWeek(formattedDate)
+  const formattedDate = dayjs(date).format("DD/MM/YYYY");
+  const formattedTotal = new Intl.NumberFormat("vi-VN").format(total);
+  const dayOfWeek = dayOfTheWeek(formattedDate);
 
   const handleSubmit = async (e) => {
     try {
@@ -76,13 +76,13 @@ const BookingSeatSummary = ({
         method: "POST",
         url: "http://localhost:5000/api/v1/reservation/createReservation",
         data: userInput,
-      }
-      const response = await axios(option)
-      console.log(response.data)
+      };
+      const response = await axios(option);
+      console.log(response.data);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 
   return (
     <div className="col-span-1 xl:pl-4 xl:order-none order-first py-4">
@@ -112,10 +112,12 @@ const BookingSeatSummary = ({
               {movies.movieName}
             </h3>
             <p className="text-sm inline-block">2D Phụ Đề</p>
-            <span>-</span>
+            <span> - </span>
             {movies.ageLimit ? (
               <div className="xl:mt-2 ml-2 xl:ml-0 inline-block">
-                <span className="inline-flex items-center justify-center w-[38px] h-7 bg-[#f58020] rounded text-sm text-center text-white font-bold not-italic"></span>
+                <span className="inline-flex items-center justify-center w-[38px] h-7 bg-[#f58020] rounded text-sm text-center text-white font-bold not-italic">
+                  {movies.ageLimit}
+                </span>
               </div>
             ) : null}
           </div>
@@ -187,7 +189,7 @@ const BookingSeatSummary = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BookingSeatSummary
+export default BookingSeatSummary;
