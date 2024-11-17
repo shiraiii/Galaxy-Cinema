@@ -18,15 +18,13 @@ const BookingSeatSummary = ({
     date: dayjs(),
     startAt: "",
     ticketPrice: "",
-    total: Number,
+    total: 0,
     movieId: "",
     cinemaId: "",
     userId: "",
     username: "",
     phone: "",
   });
-  const navigate = useNavigate();
-  const { setRedirectPath } = useContext(AppContext);
 
   useEffect(() => {
     const dataString = sessionStorage.getItem("userInfo");
@@ -36,7 +34,7 @@ const BookingSeatSummary = ({
         seats: selectedSeats,
         date: date,
         startAt: time,
-        total: selectedSeats.length * cinemas.ticketPrice,
+        total: total,
         username: data.userName,
         phone: data.phone,
         movieId: movies._id,

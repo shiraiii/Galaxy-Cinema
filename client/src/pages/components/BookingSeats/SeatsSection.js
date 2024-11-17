@@ -81,23 +81,17 @@ const SeatsSection = () => {
     ticketPrice
   ) => {
     setSelectedSeats((prevSelectedSeats) => {
-      // Check if the seat is already selected
       const isSeatSelected = prevSelectedSeats.some(
         (seat) => seat.uniqueSeatId === uniqueSeatId
       );
 
-      // Update total based on seat selection status
-      const newTotal = isSeatSelected
-        ? prevSelectedSeats.reduce(
-            (total, seat) =>
-              seat.uniqueSeatId === uniqueSeatId
-                ? total - seat.ticketPrice
-                : total,
-            total
-          )
-        : total + ticketPrice;
+      if (!isSeatSelected && prevSelectedSeats.length >= SEATLIMIT) {
+        setShowModal(true);
+        setShowLoginModal(false);
+        setOverSeats(true);
+        return prevSelectedSeats;
+      }
 
-      // Update selected seats
       const newSelectedSeats = isSeatSelected
         ? prevSelectedSeats.filter((seat) => seat.uniqueSeatId !== uniqueSeatId)
         : [
@@ -105,16 +99,14 @@ const SeatsSection = () => {
             { rowLetter, seatNumber, uniqueSeatId, ticketPrice },
           ];
 
-      return newSelectedSeats;
-    });
-
-    // Update total separately
-    setTotal((prevTotal) => {
-      const isSeatSelected = selectedSeats.some(
-        (seat) => seat.uniqueSeatId === uniqueSeatId
+      const newTotal = newSelectedSeats.reduce(
+        (sum, seat) => sum + seat.ticketPrice,
+        0
       );
 
-      return isSeatSelected ? prevTotal - ticketPrice : prevTotal + ticketPrice;
+      setTotal(newTotal);
+
+      return newSelectedSeats;
     });
   };
 
@@ -124,12 +116,6 @@ const SeatsSection = () => {
     setSelectedShowtime(showtime);
     setSelectedSeats([]);
   };
-  if (selectedSeats.length > SEATLIMIT) {
-    selectedSeats.pop();
-    setOverSeats(true);
-    setShowModal(true);
-    setShowLoginModal(false);
-  }
 
   return (
     <div className="md:container md:mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 lg:max-w-4xl md:px-0 sm:px-[45px] grid xl:grid-cols-3 grid-cols-1 ">
