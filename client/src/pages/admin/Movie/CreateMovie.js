@@ -6,10 +6,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { TextField, useTheme } from "@mui/material";
 import dayjs from "dayjs";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
@@ -42,11 +39,17 @@ const CreateMovie = () => {
     "Hành động",
     "giả tưởng",
     "phiêu lưu",
-    "kinh diễn",
+    "kinh điển",
     "văn hóa",
     "tốc nhiệm",
     "lãng mạn",
     "tâm lý",
+    "kinh dị",
+    "hoạt hình",
+    "hài",
+    "nhạc kịch",
+    "tình cảm",
+    "tiểu sử"
   ];
 
   const ITEM_HEIGHT = 48;
@@ -112,9 +115,9 @@ const CreateMovie = () => {
     <div className="flex h-auto justify-center items-center">
       <div className="w-full bg-white rounded p-3">
         <form onSubmit={handleSubmit} className="mb-3">
-          <h2>Add Movie</h2>
+          <h2 className="mb-3">Add Movie</h2>
           <TextField
-            className="textField-css"
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             id="movieName"
             label="Tên phim"
             name="movieName"
@@ -123,7 +126,7 @@ const CreateMovie = () => {
             variant="outlined"
           ></TextField>
           <TextField
-            className="textField-css pr-2"
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             id="producers"
             label="Nhà sản xuất"
             name="producers"
@@ -131,7 +134,7 @@ const CreateMovie = () => {
             onChange={onChangeHandle}
           ></TextField>
           <TextField
-            className="textField-css"
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             labelId="demo-multiple-checkbox-label"
             id="genres"
             name="genres"
@@ -149,6 +152,7 @@ const CreateMovie = () => {
           >
             {genresOpt.map((genre, index) => (
               <MenuItem
+                className="capitalize"
                 key={genre + "-" + index}
                 value={genre}
                 style={getStyles(genre, genresOpt, theme)}
@@ -158,7 +162,7 @@ const CreateMovie = () => {
             ))}
           </TextField>
           <TextField
-            className="textField-css pr-2"
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             autoComplete="true"
             id="directors"
             label="Đạo diễn"
@@ -167,7 +171,7 @@ const CreateMovie = () => {
             onChange={onChangeHandle}
           ></TextField>
           <TextField
-            className="textField-css"
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             id="casts"
             label="Diễn viên"
             name="casts"
@@ -176,17 +180,17 @@ const CreateMovie = () => {
           ></TextField>
 
           <TextField
-            className="textFeild-css pr-2"
+            className="w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300 pr-2"
             id="duration"
             label="Thời lượng phim"
             name="duration"
-            value={userInput.nation}
+            value={userInput.duration}
             onChange={onChangeHandle}
             autoComplete="true"
           ></TextField>
 
           <TextField
-            className="textField-css "
+            className=" w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300 pr-2"
             id="movieImg"
             label="Ảnh phim"
             name="movieImg"
@@ -196,7 +200,7 @@ const CreateMovie = () => {
           ></TextField>
 
           <TextField
-            className="textField-css pr-2"
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             id="movieBanner"
             label="Banner phim"
             name="movieBanner"
@@ -205,7 +209,7 @@ const CreateMovie = () => {
           ></TextField>
 
           <TextField
-            className="textField-css"
+            className=" w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300 pr-2"
             id="movieRating"
             label="Đánh giá"
             name="movieRating"
@@ -214,16 +218,16 @@ const CreateMovie = () => {
           ></TextField>
 
           <TextField
-            className="textField-css pr-2"
+            className=" pr-2  w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             id="ageLimit"
             name="ageLimit"
-            label="Đồ tuổi"
+            label="Độ tuổi"
             value={userInput.ageLimit}
             onChange={onChangeHandle}
           ></TextField>
 
           <TextField
-            className="textField-css"
+            className=" w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300 pr-2"
             id="nation"
             label="Quốc gia"
             name="nation"
@@ -232,7 +236,7 @@ const CreateMovie = () => {
           ></TextField>
 
           <TextField
-            className="textField-css pr-2"
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             id="votes"
             type="number"
             label="Lượt đánh giá"

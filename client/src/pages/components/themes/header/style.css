@@ -1,17 +1,16 @@
-
-
-.Header_header_iG0T4{
-    min-height: 80px;
-    width: 100%;
-    background: #fff;
-    display: block;
+.Header_header_iG0T4 {
+  min-height: 80px;
+  width: 100%;
+  background: #fff;
+  display: block;
 }
 
-.Card_card__title__kFoFc a, .Card_card__title__kFoFc h3 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: pre-wrap;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+.Card_card__title__kFoFc a,
+.Card_card__title__kFoFc h3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }

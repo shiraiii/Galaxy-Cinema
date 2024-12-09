@@ -131,14 +131,20 @@ const CreateUser = () => {
               onChange={onChangeHandle}
             ></input>
           </span>
-          <button className="bg-blue-500 text-white rounded px-2 py-1">
-            Thêm
-          </button>
+          <div className="mt-1">
+            <button className="bg-blue-500 text-white rounded px-2 py-1">
+              Thêm
+            </button>
+
+            <Link
+              to={"/admin"}
+              className="bg-red-500 text-white rounded px-2 py-1.5 ml-2 "
+            >
+              Back
+            </Link>
+          </div>
         </form>
       </div>
-      <Link to={"/admin"} className="bg-red-500 text-white rounded px-2 py-1">
-        Back
-      </Link>
     </div>
   );
 };

@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import "./index.css";
 import "./App.js";
 import { store } from "./app/store.js";
-import { useEffect } from "react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

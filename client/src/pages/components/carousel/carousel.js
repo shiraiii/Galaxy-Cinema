@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
-import Slider from "react-slick"
-import "./carousel.css"
+import React, { useEffect, useState } from "react";
+import Slider from "react-slick";
+import "./carousel.css";
 
 const Carousel = () => {
   var settings = {
@@ -68,14 +68,14 @@ const Carousel = () => {
       </div>
     ),
     customPaging: (i) => <div style={{ width: "10px", height: "10px" }}></div>,
-  }
+  };
 
-  const [slideImgs, setSlideImgs] = useState([])
+  const [slideImgs, setSlideImgs] = useState([]);
   useEffect(() => {
     fetch("/api/slideImg")
       .then((res) => res.json())
-      .then((data) => setSlideImgs(data))
-  }, [])
+      .then((data) => setSlideImgs(data));
+  }, []);
 
   return (
     <Slider className="md:block " {...settings}>
@@ -92,10 +92,10 @@ const Carousel = () => {
               alt={slideImg?.alt}
             ></img>
           </a>
-        )
+        );
       })}
     </Slider>
-  )
-}
+  );
+};
 
-export default Carousel
+export default Carousel;

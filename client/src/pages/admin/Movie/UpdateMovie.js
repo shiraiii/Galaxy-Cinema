@@ -5,16 +5,13 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import { useTheme } from "@mui/material/styles";
-import ListItemText from "@mui/material/ListItemText";
-import Select from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
+import { TextField, useTheme } from "@mui/material";
 
 const UpdateUser = () => {
   const { id } = useParams();
+
+  const theme = useTheme();
 
   const [movieName, setMovieName] = useState("");
 
@@ -52,11 +49,17 @@ const UpdateUser = () => {
     "Hành động",
     "giả tưởng",
     "phiêu lưu",
-    "kinh diễn",
+    "kinh điển",
     "văn hóa",
     "tốc nhiệm",
     "lãng mạn",
     "tâm lý",
+    "hoạt hình",
+    "kinh dị",
+    "hài",
+    "nhạc kịch",
+    "tiểu sử",
+    "tình cảm",
   ];
 
   const ITEM_HEIGHT = 48;
@@ -79,16 +82,6 @@ const UpdateUser = () => {
     };
   }
 
-  const handleGenreChange = (e) => {
-    const { value } = e.target;
-
-    setGenres((prevGenres) => {
-      return value
-        .filter((genre) => prevGenres.includes(genre))
-        .concat(prevGenres.filter((genre) => !value.includes(genre)));
-    });
-  };
-
   useEffect(() => {
     const fectchData = async () => {
       try {
@@ -110,9 +103,7 @@ const UpdateUser = () => {
         setNation(response.data.nation);
         setReleaseDate(dayjs(response.data.releaseDate));
         setEndDate(dayjs(response.data.endDate));
-        console.log("Fetched genres:", fectcGenres);
         setGenres(fectcGenres);
-        console.log(genresOpt);
       } catch (err) {
         console.log(err);
       }
@@ -142,7 +133,7 @@ const UpdateUser = () => {
         endDate,
         genres,
       })
-      .then((res) => {
+      .then(() => {
         navigate("/admin/movie");
       })
       .catch((err) => console.log(err));
@@ -152,134 +143,115 @@ const UpdateUser = () => {
     <div className="flex h-100 justify-center items-center">
       <div className="w-full bg-white rounded p-3">
         <form onSubmit={handleUpdate}>
-          <h2>Update Movie</h2>
-          <label
-            htmlFor=""
-            className="text-xs block font-bold not-italic text-[#777777]"
+          <h2 className="mb-3">Update Movie</h2>
+          <TextField
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Tên phim"
+            value={movieName}
+            autoComplete="true"
+            type="text"
+            id="movieName"
+            onChange={(e) => setMovieName(e.target.value)}
+          ></TextField>
+          <TextField
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Ảnh phim"
+            value={movieImg}
+            required
+            autoComplete="true"
+            type="text"
+            id="movieImg"
+            onChange={(e) => setMovieImg(e.target.value)}
+          ></TextField>
+          <TextField
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Ảnh banner phim"
+            value={movieBanner}
+            required
+            autoComplete="true"
+            type="text"
+            id="movieBanner"
+            onChange={(e) => setMovieBanner(e.target.value)}
+          ></TextField>
+          <TextField
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Đánh giá"
+            value={movieRating}
+            required
+            autoComplete="true"
+            type="text"
+            id="movieRating"
+            onChange={(e) => setMovieRating(e.target.value)}
+          ></TextField>
+
+          <TextField
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Độ tuổi"
+            value={ageLimit}
+            autoComplete="true"
+            type="text"
+            id="ageLimit"
+            onChange={(e) => setAgeLimit(e.target.value)}
+          ></TextField>
+
+          <TextField
+            id="genres"
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Thể loại"
+            labelId="demo-multiple-checkbox-label"
+            select
+            name="genres"
+            multiple
+            value={genres}
+            onChange={(e) => setGenres(e.target.value)}
+            input={<OutlinedInput label="Tag" />}
+            renderValue={(selected) => selected.join(", ")}
+            MenuProps={MenuProps}
+            SelectProps={{ multiple: true }}
           >
-            Tên phim
-          </label>
-          <span className="w-full mb-1 relative h-auto border inline-flex items-center min-w-0 text-sm bg-white rounded transition-all duration-300">
-            <input
-              autoComplete="true"
-              type="text"
-              id="movieName"
-              placeholder="Nhập tên phim"
-              className="bg-transparent w-full h-9 focus:ring-2 focus:outline-blue-500 focus:rounded px-2"
-              name="fullname"
-              value={movieName}
-              onChange={(e) => setMovieName(e.target.value)}
-            ></input>
-          </span>
-          <label
-            htmlFor=""
-            className="text-xs block font-bold not-italic text-[#777777]"
-          >
-            Ảnh phim
-          </label>
-          <span className="w-full mb-1 relative h-auto border inline-flex items-center min-w-0 text-sm bg-white rounded transition-all duration-300">
-            <input
-              value={movieImg}
-              required
-              autoComplete="true"
-              type="text"
-              id="movieImg"
-              placeholder="Ảnh phim"
-              className="bg-transparent w-full h-9 focus:ring-2 focus:outline-blue-500 focus:rounded px-2"
-              onChange={(e) => setMovieImg(e.target.value)}
-            ></input>
-          </span>
-          <label
-            htmlFor=""
-            className="text-xs block font-bold not-italic text-[#777777]"
-          >
-            Ảnh banner phim
-          </label>
-          <span className="w-full mb-1 relative h-auto border inline-flex items-center min-w-0 text-sm bg-white rounded transition-all duration-300">
-            <input
-              value={movieBanner}
-              required
-              autoComplete="true"
-              type="text"
-              id="movieBanner"
-              placeholder="Ảnh banner phim"
-              className="bg-transparent w-full h-9 focus:ring-2 focus:outline-blue-500 focus:rounded px-2"
-              onChange={(e) => setMovieBanner(e.target.value)}
-            ></input>
-          </span>
-          <label
-            htmlFor=""
-            className="text-xs block font-bold not-italic text-[#777777]"
-          >
-            Đánh giá
-          </label>
-          <span className="w-full mb-1 relative h-auto border inline-flex items-center min-w-0 text-sm bg-white rounded transition-all duration-300">
-            <input
-              value={movieRating}
-              required
-              autoComplete="true"
-              type="text"
-              id="movieRating"
-              placeholder="Nhập đánh giá"
-              className="bg-transparent w-full h-9 focus:ring-2 focus:outline-blue-500 focus:rounded px-2"
-              onChange={(e) => setMovieRating(e.target.value)}
-            ></input>
-          </span>
-          <label
-            htmlFor=""
-            className="text-xs block font-bold not-italic text-[#777777]"
-          >
-            Độ tuổi
-          </label>
-          <span className="w-full mb-1 relative h-auto border inline-flex items-center min-w-0 text-sm bg-white rounded transition-all duration-300">
-            <input
-              value={ageLimit}
-              autoComplete="true"
-              type="text"
-              id="ageLimit"
-              placeholder="Nhập độ tuổi"
-              className="bg-transparent w-full h-9 focus:ring-2 focus:outline-blue-500 focus:rounded px-2"
-              onChange={(e) => setAgeLimit(e.target.value)}
-            ></input>
-          </span>
-          <FormControl
-            className="w-full mb-1 relative h-auto border inline-flex itemscenter min-w-0 text-sm bg-white rounded transition-all duration-500 "
-            sx={{ m: 1, width: 300 }}
-          >
-            <InputLabel id="demo-multiple-checkbox-label">Thể loại</InputLabel>
-            <Select
-              id="genres"
-              multiple
-              value={genres}
-              onChange={(e) => setGenres(e.target.value)}
-              input={<OutlinedInput label="Tag" />}
-              renderValue={(selected) => selected.join(", ")}
-              MenuProps={MenuProps}
-            >
-              {genresOpt.map((genre, index) => (
-                <MenuItem key={genre + "-" + index} value={genre}>
-                  {genre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <label
-            htmlFor=""
-            className="text-xs block font-bold not-italic text-[#777777]"
-          >
-            Nhà sản xuất
-          </label>
-          <span className="w-full mb-1 relative h-auto border inline-flex items-center min-w-0 text-sm bg-white rounded transition-all duration-300">
-            <input
-              value={producers}
-              autoComplete="true"
-              type="text"
-              id="producers"
-              placeholder="Nhập nhà sản xuất"
-              className="bg-transparent w-full h-9 focus:ring-2 focus:outline-blue-500 focus:rounded px-2"
-              onChange={(e) => setProducers(e.target.value)}
-            ></input>
-          </span>
+            {genresOpt.map((genre, index) => (
+              <MenuItem
+                className="capitalize"
+                key={genre + "-" + index}
+                value={genre}
+                style={getStyles(genre, genresOpt, theme)}
+              >
+                {genre}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Nhà sản xuất"
+            value={producers}
+            type="text"
+            id="producers"
+            onChange={(e) => setProducers(e.target.value)}
+          ></TextField>
+          <TextField
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            id="actors"
+            label="Diễn viện"
+            value={casts}
+            type="text"
+            onChange={(e) => setActors(e.target.value)}
+          ></TextField>
+          <TextField
+            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Đạo diễn"
+            id="directors"
+            value={directors}
+            type="text"
+            onChange={(e) => setDirectors(e.target.value)}
+          ></TextField>
+          <TextField
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Quốc gia"
+            value={nation}
+            type="text"
+            id="nation"
+            onChange={(e) => setNation(e.target.value)}
+          ></TextField>
           <label
             htmlFor="releaseDate"
             className="text-xs block font-bold not-italic text-[#777777]"

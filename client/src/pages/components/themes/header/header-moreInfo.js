@@ -1,15 +1,14 @@
-import React, { useContext } from "react"
-import AppContext from "../../../../context/AppContext"
+import React, { useContext } from "react";
+import AppContext from "../../../../context/AppContext";
 
 const HeaderMoreInfo = () => {
-  const { setShowLoginModal, setShowModal, setShowSignUp } =
-    useContext(AppContext)
+  const { setShowLoginModal, setShowSignUp } = useContext(AppContext);
   return (
     <>
       <a
         className="ml-3 text-sm text-[#777] capitalize cursor-pointer transition-all duration-300 hover:text-[#f26b38] "
         onClick={() => {
-          setShowModal("true")
+          setShowLoginModal(true);
         }}
       >
         Đăng nhập
@@ -19,7 +18,7 @@ const HeaderMoreInfo = () => {
           <a className="logo-header cursor-pointer logo__header grow-1 ">
             <img
               style={{ width: 99, height: 38 }}
-              src="https://www.galaxycine.vn/_next/static/media/join-Gstar.24c52de9.svg"
+              src="https://www.galaxycine.vn/media/2024/11/11/join-member-Gstar.svg"
             ></img>
           </a>
           <div className="absolute top-20 right-0 hidden group-hover:md:block hover:md:block z-[400] transition-all duration-300 ease-in-out">
@@ -89,9 +88,8 @@ const HeaderMoreInfo = () => {
                   </h2>
                   <a
                     onClick={() => {
-                      setShowModal(true)
-                      setShowLoginModal(false)
-                      setShowSignUp(true)
+                      setShowSignUp(true);
+                      setShowLoginModal(false);
                     }}
                     className="w-[79px] h-8 leading-8 text-center border border-[#f58020] rounded text-[14px] font-bold not-italic hover:bg-[#f58020] hover:text-white transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] capitalize bg-[#f58020] text-white"
                   >
@@ -104,7 +102,7 @@ const HeaderMoreInfo = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default HeaderMoreInfo
+export default HeaderMoreInfo;

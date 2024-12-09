@@ -1,11 +1,11 @@
-import React from "react"
-import Carousel from "../carousel/carousel"
-import "./homepage.css"
-import { Buysection } from "../buysection/buysection"
-import Moviesection from "../moviesection/moviesection"
-import Blogsection from "../blogsection/blogsection"
-import Promotion from "../promotion/promotion"
-import Advertisesection from "../advertisesection/advertisesection"
+import React from "react";
+import Carousel from "../carousel/carousel";
+import "./homepage.css";
+import Moviesection from "../moviesection/moviesection";
+import Blogsection from "../blogsection/blogsection";
+import Promotion from "../promotion/promotion";
+import Advertisesection from "../advertisesection/advertisesection";
+import Buysection from "../buysection/buysection";
 const Homepage = () => {
   return (
     <main className="Home_main_EtNt2">
@@ -22,7 +22,7 @@ const Homepage = () => {
       <Promotion></Promotion>
       <Advertisesection></Advertisesection>
     </main>
-  )
-}
+  );
+};
 
-export default Homepage
+export default Homepage;

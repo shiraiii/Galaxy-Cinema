@@ -1,52 +1,52 @@
-import dayjs from "dayjs"
-import React, { useContext, useState } from "react"
-import AppContext from "../../../context/AppContext"
-import { useNavigate } from "react-router-dom"
-import utc from "dayjs/plugin/utc"
-import timezone from "dayjs/plugin/timezone"
-import "dayjs/locale/vi"
+import dayjs from "dayjs";
+import React, { useContext, useState } from "react";
+import AppContext from "../../../context/AppContext";
+import { useNavigate } from "react-router-dom";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import "dayjs/locale/vi";
 
-dayjs.extend(utc)
-dayjs.extend(timezone)
-dayjs.locale("vi")
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale("vi");
 const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
-  const navigate = useNavigate()
-  const { isAuth, setShowModal, setRedirectPath } = useContext(AppContext)
-  const dataString = sessionStorage.getItem("userInfo")
-  const data = JSON.parse(dataString)
+  const navigate = useNavigate();
+  const { isAuth, setShowLoginModal, setRedirectPath } = useContext(AppContext);
+  const dataString = sessionStorage.getItem("userInfo");
+  const data = JSON.parse(dataString);
 
-  const [selectedTime, setSelectedTime] = useState(null)
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const bookingMovie = (movieId, showtimeDate, cinemaId, showtime) => {
     const url = `/dat-ve/${movieId}?date=${encodeURIComponent(
       showtimeDate
-    )}&cinema=${encodeURIComponent(cinemaId)}&showtime=${showtime.startAt}`
+    )}&cinema=${encodeURIComponent(cinemaId)}&showtime=${showtime.startAt}`;
     if (data?.token) {
-      navigate(url)
+      navigate(url);
     } else {
       if (setRedirectPath) {
-        setRedirectPath(url)
-        setShowModal(true)
+        setRedirectPath(url);
+        setShowLoginModal(true);
       } else {
-        console.error("setRedirectPath not found")
+        console.error("setRedirectPath not found");
       }
     }
-  }
+  };
 
   return cinemas.map((cinema, index) => {
     const cinemaShowtimes = showtimes
       .filter((showtime) => showtime.cinemaId === cinema._id)
       .map((showtime) => {
-        const date = dayjs().format("YYYY-MM-DD")
-        const fullDateTime = `${date}T${showtime.startAt}:00`
+        const date = dayjs().format("YYYY-MM-DD");
+        const fullDateTime = `${date}T${showtime.startAt}:00`;
         return {
           ...showtime,
           fullDateTime,
           parseTime: dayjs(fullDateTime).tz("Asia/Ho_Chi_Minh"),
-        }
+        };
       })
-      .sort((a, b) => (a.parseTime.isBefore(b.parseTime) ? -1 : 1))
-    if (cinemaShowtimes.length === 0) return null
+      .sort((a, b) => (a.parseTime.isBefore(b.parseTime) ? -1 : 1));
+    if (cinemaShowtimes.length === 0) return null;
     return (
       <div
         key={index}
@@ -62,26 +62,26 @@ const Showtime_Cinema = ({ showtimes, cinemas, showtimeDay }) => {
               return (
                 <button
                   onClick={() => {
-                    setSelectedTime(showtime.startAt)
+                    setSelectedTime(showtime.startAt);
                     bookingMovie(
                       showtime.movieId,
                       showtimeDay,
                       cinema._id,
                       showtime
-                    )
+                    );
                   }}
                   key={showtime._id}
                   className="py-2 md:px-8 px-6 border rouned text-sm font-normal text-[#333333] hover:bg-[#034EA2] hover:text-white active:bg-[#034EA2] transition-all duration-500 ease-in-out"
                 >
                   {showtime.startAt}
                 </button>
-              )
+              );
             })}
           </div>
         </div>
       </div>
-    )
-  })
-}
+    );
+  });
+};
 
-export default Showtime_Cinema
+export default Showtime_Cinema;

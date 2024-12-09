@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import "../movie-card/moviecard.css"
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../movie-card/moviecard.css";
 
 const BookingSide = ({ data }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="movie__content">
       <ul className="flex flex-col justify-between">
@@ -55,6 +55,13 @@ const BookingSide = ({ data }) => {
                         </span>
                       </p>
                     </div>
+                    {movie?.ageLimit && (
+                      <div className="age__limit absolute bottom-[6px] right-[6px]">
+                        <span className="bg-[#f26b38] py-[2px] px-1 rounded text-sm text-white font-bold not-italic ">
+                          {movie?.ageLimit}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="Card_card__title__kFoFc mt-2 w-[400px]">
@@ -67,7 +74,7 @@ const BookingSide = ({ data }) => {
                 </div>
               </div>
             </li>
-          )
+          );
         })}
       </ul>
       <div className="text-end">
@@ -81,7 +88,7 @@ const BookingSide = ({ data }) => {
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BookingSide
+export default BookingSide;

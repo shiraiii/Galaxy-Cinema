@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Moremovie = ({ number }) => {
-  const [lists, setLists] = useState([])
-  const [activeIndex, setActiveIndex] = useState(number)
+  const [lists, setLists] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(number);
 
   useEffect(() => {
     fetch("/api/movieCats")
       .then((res) => res.json())
-      .then((data) => setLists(data))
-  }, [])
+      .then((data) => setLists(data));
+  }, []);
 
   const handleClick = (index) => {
-    setActiveIndex(index)
-  }
+    setActiveIndex(index);
+  };
 
   return (
     <div className="flex w-full md:justify-start justify-between gap-5 items-center mb-10">
@@ -37,7 +37,7 @@ const Moremovie = ({ number }) => {
                       className={
                         activeIndex === index
                           ? "md:text-base screen360:text-sm text-[12px] font-bold not-italic block leading-normal hover:text-[#034EA2] transition-all duration-300 ease-in-out cursor-pointer relative text-[#034EA2] tab__active opacity-100 "
-                          : "md:text-base screen360:text-sm text-[12px] font-bold not-italic block leading-normal hover:text-[#034EA2] transition-all duration-300 ease-in-out cursor-pointer text-[#333333] relative opacity-100"
+                          : "md:text-base screen360:text-sm text-[12px] font-bold not-italic block leading-normal hover:text-[#034EA2] transition-all duration-300 ease-in-out cursor-pointer text-[#333333] relative opacity-50"
                       }
                       onClick={() => handleClick(index)}
                       to={`/${list.path}`}
@@ -45,7 +45,7 @@ const Moremovie = ({ number }) => {
                       {list.name}
                     </Link>
                   </li>
-                )
+                );
               })}
             </ul>
           </div>
@@ -56,7 +56,7 @@ const Moremovie = ({ number }) => {
         <span className="inline-block ml-1">Toàn quốc</span>
       </a>
     </div>
-  )
-}
+  );
+};
 
-export default Moremovie
+export default Moremovie;

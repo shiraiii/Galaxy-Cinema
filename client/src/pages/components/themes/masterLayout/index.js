@@ -1,4 +1,11 @@
-import { memo, useCallback, useEffect, useReducer, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import Header from "../header";
 import Footer from "../footer";
 import { AppReducer } from "../../../../reducer/AppReducer";
@@ -9,6 +16,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { filterAndSortMovies } from "../../../../utils/movieUtils";
+import "react-responsive-modal/styles.css";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -16,9 +24,11 @@ const MasterLayout = ({ children, ...props }) => {
   const initialState = { user: null };
   const [state, dispatch] = useReducer(AppReducer, initialState);
   const [showModal, setShowModal] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSideNav, setShowSideNav] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showEmptySeatModal, setShowEmptySeatModal] = useState(false);
   const [menus, setMenus] = useState([{}]);
   const [movies, setMovies] = useState([{}]);
   const [cinemas, setCinemas] = useState([{}]);
@@ -27,29 +37,32 @@ const MasterLayout = ({ children, ...props }) => {
   const [showtimes, setShowtimes] = useState([{}]);
   const [overSeats, setOverSeats] = useState(false);
   const SEATLIMIT = 2;
-
   useEffect(() => {
-    fetch("/api/menus")
-      .then((res) => res.json())
-      .then((data) => setMenus(data));
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [menusRes, moviesRes, cinemasRes, showtimesRes] =
+          await Promise.all([
+            fetch("/api/menus").then((res) => res.json()),
+            fetch("http://localhost:5000/api/v1/movie/getAllMovie").then(
+              (res) => res.json()
+            ),
+            fetch("http://localhost:5000/api/v1/cinema/getAllCinema").then(
+              (res) => res.json()
+            ),
+            fetch("http://localhost:5000/api/v1/showtime/getAllShowtime").then(
+              (res) => res.json()
+            ),
+          ]);
+        setMenus(menusRes);
+        setMovies(moviesRes);
+        setCinemas(cinemasRes);
+        setShowtimes(showtimesRes);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/movie/getAllMovie")
-      .then((res) => res.json())
-      .then((data) => setMovies(data));
-  }, []);
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/cinema/getAllCinema")
-      .then((res) => res.json())
-      .then((data) => setCinemas(data));
-  }, []);
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/v1/showtime/getAllShowtime")
-      .then((res) => res.json())
-      .then((data) => setShowtimes(data));
+    fetchData();
   }, []);
 
   const checkCurrentUser = useCallback(async () => {
@@ -84,8 +97,14 @@ const MasterLayout = ({ children, ...props }) => {
     .startOf("day")
     .format("YYYY-MM-DD");
 
-  const nowShowingMovies = filterAndSortMovies(movies, today, "nowShowing");
-  const upcomingMovies = filterAndSortMovies(movies, today, "upcoming");
+  const nowShowingMovies = useMemo(
+    () => filterAndSortMovies(movies, today, "nowShowing"),
+    [movies, today]
+  );
+  const upcomingMovies = useMemo(
+    () => filterAndSortMovies(movies, today, "upcoming"),
+    [movies, today]
+  );
   return (
     <AppContext.Provider
       value={{
@@ -99,6 +118,10 @@ const MasterLayout = ({ children, ...props }) => {
         setShowSignUp,
         showSideNav,
         setShowSideNav,
+        showRatingModal,
+        setShowRatingModal,
+        showEmptySeatModal,
+        setShowEmptySeatModal,
         nowShowingMovies,
         upcomingMovies,
         movies,

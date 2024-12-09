@@ -42,7 +42,7 @@ const Footer = () => {
               <div id="connect" className="footer__connect">
                 <div className="footer__logo mb-5">
                   <img
-                    src="https://www.galaxycine.vn/_next/static/media/glx-footer.7a918263.svg"
+                    src="https://www.galaxycine.vn/media/2024/11/11/glx-footer.svg"
                     width={"94"}
                     height={"42"}
                     style={{ color: "transparent" }}
@@ -94,7 +94,7 @@ const Footer = () => {
           <div className="flex justify-start justify-items-start items-center gap-5">
             <div className="footer__logo">
               <img
-                src="https://www.galaxycine.vn/_next/static/media/glx-footer.7a918263.svg"
+                src="https://www.galaxycine.vn/media/2024/11/11/glx-footer.svg"
                 width={"94"}
                 height={"42"}
                 style={{ color: "transparent" }}

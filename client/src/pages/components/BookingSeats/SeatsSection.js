@@ -1,9 +1,12 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useMemo, useEffect, useState, useContext, memo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import BookingSeatSummary from "./BookingSeats-summary";
 import AppContext from "../../../context/AppContext";
 import SeatLayout from "./SeatLayout";
+import Modal from "react-responsive-modal";
+import EmptySeat from "../Modal/EmptySeat";
+import axios from "axios";
 
 const SeatsSection = () => {
   const [showtimes, setShowtimes] = useState([]);
@@ -14,9 +17,16 @@ const SeatsSection = () => {
   const [selectedCinemaId, setSelectedCinemaId] = useState("");
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [total, setTotal] = useState(0);
+  const [bookedSeats, setBookedSeats] = useState([]);
 
-  const { setShowLoginModal, setShowModal, setOverSeats, SEATLIMIT } =
-    useContext(AppContext);
+  const {
+    setShowLoginModal,
+    setShowModal,
+    setOverSeats,
+    SEATLIMIT,
+    showEmptySeatModal,
+    setShowEmptySeatModal,
+  } = useContext(AppContext);
 
   const { id } = useParams();
   const location = useLocation();
@@ -54,25 +64,50 @@ const SeatsSection = () => {
   }, [id]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/v1/cinema/getCinema/${selectedCinemaId}`)
-      .then((res) => res.json())
-      .then((data) => setCinemas(data))
-      .catch((err) => console.error("Error fetching cinema: ", err));
+    if (selectedCinemaId) {
+      fetch(`http://localhost:5000/api/v1/cinema/getCinema/${selectedCinemaId}`)
+        .then((res) => res.json())
+        .then((data) => setCinemas(data))
+        .catch((err) => console.error("Error fetching cinema: ", err));
+    }
   }, [selectedCinemaId]);
 
-  const filteredShowtimes = showtimes.filter((showtime) => {
-    const showtimeStartDate = dayjs(showtime.startDate, "YYYY-MM-DD");
-    const showtimeEndDate = dayjs(showtime.endDate, "YYYY-MM-DD");
-    const selectedDateObj = dayjs(selectedDate, "YYYY-MM-DD");
-    return (
-      selectedDateObj.isBetween(
-        showtimeStartDate,
-        showtimeEndDate,
-        null,
-        "[]"
-      ) && showtime.cinemaId === selectedCinemaId
+  useEffect(() => {
+    const fetchBookedSeats = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/v1/reservation/getBookedSeats`,
+          { params: { selectedCinemaId, selectedDate, id, selectedShowtime } }
+        );
+        setBookedSeats(response.data.bookedSeats);
+      } catch (err) {
+        console.error("Error fetching booked seats: ", err);
+      }
+    };
+    fetchBookedSeats();
+  }, [selectedCinemaId, selectedDate, id, selectedShowtime]);
+
+  const isSeatBooked = (row, number) => {
+    return bookedSeats.some(
+      (seat) => seat.rowLetter === row && seat.seatNumber === number
     );
-  });
+  };
+
+  const filteredShowtimes = useMemo(() => {
+    return showtimes.filter((showtime) => {
+      const showtimeStartDate = dayjs(showtime.startDate, "YYYY-MM-DD");
+      const showtimeEndDate = dayjs(showtime.endDate, "YYYY-MM-DD");
+      const selectedDateObj = dayjs(selectedDate, "YYYY-MM-DD");
+      return (
+        selectedDateObj.isBetween(
+          showtimeStartDate,
+          showtimeEndDate,
+          null,
+          "[]"
+        ) && showtime.cinemaId === selectedCinemaId
+      );
+    });
+  }, [showtimes, selectedDate, selectedCinemaId]);
 
   const handleSeatClick = (
     rowLetter,
@@ -110,7 +145,7 @@ const SeatsSection = () => {
     });
   };
 
-  const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".split("");
 
   const handleShowtimeClick = (showtime) => {
     setSelectedShowtime(showtime);
@@ -161,11 +196,19 @@ const SeatsSection = () => {
                         const isSelected = selectedSeats.some(
                           (seat) => seat.uniqueSeatId === uniqueSeatId
                         );
+                        const booked = isSeatBooked(
+                          alphabets[rowIndex],
+                          seatIndex + 1
+                        );
                         return (
                           <button
                             key={uniqueSeatId}
-                            className={`md:h-5 h-4 border rounded md:text-[12px] text-[10px] transition-all duration-200 ease-in-out text-white md:w-5 w-4 border-[#d0d0d0] xl:hover:bg-[#f26b38] xl:hover:border-[#f26b38] ${
-                              isSelected ? "bg-[#f26b38] border-[#f26b38]" : ""
+                            className={`md:h-5 h-4 border rounded md:text-[12px] text-[10px] transition-all duration-200 ease-in-out text-white md:w-5 w-4 border-[#d0d0d0] ${
+                              booked
+                                ? "border-[#d0d0d0] bg-[#d0d0d0]"
+                                : isSelected
+                                ? "bg-[#f26b38] border-[#f26b38]"
+                                : " xl:hover:bg-[#f26b38] xl:hover:border-[#f26b38] "
                             }`}
                             onClick={() =>
                               handleSeatClick(
@@ -175,6 +218,7 @@ const SeatsSection = () => {
                                 cinemas.ticketPrice
                               )
                             }
+                            disabled={booked}
                           >
                             <span
                               className={`inline-block md:w-5 w-4 text-center ${
@@ -196,6 +240,18 @@ const SeatsSection = () => {
             ) : null}
           </div>
           <SeatLayout></SeatLayout>
+          <Modal
+            open={showEmptySeatModal}
+            showCloseIcon={false}
+            closeOnOverlayClick={false}
+            classNames={{
+              modal: "modal-375 text-center p-10",
+            }}
+          >
+            <EmptySeat
+              setShowEmptySeatModal={setShowEmptySeatModal}
+            ></EmptySeat>
+          </Modal>
         </div>
       </div>
       <BookingSeatSummary
@@ -205,9 +261,10 @@ const SeatsSection = () => {
         date={selectedDate}
         total={total}
         selectedSeats={selectedSeats}
+        setShowEmptySeatModal={setShowEmptySeatModal}
       ></BookingSeatSummary>
     </div>
   );
 };
 
-export default SeatsSection;
+export default memo(SeatsSection);

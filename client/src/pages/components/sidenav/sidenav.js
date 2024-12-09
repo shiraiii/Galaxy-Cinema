@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react"
-import DataUserResponsive from "../data-user/dataUserRe"
+import React, { useState, useEffect } from "react";
+import DataUserResponsive from "../data-user/dataUserRe";
 
-const Sidenav = ({ onClose, user, signOut }) => {
-  const [menus, setMenus] = useState([{}])
+const Sidenav = ({ OnClose, user, signOut }) => {
+  const [menus, setMenus] = useState([{}]);
   useEffect(() => {
     fetch("/api/menus")
       .then((res) => res.json())
-      .then((data) => setMenus(data))
-  }, [])
+      .then((data) => setMenus(data));
+  }, []);
   return (
     <nav className="fixed pr-4 md:px-11 z-[1030] block w-[287px] md:w-[346px] top-0 bottom-0 h-full bg-white transition-all duration-500 ease-in-out pl-8 pt-6 overflow-hidden translate-x-[0] -right-[0] screen1200:hidden">
       <div className="flex justify-end">
-        <button onClick={() => onClose(false)}>
+        <button onClick={() => OnClose(false)}>
           <span>
             <i className="fa-solid fa-xmark"></i>
           </span>
@@ -53,7 +53,7 @@ const Sidenav = ({ onClose, user, signOut }) => {
             <div className="flex justify-center items-center w-full">
               <div className="flex items-center flex-wrap justify-center flex-auto mr-1">
                 <a className="cursor-pointer logo__header grow-0">
-                  <img src="https://www.galaxycine.vn/_next/static/media/join-Gstar.24c52de9.svg"></img>
+                  <img src="https://www.galaxycine.vn//media/2024/11/11/join-member-Gstar.svg"></img>
                 </a>
               </div>
             </div>
@@ -87,13 +87,13 @@ const Sidenav = ({ onClose, user, signOut }) => {
                               {child.name}
                             </a>
                           </li>
-                        )
+                        );
                       })}
                     </ul>
                   </section>
                 )}
               </div>
-            )
+            );
           })}
         </ul>
         {user ? (
@@ -107,7 +107,7 @@ const Sidenav = ({ onClose, user, signOut }) => {
         ) : null}
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Sidenav
+export default Sidenav;

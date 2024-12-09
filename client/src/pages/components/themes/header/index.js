@@ -1,50 +1,65 @@
-import React, { useState, useEffect, useContext } from "react"
-import { memo } from "react"
-import { useNavigate } from "react-router-dom"
-import "../header/style.css"
-import "../../../../../src/index.css"
-import LoginModal from "../../Modal/loginModal"
-import Sidenav from "../../sidenav/sidenav"
-import SignUp from "../../Modal/signup"
-import DataUser from "../../data-user/dataUser"
-import HeaderNavigator from "./header-navigator"
-import AppContext from "../../../../context/AppContext"
-import dayjs from "dayjs"
-import utc from "dayjs/plugin/utc"
-import timezone from "dayjs/plugin/timezone"
-import HeaderMoreInfo from "./header-moreInfo"
-import OverSeatNumber from "../../Modal/overSeatNumber"
+import React, { useContext, useEffect } from "react";
+import { memo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Modal } from "react-responsive-modal";
+import "../header/style.css";
+import "../../../../../src/index.css";
+import LoginModal from "../../Modal/loginModal";
+import Sidenav from "../../sidenav/sidenav";
+import SignUp from "../../Modal/signup";
+import DataUser from "../../data-user/dataUser";
+import HeaderNavigator from "./header-navigator";
+import AppContext from "../../../../context/AppContext";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import HeaderMoreInfo from "./header-moreInfo";
+import OverSeatNumber from "../../Modal/overSeatNumber";
 
-dayjs.extend(utc)
-dayjs.extend(timezone)
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const Header = () => {
   const {
     state,
     dispatch,
-    showModal,
-    setShowModal,
     showLoginModal,
     setShowLoginModal,
     showSignUp,
+    setShowSignUp,
     showSideNav,
     setShowSideNav,
     redirectPath,
     setRedirectPath,
     overSeats,
-  } = useContext(AppContext)
-  const navigate = useNavigate()
-  const { user } = state
-  const signOut = () => {
-    sessionStorage.removeItem("userInfo")
-    localStorage.removeItem("token")
-    dispatch({ type: "CURRENT_USER", payload: null })
-    window.location.reload()
-    if (redirectPath) {
-      navigate(redirectPath)
-      setRedirectPath(null)
-    }
-  }
+    setOverSeats,
+  } = useContext(AppContext);
+  const navigate = useNavigate();
+  const { user } = state;
+  const SignOut = () => {
+    sessionStorage.removeItem("userInfo");
+    localStorage.removeItem("token");
+    dispatch({ type: "CURRENT_USER", payload: null });
+    window.location.reload();
+    useEffect(() => {
+      if (redirectPath) {
+        navigate(redirectPath);
+        setRedirectPath(null);
+      }
+    }, [redirectPath, navigate, setRedirectPath]);
+  };
+
+  const closeIcon = (
+    <span className="inline-flex bg-[#ececec] rounded-full w-[24px] h-[24px] items-center justify-center">
+      <img
+        src="https://www.galaxycine.vn/_next/static/media/icon-close.7e22f021.svg"
+        width="30"
+        height="30"
+        className="w-[12px] h-[12px]"
+        style={{ color: "transparent" }}
+      ></img>
+    </span>
+  );
 
   return (
     <>
@@ -76,14 +91,14 @@ const Header = () => {
               <div className="search-icon mr-4">
                 <a
                   className="cursor-pointer font-light text-sm text-[#777]"
-                  title="Tím kiếm"
+                  title="Tìm kiếm"
                 >
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </a>
               </div>
               {user ? (
                 <>
-                  <DataUser signOut={signOut} user={user}></DataUser>
+                  <DataUser signOut={SignOut} user={user}></DataUser>
                 </>
               ) : (
                 <HeaderMoreInfo></HeaderMoreInfo>
@@ -92,12 +107,7 @@ const Header = () => {
             <div className="flex md:grow md:basis-6/12 justify-end screen1200:hidden">
               {!user ? (
                 <a className="text-sm text-[#777] capitalize cursor-pointer transition-all duration-300 hover:text-[#f26b38]">
-                  <span
-                    onClick={() => {
-                      setShowModal(true)
-                      setShowLoginModal(true)
-                    }}
-                  >
+                  <span onClick={() => setShowLoginModal(true)}>
                     <i className="fa-regular fa-user inline align-baseline mr-1"></i>
                     Đăng nhập
                   </span>
@@ -116,36 +126,46 @@ const Header = () => {
         {showSideNav && (
           <Sidenav
             user={user}
-            signOut={signOut}
-            onClose={setShowSideNav}
+            signOut={SignOut}
+            OnClose={setShowSideNav}
           ></Sidenav>
         )}
       </header>
-      {showModal && (
-        <div>
-          <div className="react-responsive-modal-root" data-testid="root">
-            <div
-              className="react-responsive-modal-overlay"
-              data-testid="overlay"
-              aria-hidden="true"
-              style={{
-                animation:
-                  "300ms ease 0s 1 normal none running react-responsive-modal-overlay-in",
-              }}
-            ></div>
-            <div
-              className="react-responsive-modal-container react-responsive-modal-containerCenter"
-              data-testid="modal-container"
-            >
-              {showLoginModal && <LoginModal />}
-              {showSignUp && <SignUp />}
-              {overSeats && <OverSeatNumber />}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
+      <Modal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        closeIcon={closeIcon}
+        classNames={{
+          modal: "modal-sx px-6 py-10 m-0",
+        }}
+        closeOnOverlayClick={false}
+      >
+        <LoginModal />
+      </Modal>
 
-export default memo(Header)
+      <Modal
+        open={showSignUp}
+        onClose={() => setShowSignUp(false)}
+        closeIcon={closeIcon}
+        classNames={{
+          modal: "modal-sx px-6 py-10 m-0",
+        }}
+        closeOnOverlayClick={false}
+      >
+        <SignUp />
+      </Modal>
+
+      <Modal
+        open={overSeats}
+        onClose={() => setOverSeats(false)}
+        showCloseIcon={false}
+        classNames={{ modal: "modal-375 texdt-center p-10" }}
+        closeOnOverlayClick={false}
+      >
+        <OverSeatNumber />
+      </Modal>
+    </>
+  );
+};
+
+export default memo(Header);

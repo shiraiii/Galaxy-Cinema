@@ -11,6 +11,7 @@ const BookingSeatSummary = ({
   date,
   total,
   selectedSeats,
+  setShowEmptySeatModal,
 }) => {
   const [userInput, setUserInput] = useState({
     seats: [],
@@ -179,7 +180,13 @@ const BookingSeatSummary = ({
             <span>Quay lại</span>
           </button>
           <button
-            onClick={() => handleSubmit()}
+            onClick={() => {
+              if (selectedSeats.length <= 0) {
+                setShowEmptySeatModal(true);
+              } else {
+                handleSubmit();
+              }
+            }}
             className="w-1/2 mr-2 py-2 text-white bg-[#f58020] border rounded-md hover:bg-[#ff953f]"
           >
             <span>Tiếp tục</span>

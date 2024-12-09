@@ -1,21 +1,10 @@
-import React, { useContext } from "react"
-import AppContext from "../../../context/AppContext"
+import React, { useContext } from "react";
+import AppContext from "../../../context/AppContext";
 
 const OverSeatNumber = () => {
-  const { setShowLoginModal, setShowModal, setOverSeats, SEATLIMIT } =
-    useContext(AppContext)
+  const { setOverSeats, SEATLIMIT } = useContext(AppContext);
   return (
-    <div
-      className="react-responsive-modal-modal modal-375 text-center p-10 "
-      role="dialog"
-      aria-modal="true"
-      data-testid="modal"
-      tabIndex="-1"
-      style={{
-        animation:
-          "300ms ease 0s 1 normal none running react-responsive-modal-modal-in",
-      }}
-    >
+    <>
       <div className="text-center w-full">
         <img
           alt="Icon Notice"
@@ -31,9 +20,7 @@ const OverSeatNumber = () => {
         <div className="modal__footer flex justify-center gap-3 mt-6">
           <button
             onClick={() => {
-              setShowLoginModal(true)
-              setShowModal(false)
-              setOverSeats(false)
+              setOverSeats(false);
             }}
             className="rounded-md hover:bg-[#e38601] transition-all duration-30 min-w-[135px] w-full focus:outline-none focus:ring-[#e38601] text-sm text-center inline-flex items-center dark:hover:bg-[#e38601] dark:focus:ring-[#e38601] justify-center text-white bg-primary w-[150px] h-10 px-5 py-2.5 text-sm capitalize font-bold rounded"
           >
@@ -41,8 +28,8 @@ const OverSeatNumber = () => {
           </button>
         </div>
       </div>
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default OverSeatNumber
+export default OverSeatNumber;

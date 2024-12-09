@@ -1,31 +1,31 @@
-require("dotenv").config()
-const express = require("express")
-const app = express()
-const mongoose = require("mongoose")
-const cors = require("cors")
-const corOptions = require("./config/corsOptions")
-const PORT = process.env.PORT || 5000
-const cookieParser = require("cookie-parser")
-const { logger } = require("./middleware/logger")
-const errorHandler = require("./middleware/errorHandler")
-const connectDB = require("./config/dbConn")
-const { logEvents } = require("./middleware/logger")
-const authRoutes = require("./routes/authRoutes")
-const movieRoutes = require("./routes/movieRoutes")
-const userRoutes = require("./routes/userRoutes")
-const cinemaRoutes = require("./routes/cinemaRoutes")
-const reservationRoutes = require("./routes/reservationRoutes")
-const showtimeRoutes = require("./routes/showtimeRoutes")
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+const cors = require("cors");
+const corOptions = require("./config/corsOptions");
+const PORT = process.env.PORT || 5000;
+const cookieParser = require("cookie-parser");
+const { logger } = require("./middleware/logger");
+const errorHandler = require("./middleware/errorHandler");
+const connectDB = require("./config/dbConn");
+const { logEvents } = require("./middleware/logger");
+const authRoutes = require("./routes/authRoutes");
+const movieRoutes = require("./routes/movieRoutes");
+const userRoutes = require("./routes/userRoutes");
+const cinemaRoutes = require("./routes/cinemaRoutes");
+const reservationRoutes = require("./routes/reservationRoutes");
+const showtimeRoutes = require("./routes/showtimeRoutes");
 
-connectDB()
+connectDB();
 
-app.use(logger)
+app.use(logger);
 
-app.use(express.json())
+app.use(express.json());
 
-app.use(cookieParser())
+app.use(cookieParser());
 
-app.use(cors(corOptions))
+app.use(cors(corOptions));
 
 app.use(function (req, res, next) {
   // res.setHeader("Access-Control-Allow-Origin", process.env.REACT_URL)
@@ -33,22 +33,25 @@ app.use(function (req, res, next) {
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-  )
+  );
 
-  res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type")
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
 
-  res.setHeader("Access-Control-Allow-Credentials", "true")
-  res.setHeader("Access-Control-Max-Age", "1800")
-  next()
-})
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  next();
+});
 
 //Mount the auth routes
-app.use("/api/v1/auth", authRoutes)
-app.use("/api/v1/movie", movieRoutes)
-app.use("/api/v1/user", userRoutes)
-app.use("/api/v1/cinema", cinemaRoutes)
-app.use("/api/v1/reservation", reservationRoutes)
-app.use("/api/v1/showtime", showtimeRoutes)
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/movie", movieRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/cinema", cinemaRoutes);
+app.use("/api/v1/reservation", reservationRoutes);
+app.use("/api/v1/showtime", showtimeRoutes);
 
 var menus = [
   {
@@ -120,7 +123,7 @@ var menus = [
       },
     ],
   },
-]
+];
 var movieCats = [
   {
     name: "Đang chiếu",
@@ -134,7 +137,7 @@ var movieCats = [
     name: "Phim IMAX",
     path: "phim-imax",
   },
-]
+];
 var movies = [
   {
     name: "Cái Giá Của Hạnh Phúc",
@@ -263,7 +266,7 @@ var movies = [
     movieRating: "9.6",
     ageLimit: "K",
   },
-]
+];
 var blogType = [
   {
     name: "Bình luận phim",
@@ -271,33 +274,41 @@ var blogType = [
   {
     name: "Blog điện ảnh",
   },
-]
+];
 var slideImg = [
   {
     alt: "Hinh 1",
-    ref: "https://cdn.galaxycine.vn/media/2024/4/15/digital-2048x682_1713193116776.jpg",
+    ref: "https://cdn.galaxycine.vn/media/2024/11/29/brand-gcxgp-2048x682_1732877723734.jpg",
   },
   {
     alt: "Hinh 2",
-    ref: "https://cdn.galaxycine.vn/media/2024/4/10/cai-gia-cua-hanh-phuc-2_1712733220607.jpg",
+    ref: "https://cdn.galaxycine.vn/media/2024/11/29/2048_1732875284611.jpg",
   },
   {
     alt: "Hinh 3",
-    ref: "https://cdn.galaxycine.vn/media/2024/4/1/god-x-kong-2048_1711942313253.jpg",
+    ref: "https://cdn.galaxycine.vn/media/2024/11/29/moana-2-2048_1732876014516.jpg",
   },
   {
     alt: "Hinh 4",
-    ref: "https://cdn.galaxycine.vn/media/2024/4/10/ghostbusters-frozen-empire-2048_1712719876429.jpg",
+    ref: "https://cdn.galaxycine.vn/media/2024/11/14/linh-mieu-1_1731569919178.jpg",
   },
   {
     alt: "Hinh 5",
-    ref: "https://cdn.galaxycine.vn/media/2024/4/15/luca-sneak-2048_1713170236165.jpg",
+    ref: "https://cdn.galaxycine.vn/media/2024/10/16/cong-tu-bac-lieu-2048_1729070395428.jpg",
   },
   {
     alt: "Hinh 6",
-    ref: "https://cdn.galaxycine.vn/media/2024/4/15/0324-galaxy-on-zalo-2048x683_1713169097223.jpg",
+    ref: "https://cdn.galaxycine.vn/media/2024/10/30/lien-hoan-phim-nhat-2024-1_1730262675316.jpg",
   },
-]
+  {
+    alt: "hinh 7",
+    ref: "https://cdn.galaxycine.vn/media/2024/12/3/pht12-2048_1733213447026.jpg",
+  },
+  {
+    alt: "hinh 8",
+    ref: "https://cdn.galaxycine.vn/media/2024/11/7/home-banner-app-2048x682_1730964037492.jpg",
+  },
+];
 var blogContent = [
   {
     blogImg: "https://www.galaxycine.vn/media/2024/4/27/750_1714201137911.jpg",
@@ -356,7 +367,7 @@ var blogContent = [
     blogTitle: "Top 10 Phim Kinh Dị Hay Nhất 2024",
     blogVote: "196",
   },
-]
+];
 var promoLists = [
   {
     promoImg:
@@ -407,7 +418,7 @@ var promoLists = [
       "https://cdn.galaxycine.vn/media/2022/11/1/combo-u22-digital-450x300_1667285240629.jpg",
     promoTitle: "U22 Vui Vẻ - Bắp Nước Siêu Hạt Dẻ",
   },
-]
+];
 var footer_items = [
   {
     name: "giới thiệu",
@@ -466,45 +477,45 @@ var footer_items = [
       },
     ],
   },
-]
+];
 app.get("/api/menus", (req, res) => {
-  res.send(menus)
-})
+  res.send(menus);
+});
 app.get("/api/movieCats", (req, res) => {
-  res.send(movieCats)
-})
+  res.send(movieCats);
+});
 app.get("/api/movies", (req, res) => {
-  res.send(movies)
-})
+  res.send(movies);
+});
 app.get("/api/blogType", (req, res) => {
-  res.send(blogType)
-})
+  res.send(blogType);
+});
 app.get("/api/slideImg", (req, res) => {
-  res.send(slideImg)
-})
+  res.send(slideImg);
+});
 app.get("/api/blogContent", (req, res) => {
-  res.send(blogContent)
-})
+  res.send(blogContent);
+});
 app.get("/api/promoLists", (req, res) => {
-  res.send(promoLists)
-})
+  res.send(promoLists);
+});
 app.get("/api/footer_items", (req, res) => {
-  res.send(footer_items)
-})
+  res.send(footer_items);
+});
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 mongoose.connection.once("open", () => {
-  console.log("connected to MongoDB")
+  console.log("connected to MongoDB");
   app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`)
-  })
-})
+    console.log(`Server started on port ${PORT}`);
+  });
+});
 
 mongoose.connection.on("error", (err) => {
-  console.log(err)
+  console.log(err);
   logEvents(
     `${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`,
     "mongoErrLog.log"
-  )
-})
+  );
+});

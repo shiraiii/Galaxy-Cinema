@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 const seatSchema = new Schema({
   rowLetter: {
     type: String,
@@ -10,7 +10,8 @@ const seatSchema = new Schema({
     type: Number,
     required: true,
   },
-})
+});
+
 const reservationSchema = new mongoose.Schema(
   {
     date: {
@@ -21,10 +22,25 @@ const reservationSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      validate: {
+        validator: function (v) {
+          return /^([01]\d|2[0-3]):([0-5]\d)$/.test(v); // "HH:mm" format
+        },
+        message: (props) => `${props.value} is not a valid start time format!`,
+      },
     },
     seats: {
       type: [seatSchema],
       required: true,
+      validate: {
+        validator: function (v) {
+          const uniqueSeats = new Set(
+            v.map((seat) => `${seat.rowLetter}-${seat.seatNumber}`)
+          );
+          return uniqueSeats.size === v.length;
+        },
+        message: "Duplicate seats are not allowed.",
+      },
     },
     ticketPrice: {
       type: Number,
@@ -56,6 +72,12 @@ const reservationSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
+      // validate: {
+      //   validator: function (v) {
+      //     return /^[0-9]{10,15}$/.test(v); // Adjust regex as needed
+      //   },
+      //   message: (props) => `${props.value} is not a valid phone number!`,
+      // },
     },
     checkin: {
       type: Boolean,
@@ -65,8 +87,22 @@ const reservationSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-const Reservation = mongoose.model("Reservation", reservationSchema)
+// Auto-calculate total price
+reservationSchema.pre("save", function (next) {
+  this.total = this.ticketPrice * this.seats.length;
+  next();
+});
 
-module.exports = Reservation
+// Virtual to get seat count
+reservationSchema.virtual("seatCount").get(function () {
+  return this.seats.length;
+});
+
+// Index for performance
+reservationSchema.index({ movieId: 1, cinemaId: 1, date: 1 });
+
+const Reservation = mongoose.model("Reservation", reservationSchema);
+
+module.exports = Reservation;
