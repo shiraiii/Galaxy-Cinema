@@ -16,6 +16,8 @@ const userRoutes = require("./routes/userRoutes");
 const cinemaRoutes = require("./routes/cinemaRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
 const showtimeRoutes = require("./routes/showtimeRoutes");
+const movieBlogRoutes = require("./routes/movieBlogRoutes");
+const reviewBlogRoutes = require("./routes/reviewBlogRoutes");
 
 connectDB();
 
@@ -27,22 +29,11 @@ app.use(cookieParser());
 
 app.use(cors(corOptions));
 
-app.use(function (req, res, next) {
-  // res.setHeader("Access-Control-Allow-Origin", process.env.REACT_URL)
-
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
-  );
-
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Max-Age", "1800");
-  next();
+mongoose.connection.once("open", () => {
+  console.log("connected to MongoDB");
+  app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+  });
 });
 
 //Mount the auth routes
@@ -52,6 +43,8 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/cinema", cinemaRoutes);
 app.use("/api/v1/reservation", reservationRoutes);
 app.use("/api/v1/showtime", showtimeRoutes);
+app.use("/api/v1/movieBlog", movieBlogRoutes);
+app.use("/api/v1/reviewBlog", reviewBlogRoutes);
 
 var menus = [
   {
@@ -505,17 +498,28 @@ app.get("/api/footer_items", (req, res) => {
 
 app.use(errorHandler);
 
-mongoose.connection.once("open", () => {
-  console.log("connected to MongoDB");
-  app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-  });
-});
-
 mongoose.connection.on("error", (err) => {
   console.log(err);
   logEvents(
     `${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`,
     "mongoErrLog.log"
   );
+});
+
+app.use(function (req, res, next) {
+  // res.setHeader("Access-Control-Allow-Origin", process.env.REACT_URL)
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Max-Age", "1800");
+  next();
 });

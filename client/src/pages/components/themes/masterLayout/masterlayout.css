@@ -50,3 +50,22 @@
   min-width: 315px;
   border-radius: 4px;
 }
+
+.description__short__detail,
+.description__short__detail b,
+.description__short__detail em,
+.description__short__detail em strong,
+.description__short__detail p,
+.description__short__detail p span,
+.description__short__detail p strong {
+  font-family: Nunito Sans, sans-serif !important;
+  font-style: inherit !important;
+  font-weight: 400 !important;
+  text-align: justify;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allow text wrapping */
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3; /* Still truncate after 3 lines */
+  -webkit-box-orient: vertical;
+}

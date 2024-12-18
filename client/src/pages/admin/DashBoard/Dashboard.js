@@ -6,13 +6,10 @@ import StatCard from "./StatCard";
 import AppContext from "../../../context/AppContext";
 
 const Dashboard = () => {
-  const {
-    movies = [],
-    showtimes = [],
-    reservations = [],
-  } = React.useContext(AppContext);
+  const { movies = [] } = React.useContext(AppContext);
   const [users, setUsers] = useState([]);
   const [reservationsData, setReservationsData] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/user/getAllUser")
       .then((res) => res.json())
@@ -22,7 +19,15 @@ const Dashboard = () => {
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/reservation/getAllReservation")
       .then((res) => res.json())
-      .then((data) => setReservationsData(data));
+      .then((data) => {
+        setReservationsData(data);
+        const total = data.reduce((sum, reservation) => {
+          const ticketPrice = reservation.ticketPrice || 0;
+          const seatsCount = reservation.seats?.length;
+          return sum + ticketPrice * seatsCount;
+        }, 0);
+        setTotalRevenue(total);
+      });
   }, []);
 
   return (
@@ -48,7 +53,11 @@ const Dashboard = () => {
             value={reservationsData.length}
             bgColor="bg-yellow-500"
           />
-          <StatCard title="Active Sessions" value="650" bgColor="bg-red-500" />
+          <StatCard
+            title="Total"
+            value={`${totalRevenue.toLocaleString()} VNĐ`}
+            bgColor="bg-red-500"
+          />
         </div>
 
         <div className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">

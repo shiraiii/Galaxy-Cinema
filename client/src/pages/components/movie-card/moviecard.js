@@ -1,19 +1,18 @@
-import React from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { CCard, CCardBody, CCardImage, CCardTitle } from "@coreui/react"
-// import "./moviecard.css"
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CCard, CCardBody, CCardImage, CCardTitle } from "@coreui/react";
 
 const Moviecard = ({ movies, n }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleClick = (e, path) => {
-    e.stopPropagation()
-    navigate(path)
-  }
+    e.stopPropagation();
+    navigate(path);
+  };
 
   const handleTouch = (e, path) => {
-    e.stopPropagation()
-    navigate(path)
-  }
+    e.stopPropagation();
+    navigate(path);
+  };
   return (
     <>
       {movies?.slice(0, n).map((movie, index) => {
@@ -41,8 +40,8 @@ const Moviecard = ({ movies, n }) => {
                       type="button"
                       className="text-white w-[120px] h-[40px] border border-white hover:bg-[#fb9440]/80 hover:border-transparent rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440] "
                       onClick={(e) => {
-                        e.stopPropagation()
-                        navigate(`/`)
+                        e.stopPropagation();
+                        navigate(`/`);
                       }}
                     >
                       <i className="fa-solid fa-circle-play mr-2"></i>
@@ -52,10 +51,10 @@ const Moviecard = ({ movies, n }) => {
                 </div>
                 <CCardImage
                   onClick={(e) => {
-                    handleClick(e, `/booking/${movie?._id}`)
+                    handleClick(e, `/booking/${movie?._id}`);
                   }}
                   onTouchStart={(e) => {
-                    handleTouch(e, `/booking/${movie?._id}`)
+                    handleTouch(e, `/booking/${movie?._id}`);
                   }}
                   alt={movie?.movieName}
                   width={"300px"}
@@ -87,10 +86,10 @@ const Moviecard = ({ movies, n }) => {
             </CCardBody>
             <CCardTitle>{movie?.movieName}</CCardTitle>
           </CCard>
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
-export default Moviecard
+export default Moviecard;

@@ -1,33 +1,35 @@
-const userModel = require("../models/User")
+const userModel = require("../models/User");
 
 const getAllUser = async (req, res, next) => {
   try {
-    userModel.find().then((users) => res.json(users))
+    userModel.find().then((users) => res.json(users));
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const getUser = async (req, res, next) => {
   try {
-    const id = req.params.id
-    userModel.findById(id).then((users) => res.json(users))
+    const id = req.params.id;
+    userModel.findById(id).then((users) => res.json(users));
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const createUser = async (req, res, next) => {
   try {
-    await userModel.create(req.body).then((users) => res.json(users))
+    await userModel.create(req.body).then((users) => res.json(users));
+    res.json({ success: true, message: "User created successfully" });
   } catch (err) {
-    next(err)
+    res.json({ success: false, message: err.message });
+    next(err);
   }
-}
+};
 
 const updateUser = async (req, res, next) => {
   try {
-    const id = req.params.id
+    const id = req.params.id;
     userModel
       .findByIdAndUpdate(
         { _id: id },
@@ -39,20 +41,20 @@ const updateUser = async (req, res, next) => {
           roles: req.body.roles,
         }
       )
-      .then((users) => res.json(users))
+      .then((users) => res.json(users));
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const deleteUser = async (req, res, next) => {
   try {
-    const id = req.params.id
-    userModel.findByIdAndDelete({ _id: id }).then((users) => res.json(users))
+    const id = req.params.id;
+    userModel.findByIdAndDelete({ _id: id }).then((users) => res.json(users));
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 module.exports = {
   getUser,
@@ -60,4 +62,4 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-}
+};

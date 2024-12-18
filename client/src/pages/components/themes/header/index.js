@@ -46,7 +46,7 @@ const Header = () => {
         navigate(redirectPath);
         setRedirectPath(null);
       }
-    }, [redirectPath, navigate, setRedirectPath]);
+    }, [redirectPath, setRedirectPath]);
   };
 
   const closeIcon = (
@@ -98,7 +98,7 @@ const Header = () => {
               </div>
               {user ? (
                 <>
-                  <DataUser signOut={SignOut} user={user}></DataUser>
+                  <DataUser signOut={SignOut}></DataUser>
                 </>
               ) : (
                 <HeaderMoreInfo></HeaderMoreInfo>

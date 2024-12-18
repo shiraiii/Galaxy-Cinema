@@ -84,33 +84,107 @@ const deleteReservation = async (req, res, next) => {
   }
 };
 
+// const getBookedSeats = async (req, res) => {
+//   const { selectedCinemaId, selectedDate, id, selectedShowtime } = req.query;
+
+//   try {
+//     if (!selectedDate || isNaN(new Date(selectedDate))) {
+//       return res
+//         .status(400)
+//         .json({ message: "Invalid or missing selectedDate " });
+//     }
+//     const date = new Date(selectedDate);
+//     const formattedDate = date.toISOString();
+//     const reservation = await Reservation.find({
+//       cinemaId: selectedCinemaId,
+//       date: formattedDate,
+//       movieId: id,
+//       startAt: selectedShowtime,
+//     }).select("seats -_id");
+
+//     if (reservation.length === 0) {
+//       return res.status(200).json({ bookedSeats: [] });
+//     }
+
+//     const bookedSeats = reservation.flatMap((reservation) => reservation.seats);
+//     res.status(200).json({ bookedSeats });
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ message: "Error fetching booked seats", error });
+//   }
+// };
+
 const getBookedSeats = async (req, res) => {
   const { selectedCinemaId, selectedDate, id, selectedShowtime } = req.query;
 
   try {
-    if (!selectedDate || isNaN(new Date(selectedDate))) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or missing selectedDate " });
-    }
     const date = new Date(selectedDate);
-    const formattedDate = date.toISOString();
+    const startOfDay = new Date(date.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(date.setHours(23, 59, 59, 999));
     const reservation = await Reservation.find({
       cinemaId: selectedCinemaId,
-      date: formattedDate,
       movieId: id,
       startAt: selectedShowtime,
+      date: { $gte: startOfDay.toISOString(), $lte: endOfDay.toISOString() },
     }).select("seats -_id");
-
-    if (reservation.length === 0) {
-      return res.status(200).json({ bookedSeats: [] });
-    }
 
     const bookedSeats = reservation.flatMap((reservation) => reservation.seats);
     res.status(200).json({ bookedSeats });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ message: "Error fetching booked seats", error });
+  }
+};
+
+const revenue = async (req, res) => {
+  try {
+    const revenueData = await Reservation.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          totalRevenue: { $sum: "$total" },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+    res.status(200).json(revenueData);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch revenue data" });
+  }
+};
+
+const totalInMonth = async (req, res) => {
+  try {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    const revenue = await Reservation.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(currentYear, currentMonth, 1),
+            $lt: new Date(currentYear, currentMonth + 1, 1),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null, // No grouping key; calculate total for all matched documents
+          totalRevenue: {
+            $sum: {
+              $multiply: ["$ticketPrice", { $size: "$seats" }], // Calculate revenue: ticketPrice * number of seats
+            },
+          },
+        },
+      },
+    ]);
+
+    res.status(200).json(revenue[0]?.totalRevenue || 0); // Return 0 if no revenue found
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -121,4 +195,6 @@ module.exports = {
   updateReservation,
   deleteReservation,
   getBookedSeats,
+  revenue,
+  totalInMonth,
 };

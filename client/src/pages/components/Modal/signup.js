@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import AppContext from "../../../context/AppContext";
 import axios from "axios";
+import Checkbox from "@mui/material/Checkbox";
 
 const SignUp = () => {
   const [name, setName] = useState();
@@ -19,6 +20,8 @@ const SignUp = () => {
   const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
   const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   const { dispatch, setShowLoginModal, setShowSignUp, setIsAuth } =
     useContext(AppContext);
@@ -240,6 +243,20 @@ const SignUp = () => {
             >
               Xác nhận mật khẩu phải trùng với mật khẩu
             </p>
+            {/* <div className="flex items-start mt-2">
+              <Checkbox {...label} />
+              <p className="text-[11px] font-bold description__short__detail ml-1">
+                Bằng việc đăng ký tài khoản, tôi đồng ý với &nbsp;
+                <a href="#" target="_blank" className="text-[#034ea2] italic">
+                  Điều khoản dịch vụ &nbsp;
+                </a>
+                và &nbsp;
+                <a href="#" target="_blank" className="text-[#034ea2] italic">
+                  Chính sách bảo mật &nbsp;
+                </a>
+                của Galaxy Cinema
+              </p>
+            </div> */}
             <button
               type="submit"
               className="rounded-md hover:bg-[#e38601] transition-all duration-300 min-w-[135px] w-full focus:outline-none focus:ring-[#e38601] text-sm text-center inline-flex items-center dark:hover:bg-[#e38601] dark:focus:ring-[#e38601] justify-center text-white bg-[#F58020] w-full h-full px-5 py-2.5 uppercase mt-5"

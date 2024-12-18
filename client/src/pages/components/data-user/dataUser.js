@@ -1,8 +1,8 @@
-import React from "react"
-import { Link } from "react-router-dom"
-const DataUser = (props) => {
-  const dataString = sessionStorage.getItem("userInfo")
-  const data = JSON.parse(dataString)
+import React from "react";
+import { Link } from "react-router-dom";
+const DataUser = ({ signOut }) => {
+  const dataString = sessionStorage.getItem("userInfo");
+  const data = JSON.parse(dataString);
 
   return (
     <div className="md:px-2 py-4 relative items-center text-left md:cursor-pointer group transition-all duration-500 ease-in-out md:flex hidden">
@@ -28,7 +28,7 @@ const DataUser = (props) => {
             style={{ color: "transparent" }}
           ></img>
           <p className="flex-auto md:flex hidden flex-col text-sm font-bold not-italic justify-start md:pr-0 group hover:text-orange-500 transition-all duration-500 ease-in-out capitalize">
-            {data.userName}
+            {data?.userName}
             <span className="block text-xs font-light not-italic">Star</span>
           </p>
         </div>
@@ -45,7 +45,7 @@ const DataUser = (props) => {
             ></img>
           </div>
           <span className="flex-auto text-sm font-semibold not-italic mt-1 capitalize">
-            0 Start
+            0 Star
           </span>
         </div>
       </div>
@@ -53,7 +53,7 @@ const DataUser = (props) => {
         type="button"
         className="md:py-7 md:hidden flex text-sm font-bold not-italic justify-between items-center md:pr-0 group hover:text-orange-500 transition-all duration-500 ease-in-out"
       >
-        {data.userName}
+        {data?.userName}
       </button>
       <div className="absolute left-0 w-full min-w-[150px] max-w-[220px] top-20 hidden group-hover:md:block hover:md:block z-[500] transition-all duration-500 ease-in-out">
         <div
@@ -75,14 +75,16 @@ const DataUser = (props) => {
               </Link>
             </li>
             {/* đánh dấu trạng thái admin sau đó ẩn lịch sử ròi thay bằng đường dẫn đến admin */}
-            {data.roles == "User" ? (
+            {data?.roles == "User" ? (
               <li>
                 <a
                   className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
                   type="button"
                 >
                   <i className="fa-solid fa-list-ol"></i>
-                  <span className="grow ml-4">Lịch sử</span>
+                  <Link to={"/tai-khoan/"} className="grow ml-4">
+                    Lịch sử
+                  </Link>
                 </a>
               </li>
             ) : (
@@ -101,7 +103,7 @@ const DataUser = (props) => {
             <li>
               <a className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize">
                 <i className="fa-solid fa-right-from-bracket rotate-180"></i>
-                <span className="grow ml-4" onClick={props.signOut}>
+                <span className="grow ml-4" onClick={signOut}>
                   Đăng xuất
                 </span>
               </a>
@@ -110,7 +112,7 @@ const DataUser = (props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DataUser
+export default DataUser;

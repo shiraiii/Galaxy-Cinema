@@ -36,7 +36,7 @@ const MasterLayout = ({ children, ...props }) => {
   const [redirectPath, setRedirectPath] = useState(null);
   const [showtimes, setShowtimes] = useState([{}]);
   const [overSeats, setOverSeats] = useState(false);
-  const SEATLIMIT = 2;
+  const SEATLIMIT = 5;
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -22,4 +22,7 @@ router
   .route("/deleteReservation/:id")
   .delete(reservationController.deleteReservation);
 
+router.route("/revenue").get(reservationController.revenue);
+
+router.route("/totalInMonth").get(reservationController.totalInMonth);
 module.exports = router;

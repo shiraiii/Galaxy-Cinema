@@ -1,8 +1,6 @@
 import axios from "axios";
 import dayjs from "dayjs";
-import React, { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import AppContext from "../../../context/AppContext";
+import React, { useEffect, useState } from "react";
 
 const BookingSeatSummary = ({
   movies,
@@ -12,6 +10,8 @@ const BookingSeatSummary = ({
   total,
   selectedSeats,
   setShowEmptySeatModal,
+  setActiveTab,
+  activeTab,
 }) => {
   const [userInput, setUserInput] = useState({
     seats: [],
@@ -81,6 +81,10 @@ const BookingSeatSummary = ({
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handlePaymentButtonClick = () => {
+    setActiveTab(2);
   };
 
   return (
@@ -184,12 +188,16 @@ const BookingSeatSummary = ({
               if (selectedSeats.length <= 0) {
                 setShowEmptySeatModal(true);
               } else {
-                handleSubmit();
+                if (activeTab === 1) {
+                  handlePaymentButtonClick();
+                } else if (activeTab === 2) {
+                  handleSubmit();
+                }
               }
             }}
             className="w-1/2 mr-2 py-2 text-white bg-[#f58020] border rounded-md hover:bg-[#ff953f]"
           >
-            <span>Tiếp tục</span>
+            <span>{activeTab === 1 ? "Tiếp tục" : "Thanh toán"}</span>
           </button>
         </div>
       </div>

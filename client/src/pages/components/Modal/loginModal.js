@@ -38,7 +38,7 @@ const LoginModal = () => {
       const userString = JSON.stringify(response.data.data);
       sessionStorage.setItem("userInfo", userString);
       window.localStorage.setItem("token", token);
-      dispatch({ type: "CURRENT_USER", payload: { userName } });
+      dispatch({ type: "CURRENT_USER", payload: { userName, roles } });
       setIsAuth(true);
       if (roles == "Admin") {
         setShowLoginModal(false);

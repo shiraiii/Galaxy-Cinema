@@ -1,21 +1,21 @@
-const movieModel = require("../models/Movie")
+const movieModel = require("../models/Movie");
 
 const getAllMovie = async (req, res, next) => {
   try {
-    await movieModel.find().then((movies) => res.json(movies))
+    await movieModel.find().then((movies) => res.json(movies));
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const getMovie = async (req, res, next) => {
   try {
-    const id = req.params.id
-    await movieModel.findById(id).then((movies) => res.json(movies))
+    const id = req.params.id;
+    await movieModel.findById(id).then((movies) => res.json(movies));
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const createMovie = async (req, res, next) => {
   try {
@@ -35,21 +35,21 @@ const createMovie = async (req, res, next) => {
       nation,
       releaseDate,
       endDate,
-    } = req.body
-    const oldMovie = await movieModel.findOne({ movieName })
+    } = req.body;
+    const oldMovie = await movieModel.findOne({ movieName });
     if (oldMovie) {
-      return res.status(400).json({ message: "Movie already exists" })
+      return res.status(400).json({ message: "Movie already exists" });
     } else {
       const directorArray =
         typeof directors === "string"
           ? directors.split(",").map((d) => d.trim())
-          : []
+          : [];
       const castArray =
-        typeof casts === "string" ? casts.split(",").map((c) => c.trim()) : []
+        typeof casts === "string" ? casts.split(",").map((c) => c.trim()) : [];
       const producerArray =
         typeof producers === "string"
           ? producers.split(",").map((p) => p.trim())
-          : []
+          : [];
       const newMovie = new movieModel({
         movieName,
         movieImg,
@@ -66,23 +66,23 @@ const createMovie = async (req, res, next) => {
         nation,
         releaseDate,
         endDate,
-      })
-      await newMovie.save()
-      res.status(201).json(newMovie)
+      });
+      await newMovie.save();
+      res.status(201).json(newMovie);
     }
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const updateMovie = async (req, res, next) => {
   try {
-    const id = req.params.id
+    const id = req.params.id;
 
     // Retrieve the current movie data
-    const currentMovie = await movieModel.findById(id)
+    const currentMovie = await movieModel.findById(id);
     if (!currentMovie) {
-      return res.status(404).json({ message: "Movie not found" })
+      return res.status(404).json({ message: "Movie not found" });
     }
 
     // Merge new data with existing data
@@ -114,41 +114,78 @@ const updateMovie = async (req, res, next) => {
       nation: req.body.nation || currentMovie.nation,
       releaseDate: req.body.releaseDate || currentMovie.releaseDate,
       endDate: req.body.endDate || currentMovie.endDate,
-    }
+    };
 
     // Update the movie with the merged data
     const updatedMovie = await movieModel.findByIdAndUpdate(id, updatedData, {
       new: true,
-    })
+    });
 
-    res.json(updatedMovie)
+    res.json(updatedMovie);
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const deleteMovie = async (req, res, next) => {
   try {
-    const id = req.params.id
+    const id = req.params.id;
     await movieModel
       .findByIdAndDelete({ _id: id })
-      .then((movies) => res.json(movies))
+      .then((movies) => res.json(movies));
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
 const voteMovie = async (req, res, next) => {
   try {
-    const movie = await movieModel.findById(req.params.id)
-    if (!movie) return res.status(404).json({ error: "Movie not found" })
-    movie.votes += req.body.votes
-    await movie.save()
-    res.json({ success: true, votes: movie.votes })
+    const movie = await movieModel.findById(req.params.id);
+    if (!movie) return res.status(404).json({ error: "Movie not found" });
+    movie.votes += req.body.votes;
+    await movie.save();
+    res.json({ success: true, votes: movie.votes });
   } catch (err) {
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err.message });
   }
-}
+};
+
+const updateMovieRating = async (req, res) => {
+  const { movieId, rating } = req.body;
+
+  try {
+    const movie = await movieModel.findById(movieId);
+
+    if (!movie) {
+      return res.status(404).json({ error: "Movie not found" });
+    }
+
+    // Update movie rating and votes
+    const totalVotes = movie.votes + 1;
+    const newRating =
+      Math.round(
+        ((movie.movieRating * movie.votes + rating) / totalVotes) * 10
+      ) / 10;
+
+    movie.movieRating = newRating;
+    movie.votes = totalVotes;
+
+    // Save updated movie
+    await movie.save();
+
+    // Return updated movie with rating and votes
+    res.status(200).json({
+      message: "Rating updated successfully",
+      movie: {
+        movieRating: newRating,
+        votes: totalVotes,
+      },
+    });
+  } catch (err) {
+    console.error("Error updating movie rating:", err); // Log the error for debugging
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 module.exports = {
   getMovie,
@@ -157,4 +194,5 @@ module.exports = {
   updateMovie,
   deleteMovie,
   voteMovie,
-}
+  updateMovieRating,
+};

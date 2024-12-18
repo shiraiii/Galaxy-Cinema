@@ -38,7 +38,13 @@ const Booking = () => {
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/movie/getMovie/" + id)
       .then((res) => res.json())
-      .then((data) => setMovies(data))
+      .then((data) => {
+        if (data.movieRating && data.votes) {
+          setMovies(data);
+        } else {
+          console.error("Movie data is missing 'movieRating' or 'votes'");
+        }
+      })
       .catch((err) => console.error("Error fetching movie: ", err));
   }, [id]);
 
@@ -55,6 +61,17 @@ const Booking = () => {
       })
       .catch((err) => console.error("Error fetching showtimes: ", err));
   }, [id]);
+
+  const updateMovieRating = async (newRating, newVote) => {
+    setMovies((prevMovies) => {
+      return {
+        ...prevMovies,
+        movieRating: newRating,
+        votes: newVote,
+      };
+    });
+  };
+
   return (
     <>
       <div className="book__ticket__wrapper">
@@ -96,7 +113,7 @@ const Booking = () => {
           modal: "max-w-[375px] modal-375 border-t-8 border-[#f58020] p-0",
         }}
       >
-        <RatingModal id={id} />
+        <RatingModal id={id} updateMovieRating={updateMovieRating} />
       </Modal>
     </>
   );
