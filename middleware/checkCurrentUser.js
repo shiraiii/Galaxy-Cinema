@@ -4,8 +4,7 @@ const checkCurrentUser = (req, res, next) => {
   const Authorization = req.header("authorization");
 
   if (!Authorization) {
-    req.user = null;
-    return next();
+    return res.status(401).json({ message: "Authorization token missing" });
   } else {
     const token = Authorization.replace("Bearer ", "");
 

@@ -12,7 +12,7 @@ const RatingModal = ({ id, updateMovieRating }) => {
     filledIcon: <i className="fa-regular fa-star"></i>,
   };
 
-  const { setShowRatingModal, isAuth } = useContext(AppContext);
+  const { setShowRatingModal, token } = useContext(AppContext);
 
   const [movie, setMovie] = useState({
     movieBanner: "",
@@ -48,7 +48,6 @@ const RatingModal = ({ id, updateMovieRating }) => {
         }
       );
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         updateMovieRating(data.movie.movieRating, data.movie.votes);
         setShowRatingModal(false);
@@ -106,7 +105,7 @@ const RatingModal = ({ id, updateMovieRating }) => {
           Đóng
         </button>
         <button
-          disabled={!isAuth}
+          disabled={token === null || userRating === 0}
           onClick={handleRatingSubmit} // Call the submit function
           className="block text-sm px-[14px] py-[7px] border-[#f58020] bg-[#f58020] text-white capitalize cursor-pointer transition duration-500 ease-in-out flex-1"
         >

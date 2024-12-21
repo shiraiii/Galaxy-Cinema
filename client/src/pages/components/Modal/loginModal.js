@@ -42,7 +42,7 @@ const LoginModal = () => {
       setIsAuth(true);
       if (roles == "Admin") {
         setShowLoginModal(false);
-        // navigate("/admin")
+        navigate("/admin");
       }
       if (roles == "User") {
         setShowLoginModal(false);

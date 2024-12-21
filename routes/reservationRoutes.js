@@ -1,6 +1,7 @@
 const express = require("express");
 
 const reservationController = require("../controllers/reservationController");
+const checkCurrentUser = require("../middleware/checkCurrentUser");
 
 const router = express.Router();
 
@@ -25,4 +26,12 @@ router
 router.route("/revenue").get(reservationController.revenue);
 
 router.route("/totalInMonth").get(reservationController.totalInMonth);
+
+router
+  .route("/createReservationStripe")
+  .post(reservationController.createStripe);
+
+router
+  .route("/verifyStripe")
+  .post(checkCurrentUser, reservationController.verifyStripe);
 module.exports = router;

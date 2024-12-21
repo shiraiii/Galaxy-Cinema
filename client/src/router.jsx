@@ -22,6 +22,7 @@ import CinemaAdmin from './pages/admin/Cinema/CinemaAdmin';
 import CreateShowTime from './pages/admin/ShowTime/CreateShowTime';
 import ShowTimeAdmin from './pages/admin/ShowTime/ShowTimeAdmin';
 import BookingSeats from './pages/components/BookingSeats/bookingseats';
+import Verify from './pages/components/VerifyPage/Verify';
 
 const RenderUserRouter = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -62,6 +63,10 @@ const RenderUserRouter = () => {
         {
           path: ROUTERS.USER.PROFILE,
           component: <UserDetails></UserDetails>
+        },
+        {
+          path: ROUTERS.USER.VERIFY,
+          component: <Verify></Verify>
         },
         {
           path: ROUTERS.USER.BOOKINGSEAT,

@@ -22,6 +22,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 const MasterLayout = ({ children, ...props }) => {
   const initialState = { user: null };
+  const token = localStorage.getItem("token");
   const [state, dispatch] = useReducer(AppReducer, initialState);
   const [showModal, setShowModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -36,6 +37,8 @@ const MasterLayout = ({ children, ...props }) => {
   const [redirectPath, setRedirectPath] = useState(null);
   const [showtimes, setShowtimes] = useState([{}]);
   const [overSeats, setOverSeats] = useState(false);
+  const [showTicketInfo, setShowTicketInfo] = useState(false);
+  const [method, setMethod] = useState("HSBC");
   const SEATLIMIT = 5;
   useEffect(() => {
     const fetchData = async () => {
@@ -67,7 +70,6 @@ const MasterLayout = ({ children, ...props }) => {
 
   const checkCurrentUser = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token");
       const option = {
         method: "GET",
         url: "/api/v1/auth",
@@ -139,6 +141,11 @@ const MasterLayout = ({ children, ...props }) => {
         overSeats,
         setOverSeats,
         SEATLIMIT,
+        showTicketInfo,
+        setShowTicketInfo,
+        method,
+        setMethod,
+        token,
       }}
     >
       <div {...props}>

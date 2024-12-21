@@ -69,3 +69,37 @@
   -webkit-line-clamp: 3; /* Still truncate after 3 lines */
   -webkit-box-orient: vertical;
 }
+.modal-ticket:after,
+.modal-ticket:before {
+  content: "";
+  position: absolute;
+  bottom: -50px;
+  border-top: none;
+  width: 17px;
+  height: 35px;
+  background-color: #afafaf;
+}
+
+.modal-ticket:before {
+  transform: translate(-141%, -100%);
+  border-radius: 0 12rem 12rem 0;
+}
+
+.modal-ticket:after {
+  right: 0;
+  transform: translate(141%, -100%);
+  border-radius: 12rem 0 0 12rem;
+}
+
+#custom__btn__icon-close-confirm {
+  top: 0;
+  right: 50%;
+}
+
+.modal-confirm-order {
+  padding: 40px 0 0 !important;
+}
+
+.modal-radius-10 {
+  border-radius: 10px;
+}

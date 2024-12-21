@@ -10,7 +10,7 @@ const SideBar = () => {
 
   return (
     <div
-      className={`bg-gray-800 text-white h-screen  rounded-lg  ${
+      className={`bg-gray-800 text-white h-full  rounded-lg  ${
         isOpen ? "w-64" : "w-20"
       } transition-width duration-300`}
     >

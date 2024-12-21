@@ -26,6 +26,10 @@ const BookingSeats = () => {
     setOverSeats,
     SEATLIMIT,
     setShowEmptySeatModal,
+    showTicketInfo,
+    setShowTicketInfo,
+    isAuth,
+    token,
   } = useContext(AppContext);
 
   const { id } = useParams();
@@ -41,6 +45,12 @@ const BookingSeats = () => {
     setSelectedCinemaId(initialCinemaId);
     setSelectedShowtime(initialTime);
   }, [initialDate, initialCinemaId, initialTime]);
+
+  useEffect(() => {
+    if (isAuth === false && token === null) {
+      setShowLoginModal(true);
+    }
+  }, [token]);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/movie/getMovie/" + id)
@@ -115,34 +125,40 @@ const BookingSeats = () => {
     uniqueSeatId,
     ticketPrice
   ) => {
-    setSelectedSeats((prevSelectedSeats) => {
-      const isSeatSelected = prevSelectedSeats.some(
-        (seat) => seat.uniqueSeatId === uniqueSeatId
-      );
+    if (isAuth === false && token === null) {
+      setShowLoginModal(true);
+    } else {
+      setSelectedSeats((prevSelectedSeats) => {
+        const isSeatSelected = prevSelectedSeats.some(
+          (seat) => seat.uniqueSeatId === uniqueSeatId
+        );
 
-      if (!isSeatSelected && prevSelectedSeats.length >= SEATLIMIT) {
-        setShowModal(true);
-        setShowLoginModal(false);
-        setOverSeats(true);
-        return prevSelectedSeats;
-      }
+        if (!isSeatSelected && prevSelectedSeats.length >= SEATLIMIT) {
+          setShowModal(true);
+          setShowLoginModal(false);
+          setOverSeats(true);
+          return prevSelectedSeats;
+        }
 
-      const newSelectedSeats = isSeatSelected
-        ? prevSelectedSeats.filter((seat) => seat.uniqueSeatId !== uniqueSeatId)
-        : [
-            ...prevSelectedSeats,
-            { rowLetter, seatNumber, uniqueSeatId, ticketPrice },
-          ];
+        const newSelectedSeats = isSeatSelected
+          ? prevSelectedSeats.filter(
+              (seat) => seat.uniqueSeatId !== uniqueSeatId
+            )
+          : [
+              ...prevSelectedSeats,
+              { rowLetter, seatNumber, uniqueSeatId, ticketPrice },
+            ];
 
-      const newTotal = newSelectedSeats.reduce(
-        (sum, seat) => sum + seat.ticketPrice,
-        0
-      );
+        const newTotal = newSelectedSeats.reduce(
+          (sum, seat) => sum + seat.ticketPrice,
+          0
+        );
 
-      setTotal(newTotal);
+        setTotal(newTotal);
 
-      return newSelectedSeats;
-    });
+        return newSelectedSeats;
+      });
+    }
   };
 
   const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ ".split("");
@@ -179,6 +195,8 @@ const BookingSeats = () => {
           setShowEmptySeatModal={setShowEmptySeatModal}
           setActiveTab={setActiveTab}
           activeTab={activeTab}
+          setShowTicketInfo={setShowTicketInfo}
+          showTicketInfo={showTicketInfo}
         ></BookingSeatSummary>
       </div>
     </>

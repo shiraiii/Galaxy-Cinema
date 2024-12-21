@@ -74,20 +74,17 @@ const DataUser = ({ signOut }) => {
                 <span className="grow ml-4">Tài khoản</span>
               </Link>
             </li>
+            <li>
+              <Link
+                className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
+                to={"/tai-khoan/"}
+              >
+                <i className="fa-solid fa-list-ol"></i>
+                <span className="grow ml-4">Lịch sử</span>
+              </Link>
+            </li>
             {/* đánh dấu trạng thái admin sau đó ẩn lịch sử ròi thay bằng đường dẫn đến admin */}
-            {data?.roles == "User" ? (
-              <li>
-                <a
-                  className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
-                  type="button"
-                >
-                  <i className="fa-solid fa-list-ol"></i>
-                  <Link to={"/tai-khoan/"} className="grow ml-4">
-                    Lịch sử
-                  </Link>
-                </a>
-              </li>
-            ) : (
+            {data?.roles == "Admin" ? (
               <li>
                 <Link
                   to={"/admin"}
@@ -98,8 +95,7 @@ const DataUser = ({ signOut }) => {
                   <span className="grow ml-4">Admin</span>
                 </Link>
               </li>
-            )}
-
+            ) : null}
             <li>
               <a className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize">
                 <i className="fa-solid fa-right-from-bracket rotate-180"></i>

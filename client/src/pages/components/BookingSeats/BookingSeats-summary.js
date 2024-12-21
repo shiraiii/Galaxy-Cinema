@@ -1,6 +1,11 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
+import Modal from "react-responsive-modal";
+import TicketInfo from "../Modal/ticketInfo";
+import ReservationDetail from "../Modal/reservationDetail";
+import AppContext from "../../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const BookingSeatSummary = ({
   movies,
@@ -12,6 +17,8 @@ const BookingSeatSummary = ({
   setShowEmptySeatModal,
   setActiveTab,
   activeTab,
+  setShowTicketInfo,
+  showTicketInfo,
 }) => {
   const [userInput, setUserInput] = useState({
     seats: [],
@@ -27,11 +34,28 @@ const BookingSeatSummary = ({
     phone: "",
   });
 
+  const [reservationDetail, setReservationDetail] = useState(null);
+  const [qrCode, setQrCode] = useState(null);
+  const [showReservationDetail, setShowReservationDetail] = useState(false);
+
+  const { method } = React.useContext(AppContext);
+  const navigate = useNavigate();
+
+  const closeIcon = (
+    <span className="w-[25px]  h-[25px] rounded-full outline-none absolute">
+      <img
+        alt="Icon close"
+        className="w-[25px] h-[25px]"
+        src="https://www.galaxycine.vn/_next/static/media/IconClose.41d08d13.png"
+      ></img>
+    </span>
+  );
+
   useEffect(() => {
     const dataString = sessionStorage.getItem("userInfo");
     const data = JSON.parse(dataString);
     if (data) {
-      setUserInput(() => ({
+      const updatedUserInput = {
         seats: selectedSeats,
         date: date,
         startAt: time,
@@ -42,7 +66,9 @@ const BookingSeatSummary = ({
         cinemaId: cinemas._id,
         userId: data.id,
         ticketPrice: cinemas.ticketPrice,
-      }));
+      };
+
+      setUserInput(updatedUserInput);
     }
   }, [date, time, total, selectedSeats, cinemas, movies]);
   const dayOfTheWeek = (dateString) => {
@@ -71,13 +97,40 @@ const BookingSeatSummary = ({
 
   const handleSubmit = async (e) => {
     try {
-      const option = {
-        method: "POST",
-        url: "http://localhost:5000/api/v1/reservation/createReservation",
-        data: userInput,
-      };
-      const response = await axios(option);
-      console.log(response.data);
+      switch (method) {
+        case "HSBC":
+          const option = {
+            method: "POST",
+            url: "http://localhost:5000/api/v1/reservation/createReservation",
+            data: userInput,
+          };
+          const response = await axios(option);
+          const { reservation, qrCode } = response.data;
+          setReservationDetail(reservation);
+          setQrCode(qrCode);
+          setShowTicketInfo(false);
+          setShowReservationDetail(true);
+          break;
+
+        case "stripe":
+          const optionStripe = {
+            method: "POST",
+            url: "http://localhost:5000/api/v1/reservation/createReservationStripe",
+            data: userInput,
+          };
+          const responseStripe = await axios(optionStripe);
+          console.log(responseStripe);
+          if (responseStripe.data.success) {
+            const { session_url } = responseStripe.data;
+            window.location.replace(session_url);
+          } else {
+            console.error(responseStripe.data.message);
+          }
+          break;
+
+        default:
+          throw new Error("Invalid payment method");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -191,7 +244,7 @@ const BookingSeatSummary = ({
                 if (activeTab === 1) {
                   handlePaymentButtonClick();
                 } else if (activeTab === 2) {
-                  handleSubmit();
+                  setShowTicketInfo(true);
                 }
               }
             }}
@@ -201,6 +254,49 @@ const BookingSeatSummary = ({
           </button>
         </div>
       </div>
+
+      <Modal
+        open={showTicketInfo}
+        onClose={() => setShowTicketInfo(false)}
+        closeOnOverlayClick={false}
+        closeIcon={closeIcon}
+        closeIconId="custom__btn__icon-close-confirm"
+        classNames={{
+          modal: "modal-sx m-0 bg-transparent shadow-none modal-confirm-order",
+        }}
+      >
+        <TicketInfo
+          cinemas={cinemas}
+          movies={movies}
+          time={time}
+          formattedDate={formattedDate}
+          dayOfWeek={dayOfWeek}
+          selectedSeats={selectedSeats}
+          formattedTotal={formattedTotal}
+          handleSubmit={handleSubmit}
+          setShowTicketInfo={setShowTicketInfo}
+          setShowReservationDetail={setShowReservationDetail}
+        ></TicketInfo>
+      </Modal>
+
+      <Modal
+        open={showReservationDetail}
+        onClose={() => {
+          navigate("/");
+          setShowReservationDetail(false);
+        }}
+        closeOnOverlayClick={false}
+        closeIcon={closeIcon}
+        closeIconId="custom__btn__icon-close-confirm"
+        classNames={{
+          modal: "modal-sx m-0 bg-transparent shadow-none modal-confirm-order",
+        }}
+      >
+        <ReservationDetail
+          qrCode={qrCode}
+          reservationDetail={reservationDetail}
+        ></ReservationDetail>
+      </Modal>
     </div>
   );
 };

@@ -40,13 +40,6 @@ const Header = () => {
     sessionStorage.removeItem("userInfo");
     localStorage.removeItem("token");
     dispatch({ type: "CURRENT_USER", payload: null });
-    window.location.reload();
-    useEffect(() => {
-      if (redirectPath) {
-        navigate(redirectPath);
-        setRedirectPath(null);
-      }
-    }, [redirectPath, setRedirectPath]);
   };
 
   const closeIcon = (

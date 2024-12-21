@@ -1,10 +1,11 @@
-import axios from "axios"
-import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { Box, TextField } from "@mui/material"
+import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Box, TextField } from "@mui/material";
+import AppContext from "../../../context/AppContext";
 
 const CreateCinema = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [userInput, setUserInput] = useState({
     name: "",
     ticketPrice: "",
@@ -13,38 +14,42 @@ const CreateCinema = () => {
     seats: [],
     seatsAvailable: "",
     image: "",
-  })
+  });
+
+  const { token } = useContext(AppContext);
   const onChangeHandle = (e) => {
-    setUserInput({ ...userInput, [e.target.name]: e.target.value })
-  }
+    setUserInput({ ...userInput, [e.target.name]: e.target.value });
+  };
 
   const handleAddSeat = () => {
-    setUserInput({ ...userInput, seats: [...userInput.seats, ""] })
-  }
-
+    setUserInput({ ...userInput, seats: [...userInput.seats, ""] });
+  };
 
   const handleSeatChange = (index, value) => {
-    if (value > 10) return
-    const newSeats = [...userInput.seats]
-    newSeats[index] = Array.from({ length: value }, () => 0)
-    setUserInput({ ...userInput, seats: newSeats })
-  }
+    if (value > 20) return;
+    const newSeats = [...userInput.seats];
+    newSeats[index] = Array.from({ length: value }, () => 0);
+    setUserInput({ ...userInput, seats: newSeats });
+  };
 
   const onChangeSubmit = async (e) => {
     try {
-      e.preventDefault()
+      e.preventDefault();
       const option = {
         method: "POST",
         url: "http://localhost:5000/api/v1/cinema/createCinema",
         data: userInput,
-      }
-      const response = await axios(option)
-      console.log(response.data)
-      navigate("/admin/cinema")
+        Headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios(option);
+      console.log(response.data);
+      navigate("/admin/cinema");
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
   return (
     <div className="flex h-auto justify-center items-center">
       <div className="w-full bg-white rounded p-3">
@@ -156,7 +161,7 @@ const CreateCinema = () => {
         </Box>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateCinema
+export default CreateCinema;
