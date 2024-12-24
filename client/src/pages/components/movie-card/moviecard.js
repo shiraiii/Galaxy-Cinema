@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CCard, CCardBody, CCardImage, CCardTitle } from "@coreui/react";
+import Modal from "react-responsive-modal";
+import TrailerModal from "../Modal/TrailerModal";
+import AppContext from "../../../context/AppContext";
 
 const Moviecard = ({ movies, n }) => {
   const navigate = useNavigate();
+  const { showTrailer, setShowTrailer } = useContext(AppContext);
   const handleClick = (e, path) => {
     e.stopPropagation();
     navigate(path);
@@ -41,7 +45,7 @@ const Moviecard = ({ movies, n }) => {
                       className="text-white w-[120px] h-[40px] border border-white hover:bg-[#fb9440]/80 hover:border-transparent rounded text-sm px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#fb9440] dark:focus:ring-[#fb9440] "
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/`);
+                        setShowTrailer(true);
                       }}
                     >
                       <i className="fa-solid fa-circle-play mr-2"></i>
@@ -88,6 +92,17 @@ const Moviecard = ({ movies, n }) => {
           </CCard>
         );
       })}
+      <Modal
+        onClose={() => setShowTrailer(false)}
+        open={showTrailer}
+        classNames={{
+          modal:
+            "custom__modal__confirm modal-default p-0 bg-transparent w-[100%] min-w-[400px] max-w-[90vw]",
+        }}
+        showCloseIcon={false}
+      >
+        <TrailerModal movies={movies} />
+      </Modal>
     </>
   );
 };

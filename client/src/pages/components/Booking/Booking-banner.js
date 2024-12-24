@@ -1,6 +1,6 @@
 import React from "react";
 
-const BookingBanner = ({ movies }) => {
+const BookingBanner = ({ movies, setShowTrailer }) => {
   return (
     <div className="relative bg-black flex justify-center w-full h-full">
       <div className="absolute w-full h-full z-[300] bg-[#0003]"></div>
@@ -26,6 +26,9 @@ const BookingBanner = ({ movies }) => {
           ></img>
           <button className="absolute top-[50%] left-[50%] -translate-x-2/4 -translate-y-2/4 z-[600]">
             <img
+              onClick={(e) => {
+                setShowTrailer(true);
+              }}
               alt="Play"
               width={64}
               height={64}

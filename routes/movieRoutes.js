@@ -24,6 +24,8 @@ router
 
 router.route("/voteMovie/:id").post(movieController.voteMovie);
 
-router.route("/updateMovieRating").post(movieController.updateMovieRating);
+router
+  .route("/updateMovieRating")
+  .post(checkCurrentUser, movieController.updateMovieRating);
 
 module.exports = router;

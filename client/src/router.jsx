@@ -23,6 +23,7 @@ import CreateShowTime from './pages/admin/ShowTime/CreateShowTime';
 import ShowTimeAdmin from './pages/admin/ShowTime/ShowTimeAdmin';
 import BookingSeats from './pages/components/BookingSeats/bookingseats';
 import Verify from './pages/components/VerifyPage/Verify';
+import BookingSuccess from './pages/components/Booking/Booking-Success';
 
 const RenderUserRouter = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -67,6 +68,10 @@ const RenderUserRouter = () => {
         {
           path: ROUTERS.USER.VERIFY,
           component: <Verify></Verify>
+        },
+        {
+          path: ROUTERS.USER.BOOKINGSUCCESS,
+          component: <BookingSuccess></BookingSuccess>
         },
         {
           path: ROUTERS.USER.BOOKINGSEAT,

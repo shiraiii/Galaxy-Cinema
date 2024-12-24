@@ -31,8 +31,7 @@ const SuccessPayment = () => {
       );
 
       if (response.data.success) {
-        setReservationDetails(response.data.reservation);
-        setQrCode(response.data.qrCode);
+        navigate("/dat-ve-thanh-cong");
         setLoading(false);
       } else {
         console.error("Payment failed");

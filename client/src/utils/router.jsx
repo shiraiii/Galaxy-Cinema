@@ -8,9 +8,8 @@ export const ROUTERS = {
         UPCOMING: "phim-sap-chieu",
         IMAX: "phim-imax",
         BOOKINGSEAT:"dat-ve/:id",
-        VERIFY:"verify"
-
-    
+        VERIFY:"verify",
+        BOOKINGSUCCESS:"dat-ve-thanh-cong"
         
     },
     ADMIN: {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -7,6 +7,7 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import { TextField, useTheme } from "@mui/material";
+import AppContext from "../../../context/AppContext";
 
 const UpdateUser = () => {
   const { id } = useParams();
@@ -42,6 +43,10 @@ const UpdateUser = () => {
   const [endDate, setEndDate] = useState(dayjs());
 
   const [genres, setGenres] = useState([]);
+
+  const [trailer, setTrailer] = useState("");
+
+  const { token } = useContext(AppContext);
 
   const genresOpt = [
     "Hài",
@@ -104,6 +109,7 @@ const UpdateUser = () => {
         setReleaseDate(dayjs(response.data.releaseDate));
         setEndDate(dayjs(response.data.endDate));
         setGenres(fectcGenres);
+        setTrailer(response.data.trailer);
       } catch (err) {
         console.log(err);
       }
@@ -116,23 +122,32 @@ const UpdateUser = () => {
   const handleUpdate = (e) => {
     e.preventDefault();
     axios
-      .put("http://localhost:5000/api/v1/movie/updateMovie/" + id, {
-        movieName,
-        movieImg,
-        movieRating,
-        ageLimit,
-        movieBanner,
-        producers,
-        directors,
-        actors,
-        casts,
-        description,
-        duration,
-        nation,
-        releaseDate,
-        endDate,
-        genres,
-      })
+      .put(
+        "http://localhost:5000/api/v1/movie/updateMovie/" + id,
+        {
+          movieName,
+          movieImg,
+          movieRating,
+          ageLimit,
+          movieBanner,
+          producers,
+          directors,
+          actors,
+          casts,
+          description,
+          duration,
+          nation,
+          releaseDate,
+          endDate,
+          genres,
+          trailer,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then(() => {
         navigate("/admin/movie");
       })
@@ -175,13 +190,13 @@ const UpdateUser = () => {
           ></TextField>
           <TextField
             className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
-            label="Đánh giá"
-            value={movieRating}
+            label="Trailer"
+            value={trailer}
             required
             autoComplete="true"
             type="text"
-            id="movieRating"
-            onChange={(e) => setMovieRating(e.target.value)}
+            id="trailer"
+            onChange={(e) => setTrailer(e.target.value)}
           ></TextField>
 
           <TextField

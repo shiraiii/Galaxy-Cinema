@@ -17,11 +17,11 @@ router.route("/getBookedSeats").get(reservationController.getBookedSeats);
 
 router
   .route("/updateReservation/:id")
-  .put(reservationController.updateReservation);
+  .put(checkCurrentUser, reservationController.updateReservation);
 
 router
   .route("/deleteReservation/:id")
-  .delete(reservationController.deleteReservation);
+  .delete(checkCurrentUser, reservationController.deleteReservation);
 
 router.route("/revenue").get(reservationController.revenue);
 
@@ -34,4 +34,8 @@ router
 router
   .route("/verifyStripe")
   .post(checkCurrentUser, reservationController.verifyStripe);
+
+router
+  .route("/getReservationByUserId/:userId")
+  .get(reservationController.getReservationByUserId);
 module.exports = router;

@@ -1,9 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-const DataUser = ({ signOut }) => {
-  const dataString = sessionStorage.getItem("userInfo");
-  const data = JSON.parse(dataString);
-
+const DataUser = ({ signOut, data }) => {
   return (
     <div className="md:px-2 py-4 relative items-center text-left md:cursor-pointer group transition-all duration-500 ease-in-out md:flex hidden">
       <div className="w-[40px] h-[40px] leading-[62px] text-center rounded-full bg-[#D0D0D0] border-4 border-solid border-[#E9E9E2] flex-none mr-4">
@@ -66,7 +63,7 @@ const DataUser = ({ signOut }) => {
           <ul className="flex flex-col">
             <li>
               <Link
-                to={"/userDetails"}
+                to={"/tai-khoan/#profile"}
                 className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
                 type="button"
               >
@@ -77,7 +74,7 @@ const DataUser = ({ signOut }) => {
             <li>
               <Link
                 className="text-sm text-left text-black py-2 px-[18px] hover:text-[#f26b38] hover:border-l-4 hover:border-[#fd841f] hover:bg-[#fb770b1a] transition-all duration-300 flex items-center justify-between capitalize"
-                to={"/tai-khoan/"}
+                to={"/tai-khoan/#transaction"}
               >
                 <i className="fa-solid fa-list-ol"></i>
                 <span className="grow ml-4">Lịch sử</span>

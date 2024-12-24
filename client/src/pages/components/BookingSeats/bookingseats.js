@@ -18,7 +18,6 @@ const BookingSeats = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [total, setTotal] = useState(0);
   const [bookedSeats, setBookedSeats] = useState([]);
-  const [activeTab, setActiveTab] = useState(1);
 
   const {
     setShowLoginModal,
@@ -30,6 +29,8 @@ const BookingSeats = () => {
     setShowTicketInfo,
     isAuth,
     token,
+    activeTab,
+    setActiveTab,
   } = useContext(AppContext);
 
   const { id } = useParams();

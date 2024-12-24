@@ -53,20 +53,20 @@ const createReservation = async (req, res, next) => {
       .populate("movieId", "movieName")
       .populate("cinemaId", "name");
 
-    const qrCodeData = {
+    const qrcodedata = {
       id: reservation._id,
-      movieName: movie.movieName,
-      cinemaName: cinema.name,
+      moviename: movie.moviename,
+      cinemaname: cinema.name,
       date: reservation.date,
-      startAt: reservation.startAt,
+      startat: reservation.startat,
       seats: reservation.seats.map((seat) => ({
-        row: seat.rowLetter,
-        number: seat.seatNumber,
+        row: seat.rowletter,
+        number: seat.seatnumber,
       })),
       total: reservation.total,
     };
 
-    const qrCodeDataURL = await generateQR(JSON.stringify(qrCodeData));
+    const qrCodeDataURL = await generateQR(JSON.stringify(qrcodedata));
     res
       .status(201)
       .send({ reservation: populatedReservation, qrCode: qrCodeDataURL });
@@ -216,13 +216,65 @@ const getReservation = async (req, res, next) => {
     const reservation = await Reservation.findById(_id);
     if (!reservation)
       return res.status(404).send({ error: "Reservation not found" });
-    return res.send(reservation);
+    else {
+      const qrCodeData = {
+        id: reservation._id,
+      };
+
+      // Generate QR code
+      const qrCodeDataURL = await generateQR(JSON.stringify(qrCodeData));
+    }
+    return res.json({ reservation, qrCode: qrCodeDataURL });
   } catch (err) {
     res.status(400).send(err);
     next(err);
   }
 };
 
+const getReservationByUserId = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    // Find all reservations for the user
+    const reservations = await Reservation.find({ userId });
+
+    // Get all movie IDs and cinema IDs from the reservations
+    const movieIds = [...new Set(reservations.map((res) => res.movieId))]; // Unique movie IDs
+    const cinemaIds = [...new Set(reservations.map((res) => res.cinemaId))]; // Unique cinema IDs
+
+    // Batch query all movies and cinemas
+    const movies = await mongoose
+      .model("Movie")
+      .find({ _id: { $in: movieIds } });
+    const cinemas = await mongoose
+      .model("Cinema")
+      .find({ _id: { $in: cinemaIds } });
+
+    // Create a map for faster lookup
+    const movieMap = movies.reduce((map, movie) => {
+      map[movie._id] = { movieName: movie.movieName, movieImg: movie.movieImg };
+      return map;
+    }, {});
+
+    const cinemaMap = cinemas.reduce((map, cinema) => {
+      map[cinema._id] = cinema.name;
+      return map;
+    }, {});
+
+    // Map reservations to include movieName, movieImg, and cinemaName
+    const reservationData = reservations.map((reservation) => ({
+      ...reservation._doc,
+      movieName: movieMap[reservation.movieId]?.movieName,
+      movieImg: movieMap[reservation.movieId]?.movieImg,
+      cinemaName: cinemaMap[reservation.cinemaId],
+    }));
+
+    res.status(200).json({ success: true, reservation: reservationData });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+    next(err);
+  }
+};
 const updateReservation = async (req, res, next) => {
   const _id = req.params.id;
   const updates = Object.keys(req.body);
@@ -356,4 +408,5 @@ module.exports = {
   totalInMonth,
   createStripe,
   verifyStripe,
+  getReservationByUserId,
 };

@@ -103,3 +103,56 @@
 .modal-radius-10 {
   border-radius: 10px;
 }
+
+.custom__modal_confirm {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.modal-defaut {
+  min-width: 400px;
+  max-width: 90vw;
+}
+
+.card__item__ticket:after, .card__item__ticket:before {
+    content: "";
+    position: absolute;
+    bottom: 25px;
+    border-top: none;
+    width: 16px;
+    height: 18px;
+    background-color: #f6f6f6;
+}
+
+.card__item__ticket:before {
+    transform: translate(-155%, -110%);
+    border-radius: 0 12rem 12rem 0;
+}
+
+@media only screen and (min-width: 1024px) {
+    .card__item__ticket:after, .card__item__ticket:before {
+        bottom: 20px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .card__item__ticket:after, .card__item__ticket:before {
+        bottom: 20px;
+    }
+}
+
+.card__item__ticket:after {
+    right: 0;
+    transform: translate(30%, -110%);
+    border-radius: 12rem 0 0 12rem;
+}
+
+.card__item__ticket:after, .card__item__ticket:before {
+    content: "";
+    position: absolute;
+    bottom: 25px;
+    border-top: none;
+    width: 16px;
+    height: 18px;
+    background-color: #f6f6f6;
+}

@@ -11,6 +11,7 @@
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.16.0",
     "@mui/x-date-pickers": "^7.9.0",
+    "@paypal/react-paypal-js": "^8.7.0",
     "@reduxjs/toolkit": "^2.2.4",
     "@stripe/stripe-js": "^5.4.0",
     "@testing-library/jest-dom": "^5.17.0",

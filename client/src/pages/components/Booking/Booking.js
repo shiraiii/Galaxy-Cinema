@@ -11,6 +11,7 @@ import BookingBanner from "./Booking-banner";
 import BookingMovieInfo from "./Booking-movieInfo";
 import { Modal } from "react-responsive-modal";
 import RatingModal from "../Modal/ratingModal";
+import TrailerModal from "../Modal/TrailerModal";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -19,8 +20,13 @@ const Booking = () => {
   const { id } = useParams();
   const [movies, setMovies] = useState("");
   const [showtimes, setShowtimes] = useState([]);
-  const { nowShowingMovies, setShowRatingModal, showRatingModal } =
-    useContext(AppContext);
+  const {
+    nowShowingMovies,
+    setShowRatingModal,
+    showRatingModal,
+    showTrailer,
+    setShowTrailer,
+  } = useContext(AppContext);
 
   const closeIcon = (
     <span className="inline-flex bg-[#ececec] rounded-full w-[24px] h-[24px] items-center justify-center">
@@ -39,11 +45,7 @@ const Booking = () => {
     fetch("http://localhost:5000/api/v1/movie/getMovie/" + id)
       .then((res) => res.json())
       .then((data) => {
-        if (data.movieRating && data.votes) {
-          setMovies(data);
-        } else {
-          console.error("Movie data is missing 'movieRating' or 'votes'");
-        }
+        setMovies(data);
       })
       .catch((err) => console.error("Error fetching movie: ", err));
   }, [id]);
@@ -75,7 +77,7 @@ const Booking = () => {
   return (
     <>
       <div className="book__ticket__wrapper">
-        <BookingBanner movies={movies} />
+        <BookingBanner setShowTrailer={setShowTrailer} movies={movies} />
         <div className="grid grid-cols-1 screen1200:grid-cols-7 my-0 mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 md:max-w-4xl lg:max-w-4xl gap-8 py-7 md:px-4 px-4">
           <div className="book__left lg:col-span-5 w-full">
             <div className="book__film flex flex-col">
@@ -114,6 +116,17 @@ const Booking = () => {
         }}
       >
         <RatingModal id={id} updateMovieRating={updateMovieRating} />
+      </Modal>
+      <Modal
+        onClose={() => setShowTrailer(false)}
+        open={showTrailer}
+        classNames={{
+          modal:
+            "custom__modal__confirm modal-default p-0 bg-transparent w-[100%] min-w-[400px] max-w-[90vw]",
+        }}
+        showCloseIcon={false}
+      >
+        <TrailerModal movies={movies} />
       </Modal>
     </>
   );

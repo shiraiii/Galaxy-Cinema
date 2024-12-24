@@ -5,7 +5,7 @@ import Modal from "react-responsive-modal";
 import TicketInfo from "../Modal/ticketInfo";
 import ReservationDetail from "../Modal/reservationDetail";
 import AppContext from "../../../context/AppContext";
-import { useNavigate } from "react-router-dom";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const BookingSeatSummary = ({
   movies,
@@ -38,8 +38,7 @@ const BookingSeatSummary = ({
   const [qrCode, setQrCode] = useState(null);
   const [showReservationDetail, setShowReservationDetail] = useState(false);
 
-  const { method } = React.useContext(AppContext);
-  const navigate = useNavigate();
+  const { method, data, navigate, dayOfTheWeek } = React.useContext(AppContext);
 
   const closeIcon = (
     <span className="w-[25px]  h-[25px] rounded-full outline-none absolute">
@@ -52,13 +51,11 @@ const BookingSeatSummary = ({
   );
 
   useEffect(() => {
-    const dataString = sessionStorage.getItem("userInfo");
-    const data = JSON.parse(dataString);
     if (data) {
       const updatedUserInput = {
         seats: selectedSeats,
         date: date,
-        startAt: time,
+        startAt: time || "N/A",
         total: total,
         username: data.userName,
         phone: data.phone,
@@ -71,25 +68,6 @@ const BookingSeatSummary = ({
       setUserInput(updatedUserInput);
     }
   }, [date, time, total, selectedSeats, cinemas, movies]);
-  const dayOfTheWeek = (dateString) => {
-    const [day, month, year] = dateString.split("/");
-
-    const date = new Date(year, month - 1, day);
-
-    const daysOfWeek = [
-      "Chủ Nhật",
-      "Thứ Hai",
-      "Thứ Ba",
-      "Thứ Tư",
-      "Thứ Năm",
-      "Thứ Sáu",
-      "Thứ Bảy",
-    ];
-
-    const dayOfWeekNumber = date.getDay();
-
-    return daysOfWeek[dayOfWeekNumber];
-  };
 
   const formattedDate = dayjs(date).format("DD/MM/YYYY");
   const formattedTotal = new Intl.NumberFormat("vi-VN").format(total);
@@ -236,6 +214,11 @@ const BookingSeatSummary = ({
           <button className="w-1/2 mr-2 py-2 text-[#f58020]">
             <span>Quay lại</span>
           </button>
+          {method === "paypal" ? (
+            <PayPalScriptProvider>
+              <PayPalButtons />
+            </PayPalScriptProvider>
+          ) : null}
           <button
             onClick={() => {
               if (selectedSeats.length <= 0) {

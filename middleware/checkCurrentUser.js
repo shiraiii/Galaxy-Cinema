@@ -1,9 +1,11 @@
 const jwt = require("jsonwebtoken");
 
 const checkCurrentUser = (req, res, next) => {
-  const Authorization = req.header("authorization");
+  const Authorization =
+    req.header("authorization") || req.header("Authorization");
 
   if (!Authorization) {
+    console.log("Authorization header:", Authorization);
     return res.status(401).json({ message: "Authorization token missing" });
   } else {
     const token = Authorization.replace("Bearer ", "");

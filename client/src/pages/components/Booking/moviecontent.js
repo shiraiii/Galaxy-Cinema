@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 const MovieContent = ({ movies }) => {
   return (
@@ -19,7 +19,7 @@ const MovieContent = ({ movies }) => {
         <p>Noi dung</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MovieContent
+export default MovieContent;

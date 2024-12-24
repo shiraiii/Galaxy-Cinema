@@ -33,10 +33,12 @@ const Header = () => {
     setRedirectPath,
     overSeats,
     setOverSeats,
+    data,
   } = useContext(AppContext);
   const navigate = useNavigate();
   const { user } = state;
   const SignOut = () => {
+    window.location.reload();
     sessionStorage.removeItem("userInfo");
     localStorage.removeItem("token");
     dispatch({ type: "CURRENT_USER", payload: null });
@@ -91,7 +93,7 @@ const Header = () => {
               </div>
               {user ? (
                 <>
-                  <DataUser signOut={SignOut}></DataUser>
+                  <DataUser signOut={SignOut} data={data}></DataUser>
                 </>
               ) : (
                 <HeaderMoreInfo></HeaderMoreInfo>

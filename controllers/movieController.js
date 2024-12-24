@@ -35,6 +35,7 @@ const createMovie = async (req, res, next) => {
       nation,
       releaseDate,
       endDate,
+      trailer,
     } = req.body;
     const oldMovie = await movieModel.findOne({ movieName });
     if (oldMovie) {
@@ -61,6 +62,7 @@ const createMovie = async (req, res, next) => {
         movieRating,
         ageLimit,
         movieBanner,
+        trailer,
         duration,
         votes,
         nation,
@@ -109,6 +111,7 @@ const updateMovie = async (req, res, next) => {
       movieRating: req.body.movieRating || currentMovie.movieRating,
       ageLimit: req.body.ageLimit || currentMovie.ageLimit,
       movieBanner: req.body.movieBanner || currentMovie.movieBanner,
+      trailer: req.body.trailer || currentMovie.trailer,
       duration: req.body.duration || currentMovie.duration,
       votes: req.body.votes || currentMovie.votes,
       nation: req.body.nation || currentMovie.nation,

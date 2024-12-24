@@ -17,6 +17,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { filterAndSortMovies } from "../../../../utils/movieUtils";
 import "react-responsive-modal/styles.css";
+import { useNavigate } from "react-router-dom";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -39,7 +40,31 @@ const MasterLayout = ({ children, ...props }) => {
   const [overSeats, setOverSeats] = useState(false);
   const [showTicketInfo, setShowTicketInfo] = useState(false);
   const [method, setMethod] = useState("HSBC");
+  const [showTrailer, setShowTrailer] = useState(false);
+  const [activeTab, setActiveTab] = useState(1);
   const SEATLIMIT = 5;
+  const dataString = sessionStorage.getItem("userInfo");
+  const data = JSON.parse(dataString);
+  const navigate = useNavigate();
+  const dayOfTheWeek = (dateString) => {
+    const [day, month, year] = dateString.split("/");
+
+    const date = new Date(year, month - 1, day);
+
+    const daysOfWeek = [
+      "Chủ Nhật",
+      "Thứ Hai",
+      "Thứ Ba",
+      "Thứ Tư",
+      "Thứ Năm",
+      "Thứ Sáu",
+      "Thứ Bảy",
+    ];
+
+    const dayOfWeekNumber = date.getDay();
+
+    return daysOfWeek[dayOfWeekNumber];
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -146,6 +171,13 @@ const MasterLayout = ({ children, ...props }) => {
         method,
         setMethod,
         token,
+        showTrailer,
+        setShowTrailer,
+        activeTab,
+        setActiveTab,
+        data,
+        navigate,
+        dayOfTheWeek,
       }}
     >
       <div {...props}>

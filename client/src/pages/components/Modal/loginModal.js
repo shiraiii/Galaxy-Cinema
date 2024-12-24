@@ -34,7 +34,7 @@ const LoginModal = () => {
         data: userInput,
       };
       const response = await axios(option);
-      const { token, userName, roles, phone } = response.data.data;
+      const { token, userName, roles } = response.data.data;
       const userString = JSON.stringify(response.data.data);
       sessionStorage.setItem("userInfo", userString);
       window.localStorage.setItem("token", token);

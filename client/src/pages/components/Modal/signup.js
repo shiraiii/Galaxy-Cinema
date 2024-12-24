@@ -51,6 +51,7 @@ const SignUp = () => {
       localStorage.setItem("token", token);
       dispatch({ type: "CURRENT_USER", payload: { userName } });
       if (status == "success") {
+        setShowSignUp(false);
         setIsAuth(true);
       }
     } catch (err) {
