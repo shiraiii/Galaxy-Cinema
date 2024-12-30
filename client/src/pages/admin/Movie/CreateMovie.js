@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -9,13 +9,14 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import AppContext from "../../../context/AppContext";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const CreateMovie = () => {
-  const navigate = useNavigate();
   const theme = useTheme();
+  const { token, navigate } = useContext(AppContext);
 
   const [userInput, setUserInput] = useState({
     movieName: "",
@@ -33,6 +34,7 @@ const CreateMovie = () => {
     nation: "",
     releaseDate: dayjs(),
     endDate: dayjs(),
+    trailer: "",
   });
 
   const genresOpt = [
@@ -40,6 +42,7 @@ const CreateMovie = () => {
     "giả tưởng",
     "phiêu lưu",
     "kinh điển",
+    "gia đình",
     "văn hóa",
     "tốc nhiệm",
     "lãng mạn",
@@ -49,7 +52,7 @@ const CreateMovie = () => {
     "hài",
     "nhạc kịch",
     "tình cảm",
-    "tiểu sử"
+    "tiểu sử",
   ];
 
   const ITEM_HEIGHT = 48;
@@ -102,10 +105,11 @@ const CreateMovie = () => {
         method: "POST",
         url: "http://localhost:5000/api/v1/movie/createMovie",
         data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
       const response = await axios(option);
-      console.log(response.data);
-      console.log(dayjs(releaseDate).tz("Asia/Ho_Chi_Minh").format());
       navigate("/admin/movie");
     } catch (err) {
       console.log(err);
@@ -115,7 +119,7 @@ const CreateMovie = () => {
     <div className="flex h-auto justify-center items-center">
       <div className="w-full bg-white rounded p-3">
         <form onSubmit={handleSubmit} className="mb-3">
-          <h2 className="mb-3">Add Movie</h2>
+          <h2 className="mb-3">Thêm phim</h2>
           <TextField
             className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             id="movieName"
@@ -236,12 +240,13 @@ const CreateMovie = () => {
           ></TextField>
 
           <TextField
-            className=" pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
-            id="votes"
-            type="number"
-            label="Lượt đánh giá"
-            name="votes"
-            value={userInput.votes}
+            className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
+            label="Trailer"
+            value={userInput.trailer}
+            autoComplete="true"
+            type="text"
+            name="trailer"
+            id="trailer"
             onChange={onChangeHandle}
           ></TextField>
 
@@ -283,8 +288,11 @@ const CreateMovie = () => {
             Thêm
           </button>
         </form>
-        <Link to={"/admin"} className="bg-red-500 text-white rounded px-3 py-1">
-          Back
+        <Link
+          to={"/admin/movie"}
+          className="bg-red-500 text-white rounded px-3 py-1"
+        >
+          Trở lại
         </Link>
       </div>
     </div>

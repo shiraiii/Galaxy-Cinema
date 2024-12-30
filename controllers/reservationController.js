@@ -55,18 +55,11 @@ const createReservation = async (req, res, next) => {
 
     const qrcodedata = {
       id: reservation._id,
-      moviename: movie.moviename,
-      cinemaname: cinema.name,
-      date: reservation.date,
-      startat: reservation.startat,
-      seats: reservation.seats.map((seat) => ({
-        row: seat.rowletter,
-        number: seat.seatnumber,
-      })),
-      total: reservation.total,
     };
 
     const qrCodeDataURL = await generateQR(JSON.stringify(qrcodedata));
+    reservation.qrCode = qrCodeDataURL;
+    await reservation.save();
     res
       .status(201)
       .send({ reservation: populatedReservation, qrCode: qrCodeDataURL });
@@ -114,7 +107,15 @@ const createStripe = async (req, res, next) => {
       cinemaId,
     });
 
-    reservation.save();
+    const qrCodeData = {
+      id: reservation._id,
+    };
+
+    // Generate QR code
+    const qrCodeDataURL = await generateQR(JSON.stringify(qrCodeData));
+
+    reservation.qrCode = qrCodeDataURL;
+    await reservation.save();
 
     const line_items = [
       {
@@ -170,25 +171,9 @@ const verifyStripe = async (req, res, next) => {
       await Reservation.findByIdAndUpdate(reservationId, { checkin: true });
 
       // Generate QR code data
-      const qrCodeData = {
-        id: reservation._id,
-        movieName: reservation.movieId.movieName,
-        cinemaName: reservation.cinemaId.name,
-        date: reservation.date,
-        startAt: reservation.startAt,
-        seats: reservation.seats.map((seat) => ({
-          row: seat.rowLetter,
-          number: seat.seatNumber,
-        })),
-        total: reservation.total,
-      };
-
-      // Generate QR code
-      const qrCodeDataURL = await generateQR(JSON.stringify(qrCodeData));
 
       res.json({
         success: true,
-        qrCode: qrCodeDataURL, // Send QR code in response
       });
     } else {
       // If payment failed, delete the reservation
@@ -266,10 +251,22 @@ const getReservationByUserId = async (req, res, next) => {
       ...reservation._doc,
       movieName: movieMap[reservation.movieId]?.movieName,
       movieImg: movieMap[reservation.movieId]?.movieImg,
+      ageLimit: movieMap[reservation.movieId]?.ageLimit,
       cinemaName: cinemaMap[reservation.cinemaId],
     }));
 
-    res.status(200).json({ success: true, reservation: reservationData });
+    const qrCodeData = {
+      id: reservations._id,
+    };
+
+    // Generate QR code
+    const qrCodeDataURL = await generateQR(JSON.stringify(qrCodeData));
+
+    res.status(200).json({
+      success: true,
+      reservation: reservationData,
+      qrCode: qrCodeDataURL,
+    });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
     next(err);

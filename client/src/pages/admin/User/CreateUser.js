@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import AppContext from "../../../context/AppContext";
 
 const CreateUser = () => {
   const [roles, setRoles] = useState();
+  const { token } = useContext(AppContext);
 
   const [userInput, setUserInput] = useState({
     fullname: "",
@@ -23,9 +25,13 @@ const CreateUser = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/api/v1/user/createUser", {
-        userInput,
-      })
+      .post(
+        "http://localhost:5000/api/v1/user/createUser",
+        {
+          userInput,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
         console.log(res);
         navigate("/admin/user");
@@ -36,7 +42,7 @@ const CreateUser = () => {
     <div className="flex h-auto justify-center items-center">
       <div className="w-full bg-white rounded p-3">
         <form onSubmit={handleSubmit}>
-          <h2>Add User</h2>
+          <h2>Thêm người dùng</h2>
           <label
             htmlFor="fullname"
             className="text-xs block font-bold not-italic text-[#777777]"

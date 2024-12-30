@@ -10,8 +10,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { format } from "date-fns"; // Import date-fns for date manipulation
-import ChartDataLabels from "chartjs-plugin-datalabels"; // Correct import
+import { format } from "date-fns";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +21,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ChartDataLabels // Register the plugin here
+  ChartDataLabels
 );
 
 const Chart = () => {
@@ -35,20 +35,17 @@ const Chart = () => {
         );
         const data = await response.json();
 
-        // Get the current month and the two previous months
         const now = new Date();
-        const currentMonth = now.getMonth(); // Current month (0-indexed)
+        const currentMonth = now.getMonth();
         const monthsToShow = [currentMonth, currentMonth - 1, currentMonth - 2];
 
-        // Filter data to show only the last 3 months
         const filteredData = data.filter((item) => {
           const itemDate = new Date(item._id);
           return monthsToShow.includes(itemDate.getMonth());
         });
 
-        // Format the _id (which is assumed to be a date) as 'MM-YYYY'
         const labels = filteredData.map((item) =>
-          format(new Date(item._id), "MM-yyyy")
+          format(new Date(item._id), "MM")
         );
         const revenues = filteredData.map((item) => item.totalRevenue);
 
@@ -56,25 +53,24 @@ const Chart = () => {
           labels,
           datasets: [
             {
-              label: "Total Revenue",
+              label: "Doanh Thu Tổng",
               data: revenues,
               borderColor: "#4A90E2",
               backgroundColor: "rgba(74, 144, 226, 0.2)",
               fill: true,
               borderWidth: 3,
-              tension: 0.4, // Adds a smooth curve to the line
-              pointBackgroundColor: "#FFFFFF",
-              pointBorderColor: "#4A90E2", // Points in line will have a color
-              pointBorderWidth: 2, // Border width for points
-              pointRadius: 5, // Size of the point
-              borderDash: [5, 5], // Dashed line style
+              tension: 0.4,
+              pointBackgroundColor: "#4A90E2",
+              pointBorderColor: "#FFFFFF",
+              pointBorderWidth: 2,
+              pointRadius: 5,
               datalabels: {
-                align: "top", // Position the data labels above the points
+                align: "top",
                 font: {
                   weight: "bold",
                   size: 12,
                 },
-                color: "#FFFFFF", // Color of the data labels
+                color: "#4A90E2",
               },
             },
           ],
@@ -87,7 +83,7 @@ const Chart = () => {
   }, []);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+    <div className="bg-white rounded-lg shadow p-4">
       {chartData ? (
         <Line
           data={chartData}
@@ -97,37 +93,54 @@ const Chart = () => {
               x: {
                 title: {
                   display: true,
-                  text: "Month-Year", // Set x-axis title as "Month-Year"
+                  text: "Tháng",
+                  color: "#333",
                 },
                 ticks: {
-                  autoSkip: false, // Show all x-axis labels
+                  autoSkip: false,
+                  color: "#333",
                 },
               },
               y: {
                 title: {
                   display: true,
-                  text: "Revenue (VND)", // Set y-axis title as "Revenue"
+                  text: "Doanh Thu (VND)",
+                  color: "#333",
                 },
                 ticks: {
-                  beginAtZero: true, // Ensure the y-axis starts from zero
-                  callback: (value) => `VND ${value.toLocaleString()}`, // Format y-axis ticks
+                  beginAtZero: true,
+                  callback: (value) => `VND ${value.toLocaleString()}`,
+                  color: "#333",
+                },
+                grid: {
+                  color: "#e0e0e0",
                 },
               },
             },
             plugins: {
               tooltip: {
                 callbacks: {
-                  label: (context) => `VND ${context.raw.toLocaleString()}`, // Format tooltips
+                  label: (context) => `VND ${context.raw.toLocaleString()}`,
+                },
+                backgroundColor: "#ffffff",
+                titleColor: "#333",
+                bodyColor: "#333",
+                borderColor: "#ccc",
+                borderWidth: 1,
+              },
+              legend: {
+                labels: {
+                  color: "#333",
                 },
               },
               datalabels: {
-                display: true, // Enable data labels
+                display: true,
               },
             },
           }}
         />
       ) : (
-        <p>Loading chart data...</p>
+        <p>Đang tải dữ liệu biểu đồ...</p>
       )}
     </div>
   );

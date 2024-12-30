@@ -1,6 +1,8 @@
 import React from "react";
+import Modal from "react-responsive-modal";
+import TrailerModal from "../Modal/TrailerModal";
 
-const BookingBanner = ({ movies, setShowTrailer }) => {
+const BookingBanner = ({ movies, showTrailer, setShowTrailer }) => {
   return (
     <div className="relative bg-black flex justify-center w-full h-full">
       <div className="absolute w-full h-full z-[300] bg-[#0003]"></div>
@@ -48,6 +50,18 @@ const BookingBanner = ({ movies, setShowTrailer }) => {
           ></img>
         </div>
       </div>
+
+      <Modal
+        onClose={() => setShowTrailer(false)}
+        open={showTrailer}
+        classNames={{
+          modal:
+            "custom__modal__confirm modal-default p-0 bg-transparent w-[100%] min-w-[400px] max-w-[90vw]",
+        }}
+        showCloseIcon={false}
+      >
+        <TrailerModal trailer={movies.trailer} />
+      </Modal>
     </div>
   );
 };

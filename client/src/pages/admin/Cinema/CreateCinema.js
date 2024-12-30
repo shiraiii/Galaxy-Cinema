@@ -39,7 +39,7 @@ const CreateCinema = () => {
         method: "POST",
         url: "http://localhost:5000/api/v1/cinema/createCinema",
         data: userInput,
-        Headers: {
+        headers: {
           Authorization: `Bearer ${token}`,
         },
       };
@@ -62,10 +62,10 @@ const CreateCinema = () => {
           noValidate
           className="mb-3"
         >
-          <h2 className="text-xl font-bold mb-4">Add Cinema</h2>
+          <h2 className="text-xl font-bold mb-4">Thêm rạp</h2>
           <TextField
             id="outlined-basic"
-            label="Cinema Name*"
+            label="Tên rạp*"
             name="name"
             variant="outlined"
             onChange={onChangeHandle}
@@ -74,7 +74,7 @@ const CreateCinema = () => {
           />
           <TextField
             id="outlined-basic"
-            label="City*"
+            label="Thành phố*"
             name="city"
             variant="outlined"
             onChange={onChangeHandle}
@@ -85,7 +85,7 @@ const CreateCinema = () => {
           <TextField
             id="outlined-basic"
             name="ticketPrice"
-            label="Ticket Price"
+            label="Giá vé"
             variant="outlined"
             onChange={onChangeHandle}
             type="number"
@@ -93,7 +93,7 @@ const CreateCinema = () => {
           />
           <TextField
             id="outlined-basic"
-            label="Seats Available*"
+            label="Số ghế còn lại*"
             variant="outlined"
             name="seatsAvailable"
             onChange={onChangeHandle}
@@ -103,7 +103,7 @@ const CreateCinema = () => {
           />
           <TextField
             id="outlined-basic"
-            label="Address"
+            label="Địa chỉ"
             name="address"
             variant="outlined"
             onChange={onChangeHandle}
@@ -113,7 +113,7 @@ const CreateCinema = () => {
           />
           <TextField
             id="outlined-basic"
-            label="Image"
+            label="Ảnh rạp"
             name="image"
             variant="outlined"
             onChange={onChangeHandle}
@@ -128,7 +128,7 @@ const CreateCinema = () => {
                   key={`new-seat-${index}`} // Add a unique key for each TextField
                   id="outlined-basic"
                   label={
-                    "Add number of seats for row : " +
+                    "Thêm số lượng ghế cho hàng : " +
                     (index + 10).toString(36).toUpperCase()
                   } // Label for each seat
                   name={`seats[${index}]`} // Set name to identify seat number
@@ -149,14 +149,14 @@ const CreateCinema = () => {
             className="mt-3 w-24 ..."
             onClick={handleAddSeat}
           >
-            Add Seat
+            Thêm ghế
           </button>
 
           <button
             type="submit"
             className="mt-3 w-24 bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
           >
-            Submit
+            Tạo
           </button>
         </Box>
       </div>

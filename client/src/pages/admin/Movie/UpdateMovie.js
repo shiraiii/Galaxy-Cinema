@@ -53,6 +53,7 @@ const UpdateUser = () => {
     "Hoạt hình",
     "Hành động",
     "giả tưởng",
+    "gia đình",
     "phiêu lưu",
     "kinh điển",
     "văn hóa",
@@ -158,7 +159,7 @@ const UpdateUser = () => {
     <div className="flex h-100 justify-center items-center">
       <div className="w-full bg-white rounded p-3">
         <form onSubmit={handleUpdate}>
-          <h2 className="mb-3">Update Movie</h2>
+          <h2 className="mb-3">Cập nhật phim</h2>
           <TextField
             className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             label="Tên phim"
@@ -192,7 +193,6 @@ const UpdateUser = () => {
             className="pr-2 w-[50%] mb-2 relative h-auto border inline-flex min-w-0 text-sm bg-white rounded transition-all duration-300"
             label="Trailer"
             value={trailer}
-            required
             autoComplete="true"
             type="text"
             id="trailer"
@@ -301,13 +301,13 @@ const UpdateUser = () => {
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-1 rounded"
           >
-            Update
+            Cập nhật
           </button>
           <button
             navigate="/admin/movie"
             className="w-full bg-gray-500 mt-2 text-white font-bold py-1 rounded"
           >
-            Back
+            Trở lại
           </button>
         </form>
       </div>

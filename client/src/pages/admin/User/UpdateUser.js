@@ -1,15 +1,17 @@
-import axios from "axios"
-import React, { useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import axios from "axios";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import AppContext from "../../../context/AppContext";
 
 const UpdateUser = () => {
-  const { id } = useParams()
+  const { id } = useParams();
+  const { token } = useContext(AppContext);
 
-  const [name, setName] = useState()
-  const [email, setEmail] = useState()
-  const [phone, setPhone] = useState()
+  const [name, setName] = useState();
+  const [email, setEmail] = useState();
+  const [phone, setPhone] = useState();
 
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const fectchData = async () => {
@@ -17,40 +19,44 @@ const UpdateUser = () => {
         const option = {
           method: "GET",
           url: "http://localhost:5000/api/v1/user/getUser/" + id,
-        }
-        const response = await axios(option)
-        console.log(response)
-        setName(response.data.name)
-        setEmail(response.data.email)
-        setPhone(response.data.phone)
+        };
+        const response = await axios(option);
+        console.log(response);
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setPhone(response.data.phone);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }
-    fectchData()
-  }, [])
+    };
+    fectchData();
+  }, []);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleUpdate = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     axios
-      .put("http://localhost:5000/api/v1/user/updateUser/" + id, {
-        name,
-        email,
-        phone,
-      })
+      .put(
+        "http://localhost:5000/api/v1/user/updateUser/" + id,
+        {
+          name,
+          email,
+          phone,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
-        console.log(res)
-        navigate("/admin/user")
+        console.log(res);
+        navigate("/admin/user");
       })
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="flex h-100 justify-center items-center">
       <div className="w-full bg-white rounded p-3">
         <form onSubmit={handleUpdate}>
-          <h2>Update User</h2>
+          <h2>Cập nhật người dùng</h2>
           <label
             htmlFor=""
             className="text-xs block font-bold not-italic text-[#777777]"
@@ -111,18 +117,18 @@ const UpdateUser = () => {
             type="submit"
             className="w-full bg-blue-500 text-white font-bold py-1 rounded"
           >
-            Update
+            Cập nhật
           </button>
           <button
             navigate="/admin/movie"
             className="w-full bg-gray-500 mt-2 text-white font-bold py-1 rounded"
           >
-            Back
+            Trở lại
           </button>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UpdateUser
+export default UpdateUser;

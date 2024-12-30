@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import AppContext from "../../../context/AppContext";
 
 const Movies = () => {
-  const { movies } = useContext(AppContext);
+  const { movies, token } = useContext(AppContext);
 
   const handleDelete = (id) => {
     axios
-      .delete("http://localhost:5000/api/v1/movie/deleteMovie/" + id)
+      .delete("http://localhost:5000/api/v1/movie/deleteMovie/" + id, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         console.log(res);
       })
@@ -25,22 +27,22 @@ const Movies = () => {
           to="/admin/movie/create"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Add +
+          Thêm +
         </Link>
         <Link
           to="/admin"
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4"
         >
-          Back
+          Trở lại
         </Link>
         <table className="table w-full table--users mt-2">
           <thead>
             <tr className="w-auto">
-              <th className="text-left">Moive Name</th>
-              <th className="text-left">Movie Img</th>
-              <th className="text-left">Moive Rating</th>
-              <th className="text-left">Age Limit</th>
-              <th className="text-left">Movie Banner</th>
+              <th className="text-left">Tên phim</th>
+              <th className="text-left">Ảnh phim</th>
+              <th className="text-left">Đánh giá phim</th>
+              <th className="text-left">Độ tuổi</th>
+              <th className="text-left">Ảnh banner</th>
             </tr>
           </thead>
           <tbody>
@@ -61,7 +63,7 @@ const Movies = () => {
                       to={`/admin/movie/update/${movie._id}`}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
-                      Update
+                      Cập nhật
                     </Link>
                     <button
                       onClick={() => {
@@ -70,7 +72,7 @@ const Movies = () => {
                       }}
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                     >
-                      Delete
+                      Xoá
                     </button>
                   </td>
                 </tr>

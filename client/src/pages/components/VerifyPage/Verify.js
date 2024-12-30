@@ -4,11 +4,10 @@ import AppContext from "../../../context/AppContext"; // Assuming you have an Ap
 import axios from "axios";
 
 const SuccessPayment = () => {
-  const { token } = React.useContext(AppContext); // Retrieve the user token from context
+  const { token, navigate } = React.useContext(AppContext); // Retrieve the user token from context
   const [searchParams] = useSearchParams();
   const success = searchParams.get("success"); // Get success parameter from URL
   const reservationId = searchParams.get("reservationId"); // Get reservationId from URL
-  const navigate = useNavigate();
   const [qrCode, setQrCode] = useState(null); // State to store the QR code
   const [reservationDetails, setReservationDetails] = useState(null); // State to store reservation details
   const [loading, setLoading] = useState(true); // State to show loading indicator

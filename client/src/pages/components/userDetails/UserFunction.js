@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Transaction from "./Transaction";
 
-const UserFunction = ({ reservations }) => {
-  // Tabs data
+const UserFunction = ({ reservations, handleDetailClick }) => {
   const tabs = [
     { name: "Lịch sử giao dịch", id: "transaction" },
     { name: "Thông tin cá nhân", id: "profile" },
@@ -11,27 +10,27 @@ const UserFunction = ({ reservations }) => {
     { name: "Chính sách", id: "policy" },
   ];
 
-  // State to track the active tab
   const [activeTab, setActiveTab] = useState("");
 
-  // Update the active tab based on the hash in the URL
   useEffect(() => {
     const currentHash = window.location.hash.replace("#", "") || tabs[0].id;
     setActiveTab(currentHash);
   }, []);
 
-  // Handle tab click
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-    // Update the URL hash
     window.location.hash = `#${tabId}`;
   };
 
-  // Render content based on the active tab
   const renderContent = () => {
     switch (activeTab) {
       case "transaction":
-        return <Transaction reservations={reservations} />;
+        return (
+          <Transaction
+            reservations={reservations}
+            handleDetailClick={handleDetailClick}
+          />
+        );
       case "profile":
         return <div>Profile Information Content</div>;
       case "notification":

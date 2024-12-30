@@ -1,65 +1,77 @@
+import dayjs from "dayjs";
 import React from "react";
 
-const ReservationDetail = ({ qrCode, reservationDetail }) => {
+const ReservationDetail = ({ qrCode, reservationDetail, dayOfTheWeek }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto mt-8">
-      {qrCode && (
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-center mb-4">
-            Your QR Code
-          </h2>
-          <div className="flex justify-center">
-            <img
-              src={qrCode}
-              alt="QR Code"
-              className="w-48 h-48 object-contain"
-            />
-          </div>
+    <div className="generic__modal-wrapper">
+      <div className="text-center">
+        <div className="pb-5">
+          <img
+            alt={reservationDetail.movieName}
+            src={reservationDetail.movieImg}
+            width={80}
+            height={120}
+            className="inline-block rounded-lg object-cover duration-500 ease-in-out gorup-hover:opacity-100"
+          ></img>
+          <p className="text-lg font-bold not-italic mt-3">
+            {reservationDetail.movieName}
+          </p>
+          <p className="text-sm font-semibold not-italic mt-2">2D Lồng Tiếng</p>
+          {reservationDetail.ageLimit ? (
+            <span className="ml-4 inline-block w-7 h-5 bg-[#f58020] rounded text-[14px] font-bold leading-5.5 text-center text-white">
+              {reservationDetail.ageLimit}
+            </span>
+          ) : null}
         </div>
-      )}
-      {reservationDetail && (
-        <div>
-          <h3 className="text-2xl font-bold text-center mb-4">
-            Reservation Details
-          </h3>
-          <div className="space-y-4">
-            <p className="text-lg font-medium">
-              <span className="font-semibold">ID: </span>
+
+        <div className="pt-4 pb-4 border-y border-dashed border-black">
+          <p className="text-sm font-bold not-italic text-left">
+            {reservationDetail.cinemaName}
+            <span className="text-sm font-bold not-italic text-left">
+              {"- "} Rạp 2
+            </span>
+          </p>
+          <p className="text-sm font-bold not-italic text-left">
+            <label className="font-normal">Suất:</label>{" "}
+            {reservationDetail.startAt} {" -"}
+            <span className="font-light capitalize">
+              {dayOfTheWeek(dayjs(reservationDetail.date).format("DD/MM/YYYY"))}
+            </span>
+            {", "} {dayjs(reservationDetail.date).format("DD/MM/YYYY")}
+          </p>
+          <img
+            alt={reservationDetail._id}
+            src={reservationDetail.qrCode}
+            className="inline-block object-cover duration-500 ease-in-out group-hover:opactiy-100"
+          ></img>
+        </div>
+
+        <div className="modal__seats py-4 text-left border-b border-dashed border-black">
+          <p className="text-sm font-light not-italic">
+            Ghế
+            <span className="text-sm font-bold not-italic">
+              {"- "}{" "}
+              {(reservationDetail?.seats || [])
+                .map((seat) => `${seat.rowLetter}${seat.seatNumber}`)
+                .join(", ")}
+            </span>
+          </p>
+        </div>
+        <div className="modal__detail flex justify-between items-center py-4 relative">
+          <div className="flex-auto text-left">
+            <label className="text-sm not-italic text-[#333333]">Mã vé</label>
+            <p className="text-base not-italic font-bold text-[#333333]">
               {reservationDetail._id}
             </p>
-            <p className="text-lg font-medium">
-              <span className="font-semibold">Movie Name: </span>
-              {reservationDetail.movieId?.movieName}
+          </div>
+          <div className="flex-auto text-right ml-2">
+            <label className="text-sm not-italic text-[#333333]">Giá</label>
+            <p className="text-base not-italic text-[#333333] font-bold">
+              {reservationDetail.total} &nbsp;₫
             </p>
-            <p className="text-lg font-medium">
-              <span className="font-semibold">Cinema Name: </span>
-              {reservationDetail.cinemaId?.name}
-            </p>
-            <p className="text-lg font-medium">
-              <span className="font-semibold">Date: </span>
-              {new Date(reservationDetail.date).toLocaleDateString("en-GB")}
-            </p>
-            <p className="text-lg font-medium">
-              <span className="font-semibold">Start Time: </span>
-              {reservationDetail.startAt}
-            </p>
-            <p className="text-lg font-medium">
-              <span className="font-semibold">Total Price: </span>
-              {reservationDetail.total} VND
-            </p>
-            <div>
-              <h4 className="text-lg font-semibold">Seats:</h4>
-              <ul className="list-disc pl-5 text-lg">
-                {reservationDetail.seats.map((seat, index) => (
-                  <li key={index}>
-                    Row: {seat.rowLetter}, Seat: {seat.seatNumber}
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

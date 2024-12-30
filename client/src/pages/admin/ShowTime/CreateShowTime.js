@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react"
-import { TextField, MenuItem } from "@mui/material"
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { useNavigate } from "react-router-dom"
-import axios from "axios"
-import dayjs from "dayjs"
-import utc from "dayjs/plugin/utc"
-import timezone from "dayjs/plugin/timezone"
+import React, { useState, useEffect, useContext } from "react";
+import { TextField, MenuItem } from "@mui/material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import AppContext from "../../../context/AppContext";
 
-dayjs.extend(utc)
-dayjs.extend(timezone)
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const CreateShowTime = () => {
   const [userInput, setUserInput] = useState({
@@ -18,88 +19,94 @@ const CreateShowTime = () => {
     endDate: null,
     movieId: "",
     cinemaId: "",
-  })
-  const navigate = useNavigate()
-  const [movies, setMovies] = useState([])
-  const [cinemas, setCienmas] = useState([])
+  });
+
+  const { token, navigate } = useContext(AppContext);
+  const [movies, setMovies] = useState([]);
+  const [cinemas, setCienmas] = useState([]);
 
   const today = dayjs()
     .tz("Asia/Ho_Chi_Minh")
     .startOf("day")
-    .format("YYYY-MM-DD")
+    .format("YYYY-MM-DD");
 
   const nowShowing = movies.filter((movie) => {
     const releaseDate = dayjs(movie.releaseDate)
       .tz("Asia/Ho_Chi_Minh")
       .startOf("day")
-      .format("YYYY-MM-DD")
+      .format("YYYY-MM-DD");
 
     const endDate = dayjs(movie.endDate)
       .tz("Asia/Ho_Chi_Minh")
       .startOf("day")
-      .format("YYYY-MM-DD")
+      .format("YYYY-MM-DD");
 
-    return releaseDate <= today && endDate >= today
-  })
+    return releaseDate <= today && endDate >= today;
+  });
   const onChangeHandle = (e) => {
-    setUserInput({ ...userInput, [e.target.name]: e.target.value })
-    console.log(userInput)
-  }
+    setUserInput({ ...userInput, [e.target.name]: e.target.value });
+    console.log(userInput);
+  };
   const handleDateChange = (date, field) => {
-    setUserInput({ ...userInput, [field]: date })
-  }
-  const selectedMovie = movies.find((movie) => movie._id === userInput.movieId)
-  const maxDate = selectedMovie ? dayjs(selectedMovie.endDate) : null
+    setUserInput({ ...userInput, [field]: date });
+  };
+  const selectedMovie = movies.find((movie) => movie._id === userInput.movieId);
+  const maxDate = selectedMovie ? dayjs(selectedMovie.endDate) : null;
 
   useEffect(() => {
     const fetchMovieAndCinema = async () => {
       try {
         const movieResponse = await axios.get(
-          "http://localhost:5000/api/v1/movie/getAllMovie"
-        )
+          "http://localhost:5000/api/v1/movie/getAllMovie",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         const cinemaResponse = await axios.get(
-          "http://localhost:5000/api/v1/cinema/getAllCinema"
-        )
-        setMovies(movieResponse.data)
-        setCienmas(cinemaResponse.data)
+          "http://localhost:5000/api/v1/cinema/getAllCinema",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setMovies(movieResponse.data);
+        setCienmas(cinemaResponse.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
-    }
-    fetchMovieAndCinema()
-  }, [])
+    };
+    fetchMovieAndCinema();
+  }, []);
 
   const handleSubmit = async (e) => {
     if (userInput.startAt === "") {
-      alert("Please select a time")
-      return
+      alert("Please select a time");
+      return;
     }
     try {
-      e.preventDefault()
+      e.preventDefault();
       const option = {
         method: "POST",
         url: "http://localhost:5000/api/v1/showtime/createShowtime",
         data: userInput,
-      }
-      const response = await axios(option)
-      console.log(response.data)
-      navigate("/admin/showtime")
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios(option);
+      console.log(response.data);
+      navigate("/admin/showtime");
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   return (
     <div className="flex h-auto justify-center items-center">
       <div className="w-full bg-white rounded p-3">
         <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-          <h2 className="text-xl font-bold mb-4">Add Show time</h2>
+          <h2 className="text-xl font-bold mb-4">Thêm lịch chiếu</h2>
           <TextField
             select
             margin="dense"
             fullWidth
             id="outlined-basic"
-            label="Time*"
+            label="Thời gian chiếu*"
             name="startAt"
             value={userInput.startAt}
             helperText="Please select time"
@@ -131,7 +138,7 @@ const CreateShowTime = () => {
           <TextField
             select
             fullWidth
-            label="Movie"
+            label="Phim"
             margin="dense"
             required
             name="movieId"
@@ -148,7 +155,7 @@ const CreateShowTime = () => {
           </TextField>
           <TextField
             select
-            label="Cinema"
+            label="Rạp"
             required
             margin="dense"
             name="cinemaId"
@@ -169,7 +176,7 @@ const CreateShowTime = () => {
               views={["year", "month", "day"]}
               minDate={new dayjs()}
               maxDate={maxDate}
-              label="Start Date"
+              label="Ngày bắt đầu"
               id="startDate"
               onChange={(date) => handleDateChange(date, "startDate")}
               className="w-[48%] mr-7 mt-3"
@@ -177,7 +184,7 @@ const CreateShowTime = () => {
             />
             <DatePicker
               value={userInput.endDate}
-              label="End Date"
+              label="Ngày kết thúc"
               minDate={new dayjs(userInput.startDate)}
               maxDate={maxDate}
               name="endDate"
@@ -194,7 +201,7 @@ const CreateShowTime = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateShowTime
+export default CreateShowTime;

@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [users, setUsers] = useState([]);
   const [reservationsData, setReservationsData] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
+
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/user/getAllUser")
       .then((res) => res.json())
@@ -31,38 +32,31 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex dark:bg-gray-900 min-h-screen">
-      <SideBar />
-
-      <div className="flex-1 p-6">
-        <Navbar />
-
+    <div className="flex min-h-screen">
+      <SideBar /> {/* Sidebar stays fixed on the left */}
+      <div className="flex-1 p-6 bg-grey-500">
+        <Navbar /> {/* Navbar stays at the top of the content area */}
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
-            title="Total Users"
+            title="Tổng Người Dùng"
             value={users.length}
             bgColor="bg-blue-500"
           />
+          <StatCard title="Phim" value={movies.length} bgColor="bg-green-500" />
           <StatCard
-            title="Movies"
-            value={movies.length}
-            bgColor="bg-green-500"
-          />
-          <StatCard
-            title="Reservation"
+            title="Đặt Vé"
             value={reservationsData.length}
             bgColor="bg-yellow-500"
           />
           <StatCard
-            title="Total"
+            title="Tổng Thu"
             value={`${totalRevenue.toLocaleString()} VNĐ`}
             bgColor="bg-red-500"
           />
         </div>
-
-        <div className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-            Revenue Over Time
+        <div className="mt-8 p-6 bg-white rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">
+            Doanh Thu Theo Thời Gian
           </h2>
           <Chart />
         </div>

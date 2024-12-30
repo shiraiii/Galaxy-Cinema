@@ -42,6 +42,7 @@ const MasterLayout = ({ children, ...props }) => {
   const [method, setMethod] = useState("HSBC");
   const [showTrailer, setShowTrailer] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
+  const [showReservationDetail, setShowReservationDetail] = useState(false);
   const SEATLIMIT = 5;
   const dataString = sessionStorage.getItem("userInfo");
   const data = JSON.parse(dataString);
@@ -178,6 +179,8 @@ const MasterLayout = ({ children, ...props }) => {
         data,
         navigate,
         dayOfTheWeek,
+        showReservationDetail,
+        setShowReservationDetail,
       }}
     >
       <div {...props}>

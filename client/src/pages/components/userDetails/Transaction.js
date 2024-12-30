@@ -2,12 +2,16 @@ import React, { useContext } from "react";
 import dayjs from "dayjs";
 import AppContext from "../../../context/AppContext";
 
-const Transaction = ({ reservations }) => {
+const Transaction = ({ reservations, handleDetailClick }) => {
   const { dayOfTheWeek } = useContext(AppContext);
-  console.log(reservations); // Log the reservations to debug
 
-  // Ensure reservations is an array and not undefined or null
-  const validReservations = Array.isArray(reservations) ? reservations : [];
+  // Ensure valid reservations and sort them by date (newest to oldest)
+  const validReservations = Array.isArray(reservations)
+    ? reservations
+        .slice()
+        .sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
+        .reverse()
+    : [];
 
   return (
     <div className="card__content mt-4 gap-x-[48px] gap-y-[24px]">
@@ -19,7 +23,7 @@ const Transaction = ({ reservations }) => {
           Không có giao dịch nào.
         </h3>
       ) : (
-        validReservations.map((reservation, index) =>
+        validReservations.slice(0, 20).map((reservation, index) =>
           reservation ? (
             <div
               key={index}
@@ -59,7 +63,10 @@ const Transaction = ({ reservations }) => {
                     {dayjs(reservation?.date).format("DD/MM/YYYY")}
                   </p>
                 </div>
-                <span className="hidden lg:block text-sm font-bold not-italic text-[#f58020] border-b border-dotted">
+                <span
+                  onClick={() => handleDetailClick(reservation)}
+                  className="hidden lg:block text-sm font-bold not-italic text-[#f58020] border-b border-dotted"
+                >
                   Chi tiết
                 </span>
               </div>

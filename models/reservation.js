@@ -79,6 +79,9 @@ const reservationSchema = new mongoose.Schema(
       //   message: (props) => `${props.value} is not a valid phone number!`,
       // },
     },
+    qrCode: {
+      type: String,
+    },
     checkin: {
       type: Boolean,
       default: false,

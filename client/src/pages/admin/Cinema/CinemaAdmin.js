@@ -4,11 +4,13 @@ import axios from "axios";
 import AppContext from "../../../context/AppContext";
 
 const CinemaAdmin = () => {
-  const { cinemas } = useContext(AppContext);
+  const { cinemas, token } = useContext(AppContext);
 
   const handleDelete = (id) => {
     axios
-      .delete("http://localhost:5000/api/v1/cinema/deleteCinema/" + id)
+      .delete("http://localhost:5000/api/v1/cinema/deleteCinema/" + id, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         console.log(res);
       })
@@ -26,23 +28,23 @@ const CinemaAdmin = () => {
           to="/admin/cinema/create"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Add +
+          Thêm +
         </Link>
         <Link
           to="/admin"
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4"
         >
-          Back
+          Trở lại
         </Link>
         <table className="table w-full table--users mt-2">
           <thead>
             <tr className="w-auto">
-              <th className="text-left">Cinema Name</th>
-              <th className="text-left">Cinema Image</th>
-              <th className="text-left">Ticket Price</th>
-              <th className="text-left">City</th>
-              <th className="text-left">Address</th>
-              <th className="text-left">Seat Available</th>
+              <th className="text-left">Tên rạp</th>
+              <th className="text-left">Ảnh rạp</th>
+              <th className="text-left">Giá vé</th>
+              <th className="text-left">Thành phố</th>
+              <th className="text-left">Địa chỉ</th>
+              <th className="text-left">Số ghế còn lại</th>
             </tr>
           </thead>
           <tbody>

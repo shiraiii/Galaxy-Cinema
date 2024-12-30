@@ -1,34 +1,38 @@
-import React, { useState, useEffect } from "react"
-import axios from "axios"
-import { Link, useParams } from "react-router-dom"
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+import AppContext from "../../../context/AppContext";
 
 const Users = () => {
-  const { id } = useParams()
+  const { id } = useParams();
+  const { token } = useContext(AppContext);
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/user/getAllUser")
       .then((res) => res.json())
       .then((data) => setData(data))
-      .catch((err) => console.log(err))
-  }, [])
+      .catch((err) => console.log(err));
+  }, []);
 
   const filterSort = data
     .filter((a) => a.id === id)
-    .sort((a, b) => (a.roles > b.roles ? 1 : -1))
+    .sort((a, b) => (a.roles > b.roles ? 1 : -1));
   const handleDelete = (id) => {
     axios
-      .delete("http://localhost:5000/api/v1/user/deleteUser/" + id)
-      .then((res) => {
-        console.log(res)
+      .delete("http://localhost:5000/api/v1/user/deleteUser/" + id, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      .catch((err) => console.log(err))
-  }
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const refreshPage = () => {
-    window.location.reload(false)
-  }
+    window.location.reload(false);
+  };
   return (
     <div className="flex h-full bg-red-500 justify-center items-center">
       <div className="w-full bg-white rounded p-3">
@@ -36,13 +40,13 @@ const Users = () => {
           to="/admin/create"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Add +
+          Thêm +
         </Link>
         <Link
           to="/admin"
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-4"
         >
-          Back
+          Trở lại
         </Link>
         <table className="table w-full table--users mt-2">
           <thead>
@@ -66,27 +70,27 @@ const Users = () => {
                       to={`/admin/update/${user._id}`}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
-                      Update
+                      Cập nhật
                     </Link>
                     <button
                       type="button"
                       onClick={() => {
-                        handleDelete(user._id)
-                        refreshPage()
+                        handleDelete(user._id);
+                        refreshPage();
                       }}
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                     >
-                      Delete
+                      Xoá
                     </button>
                   </td>
                 </tr>
-              )
+              );
             })}
           </tbody>
         </table>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Users
+export default Users;

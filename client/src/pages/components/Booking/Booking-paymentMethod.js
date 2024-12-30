@@ -60,7 +60,7 @@ const BookingPaymentMethod = () => {
                 HSBC/Payoo - ATM/VISA/MASTER/JCB/QRCODE
               </label>
             </li>
-            <li className="mb-4 md:block flex items-center">
+            {/* <li className="mb-4 md:block flex items-center">
               <input
                 type="radio"
                 value="paypal"
@@ -73,12 +73,12 @@ const BookingPaymentMethod = () => {
                 width={50}
                 height={50}
                 className="inline-block mx-2 object-cover duration-500 ease-in-out group-hover:opacity-100"
-                src="https://cdn.galaxycine.vn/media/2020/10/20/hsbc-icon_1603203578522.png"
+                src="https://pbs.twimg.com/profile_images/1852025198180208642/vEvvooqj_400x400.jpg"
               ></img>
               <label className="inline-block md:text-base text-sm">
                 PayPal
               </label>
-            </li>
+            </li> */}
             <li className="mb-4 md:block flex items-center">
               <input
                 value="stripe"

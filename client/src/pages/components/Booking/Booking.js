@@ -77,7 +77,11 @@ const Booking = () => {
   return (
     <>
       <div className="book__ticket__wrapper">
-        <BookingBanner setShowTrailer={setShowTrailer} movies={movies} />
+        <BookingBanner
+          showTrailer={showTrailer}
+          setShowTrailer={setShowTrailer}
+          movies={movies}
+        />
         <div className="grid grid-cols-1 screen1200:grid-cols-7 my-0 mx-auto screen1390:max-w-screen-xl xl:max-w-screen-screen1200 md:max-w-4xl lg:max-w-4xl gap-8 py-7 md:px-4 px-4">
           <div className="book__left lg:col-span-5 w-full">
             <div className="book__film flex flex-col">

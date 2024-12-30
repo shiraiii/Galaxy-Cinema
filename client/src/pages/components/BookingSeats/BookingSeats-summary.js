@@ -36,9 +36,15 @@ const BookingSeatSummary = ({
 
   const [reservationDetail, setReservationDetail] = useState(null);
   const [qrCode, setQrCode] = useState(null);
-  const [showReservationDetail, setShowReservationDetail] = useState(false);
 
-  const { method, data, navigate, dayOfTheWeek } = React.useContext(AppContext);
+  const {
+    method,
+    data,
+    navigate,
+    dayOfTheWeek,
+    showReservationDetail,
+    setShowReservationDetail,
+  } = React.useContext(AppContext);
 
   const closeIcon = (
     <span className="w-[25px]  h-[25px] rounded-full outline-none absolute">
@@ -86,8 +92,7 @@ const BookingSeatSummary = ({
           const { reservation, qrCode } = response.data;
           setReservationDetail(reservation);
           setQrCode(qrCode);
-          setShowTicketInfo(false);
-          setShowReservationDetail(true);
+          navigate("/dat-ve-thanh-cong");
           break;
 
         case "stripe":
@@ -97,7 +102,6 @@ const BookingSeatSummary = ({
             data: userInput,
           };
           const responseStripe = await axios(optionStripe);
-          console.log(responseStripe);
           if (responseStripe.data.success) {
             const { session_url } = responseStripe.data;
             window.location.replace(session_url);
@@ -260,25 +264,6 @@ const BookingSeatSummary = ({
           setShowTicketInfo={setShowTicketInfo}
           setShowReservationDetail={setShowReservationDetail}
         ></TicketInfo>
-      </Modal>
-
-      <Modal
-        open={showReservationDetail}
-        onClose={() => {
-          navigate("/");
-          setShowReservationDetail(false);
-        }}
-        closeOnOverlayClick={false}
-        closeIcon={closeIcon}
-        closeIconId="custom__btn__icon-close-confirm"
-        classNames={{
-          modal: "modal-sx m-0 bg-transparent shadow-none modal-confirm-order",
-        }}
-      >
-        <ReservationDetail
-          qrCode={qrCode}
-          reservationDetail={reservationDetail}
-        ></ReservationDetail>
       </Modal>
     </div>
   );
